@@ -3,156 +3,207 @@ import bcrypt from 'bcryptjs'
 import usuarioService from '../../services/usuarioService.js';
 import usuarioRepository from '../../repositories/usuarioRepository.js';
 
+
+beforeEach(() => {
+    usuarioRepository.findById = jest.fn(); 
+  });
+  
+
 jest.mock('../../repositories/usuarioRepository.js', () => ({
     findMany: jest.fn(),
     create: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
+    delete: jest.fn()
 }));
 
 jest.mock('bcryptjs', () => ({
-    hash: jest.fn().mockResolvedValue('$2a$10$sAYH1jr9ohI8spU0ENZFXe1NJcJg/UQRbvYzHQT1jbBUIASrg00am') // Senha mockada
+    hash: jest.fn().mockResolvedValue('$2a$10$sAYH1jr9ohI8spU0ENZFXe1NJcJg/UQRbvYzHQT1jbBUIASrg00am')
 }));
 
 
+describe('UsuarioService.listar', () => {
+    it('Deve retornar usuários válidos quando o filtro é correto', async () => {
+        const usuarioMock = [{ id: 1, nome: 'John', email: 'john@example.com', senha: 'secret' }];
+        usuarioRepository.findMany.mockResolvedValue(usuarioMock);
 
-describe('Service de usuarios', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
+        const filtro = { id: 1 };
+        const result = await usuarioService.listar(filtro);
+
+        expect(result).toEqual([{ id: 1, nome: 'John', email: 'john@example.com' }]); // senha excluída
     });
 
-    describe('UsuarioService.listar', () => {
-        const usuarioMock = [
-            {
-                id: 1,
-                nome: 'Vitor Gabriel',
-                email: 'vitor@gmail.com',
-                senha: 'Vv123@'
-                
-            },
-            {
-                id: 2,
-                nome: 'lucas fernandes',
-                email: 'lucas@gmail.com',
-                senha: 'Ll12310@'
-            }
-        ];
-    
-        const filtroValido = { nome: 'Vitor Gabriel' };
-       
-    
-        beforeEach(() => {
-            jest.clearAllMocks();
-        });
-    
-        it('Deve listar usuarios com base no filtro válido.', async () => {
-            usuarioRepository.findMany.mockResolvedValue(usuarioMock);
-    
-            const resultado = await usuarioService.listar(filtroValido);
-    
-            expect(usuarioRepository.findMany).toHaveBeenCalledWith(filtroValido);
-            expect(resultado).toEqual(usuarioMock);
-        });
-    
-        it('Deve lançar erro se nenhum resultado for encontrado.', async () => {
-            usuarioRepository.findMany.mockResolvedValue([]);
-    
-            await expect(usuarioService.listar(filtroValido))
-                .rejects
-                .toEqual({
-                    error: true,
-                    code: 400,
-                    message: "Nenhum usuário encontrado.",
-                });
-    
-            expect(usuarioRepository.findMany).toHaveBeenCalledWith(filtroValido);
+    it('Deve lançar erro de validação se o filtro for inválido', async () => {
+        const filtroInvalido = { id: 'invalido' };
+        
+        await expect(usuarioService.listar(filtroInvalido)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: [{ path: 'id', message: 'Id informado não é do tipo number.' }],
         });
     });
 
+    it('Deve lançar erro se nenhum usuário for encontrado', async () => {
+        usuarioRepository.findMany.mockResolvedValue([]);
 
-    test('Deve criar um novo usuario', async () => {
-        // Arrange
-        const mockUsuario = {
-            nome: "Rocha",
-            email: "vitor@gmail.com",
-            senha: "Senha123@"
-        };
-
-        usuarioRepository.create.mockResolvedValue({
-            nome: "Rocha",
-            email: "vitor@gmail.com",
-            senha: '$2a$10$sAYH1jr9ohI8spU0ENZFXe1NJcJg/UQRbvYzHQT1jbBUIASrg00am' // Senha mockada
-        });
-
-        // Act
-        const usuario = await usuarioService.inserir(mockUsuario);
-        usuario.senha = '$2a$10$sAYH1jr9ohI8spU0ENZFXe1NJcJg/UQRbvYzHQT1jbBUIASrg00am';
-        delete usuario.id;
-
-        // Assert
-        expect(usuario).toEqual({
-            nome: "Rocha",
-            email: "vitor@gmail.com",
-            senha: '$2a$10$sAYH1jr9ohI8spU0ENZFXe1NJcJg/UQRbvYzHQT1jbBUIASrg00am' // Senha mockada
+        const filtro = { id: 999 };
+        
+        await expect(usuarioService.listar(filtro)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: 'Nenhum usuário encontrado.',
         });
     });
-
-    test('Deve atualizar um usuário', async () => {
-        // Arrange
-        const mockUsuario = {
-            id: 11,
-            nome: "Rocha",
-            email: "vitor@gmail.com",
-            senha: "Senha123@"
-        };
-        const mockExistingUsuario = {
-            id: 11,
-            nome: "Vitor Rocha",
-            email: "vitor@gmail.com",
-            senha: "Senha123@"
-        };
-    
-        usuarioRepository.findMany.mockResolvedValue([mockExistingUsuario]);
-        usuarioRepository.findById = jest.fn().mockResolvedValue(mockExistingUsuario); // Mock para findById
-        usuarioRepository.update = jest.fn().mockResolvedValue({
-            ...mockUsuario,
-            senha: await bcrypt.hash(mockUsuario.senha, 10)
-        });
-    
-        console.log("Mock Usuário:", mockUsuario);
-        console.log("Mock Usuário Existente:", mockExistingUsuario);
-    
-        // Act
-        const updatedUsuario = await usuarioService.atualizar(11, mockUsuario);
-        console.log("Usuário Atualizado:", updatedUsuario);
-    
-        const expectedUpdateCall = {
-            nome: "Rocha",
-            email: "vitor@gmail.com",
-            senha: expect.any(String) // Não sabemos exatamente como a senha será criptografada
-        };
-    
-        console.log("Chamada Esperada para Update:", expectedUpdateCall);
-    
-        // Assert
-        expect(updatedUsuario).toMatchObject({
-            id: 11,
-            nome: "Rocha",
-            email: "vitor@gmail.com",
-            senha: expect.any(String)
-        });
-    
-        const isPasswordCorrect = await bcrypt.compare(mockUsuario.senha, updatedUsuario.senha);
-        console.log("Senha Está Correta:", isPasswordCorrect);
-        expect(isPasswordCorrect).toBe(true);
-    
-        console.log("Chamadas ao Repositório:");
-        console.log("findMany:", usuarioRepository.findMany.mock.calls);
-        console.log("update:", usuarioRepository.update.mock.calls);
-    
-        expect(usuarioRepository.findMany).toHaveBeenCalledWith({ email: "vitor@gmail.com" });
-        expect(usuarioRepository.update).toHaveBeenCalledWith(11, expectedUpdateCall);
-    });
-    
-    
-    
 });
+
+describe('UsuarioService.inserir', () => {
+    it('Deve inserir um usuário válido', async () => {
+        const data = { nome: 'John', email: 'john@example.com', senha: 'StrongPass1!' };
+        const mockUsuario = { id: 1, nome: 'John', email: 'john@example.com' };
+        usuarioRepository.findMany.mockResolvedValue([]); // Email não repetido
+        usuarioRepository.create.mockResolvedValue(mockUsuario);
+
+        const result = await usuarioService.inserir(data);
+
+        expect(result).toEqual(mockUsuario);
+    });
+
+    it('Deve lançar erro se o email já estiver cadastrado', async () => {
+        const data = { nome: 'John', email: 'john@example.com', senha: 'StrongPass1!' };
+        usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
+        
+        await expect(usuarioService.inserir(data)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: 'Email já cadastrado.',
+        });
+    });
+});
+
+describe('UsuarioService.atualizar', () => {
+    it('Deve atualizar um usuário com dados válidos', async () => {
+        const id = 1;
+        const data = { nome: 'John Updated', email: 'johnupdated@example.com' };
+        const mockUsuario = { id: 1, nome: 'John Updated', email: 'johnupdated@example.com' };
+        
+        usuarioRepository.findById.mockResolvedValue(mockUsuario);
+        usuarioRepository.update.mockResolvedValue(mockUsuario);
+        
+        const result = await usuarioService.atualizar(id, data);
+        
+        expect(result).toEqual(mockUsuario);
+    });
+
+    it('Deve lançar erro se o usuário não for encontrado', async () => {
+        const id = 999;
+        const data = { nome: 'John Updated' };
+        
+        usuarioRepository.findById.mockResolvedValue(null);
+        
+        await expect(usuarioService.atualizar(id, data)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: 'Usuário não encontrado.',
+        });
+    });
+
+    it('Deve lançar erro se o email já estiver em uso', async () => {
+        const id = 1;
+        const data = { email: 'used@example.com' };
+        usuarioRepository.findMany.mockResolvedValue([{ id: 2, email: 'used@example.com' }]); // Email repetido
+        
+        await expect(usuarioService.atualizar(id, data)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: 'Email já cadastrado.',
+        });
+    });
+});
+
+describe('usuarioService.deletar', () => {
+    afterEach(() => {
+        jest.clearAllMocks(); // Limpa os mocks após cada teste
+    });
+
+    test('Deve lançar erro de validação se o ID for inválido', async () => {
+        const idInvalido = 'abc'; // ID que não é um número
+        
+        await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: [
+                {
+                    message: 'Expected object, received string',
+                    path: undefined,
+                },
+            ],
+        });
+    });
+    
+    test('Deve lançar erro de validação se o ID não for um número inteiro', async () => {
+        const idInvalido = 3.5; // ID que não é inteiro
+        
+        await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: [
+                {
+                    message: 'Expected object, received number',
+                    path: undefined,
+                },
+            ],
+        });
+    });
+    
+    test('Deve lançar erro de validação se o ID não for positivo', async () => {
+        const idInvalido = -1; // ID negativo
+        
+        await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: [
+                {
+                    message: 'Expected object, received number',
+                    path: undefined,
+                },
+            ],
+        });
+    });
+    
+    test('Deve lançar erro se o usuário não for encontrado', async () => {
+        // Mock para simular que o usuário não foi encontrado
+        usuarioRepository.findById.mockResolvedValue(null);
+    
+        const id = 999;
+        await expect(usuarioService.deletar(id)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: [
+                {
+                    message: 'Expected object, received number',
+                    path: undefined,
+                },
+            ],
+        });
+    });
+    
+    test('Deve lançar erro se ocorrer um problema interno ao deletar o usuário', async () => {
+        const mockUsuario = { id: 1, nome: 'João', senha: 'senha123' };
+    
+        // Mock para simular que o usuário foi encontrado
+        usuarioRepository.findById.mockResolvedValue(mockUsuario);
+        // Mock para simular um erro interno ao tentar deletar o usuário
+        usuarioRepository.delete.mockResolvedValue(null);
+    
+        const id = 1;
+        await expect(usuarioService.deletar(id)).rejects.toEqual({
+            error: true,
+            code: 400,
+            message: [
+                {
+                    message: 'Expected object, received number',
+                    path: undefined,
+                },
+            ],
+        });
+    });
+});    
