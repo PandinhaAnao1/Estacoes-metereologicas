@@ -11,7 +11,7 @@ it('Login com autenticação jwt', async () => {
     const response = await request(app)
         .post("/autenticacao")
         .send({
-            email: "joao@example.com",
+            email: "carlos@example.com",
             senha: "Senha123@"
         })
         .expect(201)
@@ -27,7 +27,7 @@ describe("Cadastrar usuario", () => {
           .set("Authorization", `Bearer ${token}`)
           .set("Content-Type", "application/json")
           .send({
-              nome: "usuario novo2",
+              nome: "Vitor G",
               email: `vitorgabriel18@gmail.com`,
               senha: "Senhaa123@"
           });
@@ -43,8 +43,8 @@ describe("Cadastrar usuario", () => {
           .set("Authorization", `Bearer ${token}`)
           .set("Content-Type", "application/json")
           .send({
-              nome: "usuario Atualizado 2.0",
-              email: "vitorgabriel12132465@gmail.com",
+              nome: "Vitor G",
+              email: "vitorgabriel18@gmail.com",
               senha: "123"
           });
 
@@ -62,8 +62,8 @@ describe("Cadastrar usuario", () => {
           .set("Authorization", `Bearer ${token}`)
           .set("Content-Type", "application/json")
           .send({
-              nome: "usuario Atualizado 2.0",
-              email: "vitorgabriel17@gmail.com",
+              nome: "Vitor G",
+              email: "vitorgabriel18@gmail.com",
               senha: "Senhaa123@"
           });
 
@@ -83,7 +83,6 @@ describe("Listar usuarios", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         const body = response.body;
-        idvalido = response.body.data[0].id;
         //deve retornar status 200
         expect(response.status).toBe(200);
         //deve retornar erro falso
@@ -92,6 +91,7 @@ describe("Listar usuarios", () => {
         expect(body).toBeInstanceOf(Object);
         //testando se retorna json
         expect(response.headers['content-type']).toContain('json');
+        expect(response.body.message).toBe("Usuários encontrados com sucesso.");
     });
 
     it('Deve retornar sucesso ao listar usuario com ID valido', async () => {
@@ -101,7 +101,7 @@ describe("Listar usuarios", () => {
             .set("Content-Type", "application/json")
         const body = response.body;
         //deve retornar a mensagem correta de sucesso
-        expect({ message: 'Usuário encontrado com sucesso' }).toHaveProperty('message', "Usuário encontrado com sucesso");
+        expect(response.body.message).toBe("Usuário encontrado com sucesso");
         //deve retornar status 200
         expect(response.status).toBe(200);
         //deve retornar erro falso
@@ -118,7 +118,7 @@ describe("Listar usuarios", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         //testando se retorna o motivo do erro
-        expect({ message: 'Usuário não encontrado' }).toHaveProperty('message', "Usuário não encontrado");
+        expect(response.body.message).toBe("Usuário não encontrado.");
         //testando o status da resposta
         expect(response.status).toBe(400);
         //testando se o erro esta ativo
@@ -126,6 +126,7 @@ describe("Listar usuarios", () => {
         //testando se retorna json
         expect(response.headers['content-type']).toContain('json');
     });
+
 });
 
 // ----------- Atualizar usuario ---------
@@ -134,7 +135,7 @@ describe("Atualizar usuario", () => {
     it('Atualização dos dados de um usuario valido', async () => {
         const updatedData = {
             nome: "usuario Atualizado",
-            email: "vitorgabriel123@gmail.com",
+            email: "vitorgabriel18@gmail.com",
             senha: "Senhaa123@"
         }
 
@@ -151,14 +152,14 @@ describe("Atualizar usuario", () => {
         expect(response.body.error).toBe(false);
     })
 
-    it.skip('Deve retornar erro ao atualizar um usuario com a senha com os parametros errados', async () => {
+    it('Deve retornar erro ao atualizar um usuario com a senha com os parametros errados', async () => {
         const response = await request(app)
             .patch(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
             .send({
                 nome: "usuario Atualizado 2.0",
-                email: "vitorgabriel12@gmail.com",
+                email: "vitorgabriel18@gmail.com",
                 senha: "Senhaa123"
             });
 
@@ -166,23 +167,6 @@ describe("Atualizar usuario", () => {
         expect({ message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo." }).toHaveProperty('message', "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.");
         expect({ error: true }).toHaveProperty('error', true);
 
-    });
-
-    it.skip('Deve retornar erro ao atualizar um usuario com o email repetido', async () => {
-        const id = 1;
-        const response = await request(app)
-            .patch(`/usuario/${id}`)
-            .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-            .send({
-                nome: "usuario Atualizado 2.0",
-                email: "vitorgabriel1@gmail.com",
-                senha: "Senhaa123@"
-            });
-
-        expect(response.status).toBe(400);
-        expect({ message: "Email Já Cadastrado!" }).toHaveProperty('message', "Email Já Cadastrado!");
-        expect({ error: true }).toHaveProperty('error', true);
     });
 });
 
