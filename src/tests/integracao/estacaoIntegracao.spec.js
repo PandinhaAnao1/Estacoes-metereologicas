@@ -12,7 +12,7 @@ it('Login com autenticação jwt', async () => {
     const response = await request(app)
         .post("/autenticacao")
         .send({
-            email: "gui@gmail.com",
+            email: "carlos@example.com",
             senha: "Senha123@"
         })
         .expect(201)
