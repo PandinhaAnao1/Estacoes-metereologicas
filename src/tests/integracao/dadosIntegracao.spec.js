@@ -1,63 +1,49 @@
 import request from "supertest";
 import { expect, describe } from "@jest/globals";
-import { prisma } from "../../configs/prismaClient.js";
 import app from "../../app.js";
 import DadosRepository from '../../repositories/dadosRepository.js';
 
-jest.mock('../../repositories/dadosRepository.js');
+
 
 describe('Testes de integração para as rotas /dados', () => {
-    
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
     describe('GET /dados', () => {
-        it('Deve retornar dados climáticos filtrados', async () => {
-            // Mock do repositório para simular dados de retorno
-            const mockDados = [
-                { temperature: '25', humidity: 80, rainfall: 10, wind_speed_kmh: 20, data_hora: `${new Date()}` },
-            ];
-            DadosRepository.findMany.mockResolvedValue(mockDados);
-
-            await request(app)
+        it('Deve retornar dados climáticos', async () => {
+            const response = await request(app)
                 .get('/dados')
-                .query({ temperature: '25' })
-                .expect(200)
-                .then((res) => {
-                    expect(res.body.error).toBe(false);
-                    expect(res.body.data).toEqual(mockDados);
-                });
+            console.log('-------', response.body.data, '8555555555')
+            expect(response.body.error).toBe(false);
+            expect(response.body.data).toBeInstanceOf(Array);
+            expect(response.body.code).toBe(200);
+            expect(response.status).toBe(200);
+            expect(response.body.message).toBe("Dados climáticos encontrados com sucesso.");
+        });
 
-            expect(DadosRepository.findMany).toHaveBeenCalledWith({ temperature: '25' });
+        it('Deve retornar dados climáticos filtrados', async () => {
+            const response = await request(app)
+                .get('/dados')
+                .query({ temperature: '25.3' })
+
+            expect(response.body.error).toBe(false);
+            expect(response.body.data).toBeInstanceOf(Array);
+            expect(response.body.data[0].temperature).toBe('25.3');
+            expect(response.body.code).toBe(200);
+            expect(response.status).toBe(200);
+            expect(response.body.message).toBe("Dado climático encontrado com sucesso.");
         });
 
         it('Deve retornar erro 400 quando não encontrar dados climáticos', async () => {
-            DadosRepository.findMany.mockResolvedValue([]);
-
-            await request(app)
+            const response = await request(app)
                 .get('/dados')
-                .query({ temperature: '25' })
-                .expect(400)
-                .then((res) => {
-                    expect(res.body.error).toBe(true);
-                    expect(res.body.message).toBe("Nenhum dado climático encontrado");
-                });
+                .query({ temperature: '25000' }) //temperatura que não existe
+            expect(response.body.error).toBe(true);
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBe("Nenhum dado climático encontrado");
         });
     });
 
     describe('POST /dados', () => {
         it('Deve inserir dados climáticos e retornar sucesso', async () => {
-            const mockData = { 
-                temperature: '25', 
-                humidity: 80, 
-                rainfall: 10, 
-                wind_speed_kmh: 20, 
-                data_hora: `${new Date()}`
-            };
-            DadosRepository.create.mockResolvedValue(mockData);
-
-            await request(app)
+            const response = await request(app)
                 .post('/dados')
                 .send({
                     temperature: '25',
@@ -65,18 +51,13 @@ describe('Testes de integração para as rotas /dados', () => {
                     rainfall: 10,
                     wind_speed_kmh: 20
                 })
-                .expect(201)
-                .then((res) => {
-                    expect(res.body.error).toBe(false);
-                    expect(res.body.data).toEqual(mockData);
-                });
-
-            expect(DadosRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-                temperature: '25',
-                humidity: 80,
-                rainfall: 10,
-                wind_speed_kmh: 20
-            }));
+            expect(response.body.error).toBe(false);
+            expect(response.body.data).toHaveProperty('temperature');
+            expect(response.body.data).toHaveProperty('humidity');
+            expect(response.body.data).toHaveProperty('rainfall');
+            expect(response.body.data).toHaveProperty('wind_speed_kmh');
+            expect(response.body.data).toHaveProperty('data_hora');
+            expect(response.status).toBe(201);
         });
 
         it('Deve retornar erro 400 ao tentar inserir dados inválidos', async () => {
