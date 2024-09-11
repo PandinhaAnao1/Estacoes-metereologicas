@@ -1,0 +1,14 @@
+services:
+  node:
+    build: .
+    ports:
+      - 3000:3000
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - vol-db:/var/lib/mysql
+volumes:
+  vol-db:
