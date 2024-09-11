@@ -124,11 +124,8 @@ class UsuarioService {
             //  verificação do email repetido
             const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
             if (emailRepetido.length > 0) {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: "Email já cadastrado.",
-                };
+                throw new Error("Email já cadastrado.")
+                
             };
             //  hash senha
             const hashSenha = await Hashsenha.criarHashSenha(data.senha);
@@ -154,7 +151,11 @@ class UsuarioService {
                     message: errorMessages,
                 };
             } else {
-                throw error;
+                throw {
+                    error: true,
+                    code: 400,
+                    message: error.message
+                };
             };
         };
     };

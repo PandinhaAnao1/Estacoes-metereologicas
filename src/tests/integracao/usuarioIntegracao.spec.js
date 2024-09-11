@@ -78,20 +78,20 @@ describe("Listar usuarios", () => {
 
 describe("Deletar usuario", () => {
     it('deve deletar usuário com id valido', async () => {
-        const id = 10;
+        const idUser = 10;
         const response = await request(app)
-            .delete(`/usuarios/${id}`)
+            .delete(`/usuarios/${idUser}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         //testando a resposta
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(204);
         // //testando se o erro é falso
         expect({ error: false }).toHaveProperty('error', false);
     })
     it('deve retornar erro com o id invalido', async () => {
-        const id = 64;
+        const idUser = 64;
         const response = await request(app)
-            .delete(`/usuarios/${id}`)
+            .delete(`/usuarios/${idUser}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         //testando a resposta
@@ -101,7 +101,7 @@ describe("Deletar usuario", () => {
         //testando se o erro é true
         expect({ error: true }).toHaveProperty('error', true);
         //testando a mensagem de retorno
-        expect({ message: `Não existe usuário com este id: ${id}` }).toHaveProperty('message', `Não existe usuário com este id: ${id}`);
+        expect({ message: `Não existe usuário com este id: ${idUser}` }).toHaveProperty('message', `Não existe usuário com este id: ${idUser}`);
     })
 });
 
@@ -110,7 +110,7 @@ describe("Deletar usuario", () => {
 describe("Cadastrar usuario", () => {
     it('Deve cadastrar um usuario com dados válidos', async () => {
         const response = await request(app)
-            .post('/usuario')
+            .post('/usuarios')
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
             .send({
@@ -119,9 +119,43 @@ describe("Cadastrar usuario", () => {
                 senha: "Senhaa123@"
             });
 
+
         expect(response.status).toBe(201);
         expect({ message: "usuario cadastrado com sucesso!" }).toHaveProperty('message', "usuario cadastrado com sucesso!");
         expect({ error: false }).toHaveProperty('error', false);
+    });
+
+    it('Deve cadastrar um usuario com dados válidos', async () => {
+        const response = await request(app)
+            .post('/usuarios')
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+            .send({
+
+            });
+
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({ "code": 400, "error": true, message: [{ message: "Campo nome é obrigatório.",  path: "nome" }, 
+            { message: "Campo email é obrigatório.", path: "email" }, 
+            {  message: "Campo senha é obrigatório.", path: "senha" }] })
+    });
+
+    it('Deve retornar erro no email', async () => {
+        const response = await request(app)
+            .post('/usuarios')
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+            .send({
+                nome: "usuario novo2",
+                email: "fernanda@example.com",
+                senha: "Senhaa123@"
+            });
+
+
+        expect(response.status).toBe(400);
+        expect({ message: "Email já cadastrado." }).toHaveProperty('message', "Email já cadastrado.");
+        expect({ error: true }).toHaveProperty('error', true);
     });
 
     it('Deve retornar erro ao cadastrar um usuario com a senha com os parametros errados', async () => {
@@ -135,7 +169,7 @@ describe("Cadastrar usuario", () => {
                 senha: "Senhaa123"
             });
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
         expect({ message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo." }).toHaveProperty('message', "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.");
         expect({ error: true }).toHaveProperty('error', true);
 
@@ -153,7 +187,7 @@ describe("Cadastrar usuario", () => {
                 senha: "Senhaa123@"
             });
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
         expect({ message: "Email Já Cadastrado!" }).toHaveProperty('message', "Email Já Cadastrado!");
         expect({ error: true }).toHaveProperty('error', true);
     });
@@ -172,13 +206,13 @@ describe("Atualizar usuario", () => {
         }
 
         const response = await request(app)
-            .patch(`/usuario/${id}`)
+            .patch(`/usuarios/${id}`)
             .set("Authorization", `Bearer ${token}`)
             .send(updatedData);
 
         expect(response.status).toBe(200);
         expect(response.headers["content-type"]).toContain('json');
-        expect(response.body.message).toMatch("Usuario atualizado com sucesso!!!");
+        expect(response.body.message).toMatch("Usuario atualizado com sucesso.");
         expect(response.body.data).toHaveProperty('nome', updatedData.nome);
         expect(response.body.data).toHaveProperty('email', updatedData.email);
         expect({ error: false }).toHaveProperty('error', false);
@@ -196,7 +230,7 @@ describe("Atualizar usuario", () => {
                 senha: "Senhaa123"
             });
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
         expect({ message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo." }).toHaveProperty('message', "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.");
         expect({ error: true }).toHaveProperty('error', true);
 
@@ -214,7 +248,7 @@ describe("Atualizar usuario", () => {
                 senha: "Senhaa123@"
             });
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
         expect({ message: "Email Já Cadastrado!" }).toHaveProperty('message', "Email Já Cadastrado!");
         expect({ error: true }).toHaveProperty('error', true);
     });
