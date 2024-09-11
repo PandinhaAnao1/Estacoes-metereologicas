@@ -27,7 +27,7 @@ const getSwaggerOptions = () => {
     swaggerDefinition: {
       openapi: "3.0.0",
       info: {
-        title: "API Estação MEteriológica",
+        title: "API Estação Meteriológica",
         version: "1.0-alpha",
         description: "API Estação Meteorológica\n\nÉ necessário autenticar com token JWT antes de utilizar a maioria das rotas, faça isso na rota /login com um email e senha válido.",
         contact: {
