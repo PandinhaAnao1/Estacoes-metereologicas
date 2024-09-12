@@ -14,23 +14,23 @@ class Dados {
                 data_hora: data_hora,
             };
 
-            console.log(filtro)
-            if(humidity){
+
+            if (humidity) {
                 filtro.humidity = parseInt(humidity)
-              }
-  
-              if(rainfall){
+            }
+
+            if (rainfall) {
                 filtro.rainfall = parseInt(rainfall)
-              }
-  
-              if(wind_speed_kmh){
+            }
+
+            if (wind_speed_kmh) {
                 filtro.wind_speed_kmh = parseInt(wind_speed_kmh)
-              }
-  
-              if(data_hora){
+            }
+
+            if (data_hora) {
                 filtro.data_hora = new Date(data_hora)
-              }
-  
+            }
+
 
             const response = await dadosService.listar(filtro)
             return res.status(200).json({
