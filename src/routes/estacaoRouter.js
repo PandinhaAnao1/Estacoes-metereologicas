@@ -7,6 +7,6 @@ router.get('/estacoes', Estacao.listar);
 router.get('/estacoes/:id', Estacao.listarPorId);
 router.patch('/estacoes/:id', autenticacaoUser, Estacao.atualizar);
 router.post('/estacoes', autenticacaoUser, Estacao.cadastrar);
-// router.delete('/estacoes/:id', autenticacaoUser, Estacao.deletar);
+//router.delete('/estacoes/:id', autenticacaoUser, Estacao.deletar);
 
 export default router;
