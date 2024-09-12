@@ -14,6 +14,69 @@ jest.mock('../../repositories/usuarioRepository.js', () => ({
     findById: jest.fn()
 }));
 
+describe('EstacaoSevices.listarPorId', () => {
+    const estacaoMock = {
+        id: 1,
+        nome: 'Estação Teste',
+        endereco: 'Rua Teste, 123',
+        latitude: -23.550520,
+        longitude: -46.633308,
+        ip: '192.168.0.1',
+        status: 'ativo',
+        usuario_id: 1
+    };
+
+    beforeEach(() => {
+        jest.spyOn(EstacaoRepository, 'findById').mockImplementation((id) => {
+            if (id === 1) {
+                return Promise.resolve(estacaoMock);
+            } else {
+                return Promise.resolve(null); // Retorna null para IDs que não existem
+            }
+        });
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('Deve listar estações com base no id', async () => {
+        const response = await EstacaoService.listarPorID({ id: 1 });
+
+        expect(response).toBeDefined();
+        expect(response.id).toBe(1);
+        expect(response).toEqual(estacaoMock);
+    });
+
+    it('Deve retornar erro: "Estação não encontrada."', async () => {
+        try {
+            await EstacaoService.listarPorID({ id: 44454 });
+        } catch (error) {
+            expect(error).toEqual({
+                error: true,
+                code: 400,
+                message: "Estação não encontrada."
+            });
+        }
+    });
+
+    it('Deve retornar erro: "Id informado não é do tipo number."', async () => {
+    try {
+        await EstacaoService.listarPorID({ id: 'errado' });
+    } catch (error) {
+        expect(error).toEqual({
+            error: true,
+            code: 400,
+            message: [
+                { message: 'Id informado não é do tipo number.', path: 'id' }
+            ]
+        });
+    }
+});
+
+});
+
+
 describe('EstacaoService.listar', () => {
     const estacoesMock = [
         {
