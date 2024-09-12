@@ -95,23 +95,6 @@ class Estacao {
     };
   };
 
-  // static deletar = async (req, res) => {
-  //   try {
-  //     if (!req.params.id) {
-  //       return res.status(400).json([{ error: true, code: 400, message: "ID da estação é obrigatória" }]);
-  //     }
-  //     const id = req.params.id;
-  //     const resposta = await EstacaoService.deletar(parseInt(id));
-  //     return res.status(200).json({
-  //       error: false,
-  //       code: 200,
-  //       message: "Estação excluída com sucesso",
-  //       data: resposta
-  //     });
-  //   } catch (error) {
-  //     return res.status(error.code || 500).json(error);
-  //   }
-  // }
 };
 
 export default Estacao;
