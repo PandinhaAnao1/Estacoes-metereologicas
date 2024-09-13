@@ -1,0 +1,14 @@
+# servidor
+PORT=7001
+JWT_SECRET="Auth"
+
+# banco de dados
+DATABASE_URL="mysql://estacao_meteorologica:admin@cloud.fslab.dev:8806/estacao_meteorologica"
+SWAGGER_DEV_URL="http://localhost:7001"
+SWAGGER_PROD_URL="http://localhost:7001"
+
+# DATABASE_HOST="edurondon.tplinkdns.com"
+# DATABASE_PORT=8021
+# DATABASE_NAME="db_Estacao_Meteriologica"
+# DATABASE_USER="fslab"
+# DATABASE_PASSWORD="fslab"

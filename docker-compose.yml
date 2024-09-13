@@ -1,0 +1,24 @@
+services:
+  node:
+    build: .
+    ports:
+      - "3060:3060"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+    command: npm run dev
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: estacao_meteorologica
+    ports:
+      - "3306:3306"
+    volumes:
+      - vol-db:/var/lib/mysql
+volumes:
+  vol-db:

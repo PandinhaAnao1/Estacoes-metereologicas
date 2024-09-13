@@ -1,0 +1,40 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model dados_diarios {
+  id             Int      @id @default(autoincrement())
+  temperature    String?  @db.VarChar(45)
+  humidity       Int?
+  rainfall       Int?
+  wind_speed_kmh Int?
+  data_hora      DateTime @db.Date
+}
+
+model estacao {
+  id         Int     @id @default(autoincrement())
+  nome       String? @db.VarChar(45)
+  endereco   String? @db.VarChar(45)
+  latitude   Float?
+  longitude  Float?
+  ip         String? @db.VarChar(45)
+  status     String? @db.VarChar(45)
+  usuario_id Int
+  usuario    usuario @relation(fields: [usuario_id], references: [id], onDelete: Cascade, map: "fk_estacao_usuario")
+
+  @@index([usuario_id], map: "fk_estacao_usuario")
+}
+
+model usuario {
+  id      Int       @id @default(autoincrement())
+  nome    String?   @db.VarChar(50)
+  email   String?   @db.VarChar(100)
+  senha   String    @db.VarChar(255)
+  estacao estacao[]
+}
