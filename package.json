@@ -5,9 +5,9 @@
   "main": "serve.js",
   "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "node prisma/seed.js && jest",
     "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "node prisma/seed.js && jest --coverage",
     "dev": "nodemon server.js",
     "seed": "node prisma/seed.js"
   },

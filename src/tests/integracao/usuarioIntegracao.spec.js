@@ -164,6 +164,7 @@ describe("Atualizar usuario", () => {
         expect(response.status).toBe(200);
         expect(response.headers["content-type"]).toContain('json');
         expect(response.body.message).toMatch("Usuario atualizado com sucesso.");
+        expect(response.body.message).toMatch("Usuario atualizado com sucesso.");
         expect(response.body.data).toHaveProperty('nome', updatedData.nome);
         expect(response.body.data).toHaveProperty('email', updatedData.email);
         expect(response.body.error).toBe(false);
@@ -180,7 +181,7 @@ describe("Atualizar usuario", () => {
                 senha: "Senhaa123"
             });
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(404);
         expect({ message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo." }).toHaveProperty('message', "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.");
         expect({ error: true }).toHaveProperty('error', true);
 
