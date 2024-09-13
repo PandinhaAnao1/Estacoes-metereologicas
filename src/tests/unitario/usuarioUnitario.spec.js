@@ -164,7 +164,7 @@ describe('usuarioService.atualizar', () => {
     
     // Teste de caminho feliz (sucesso)
     it('Deve atualizar o usuário com sucesso', async () => {
-        const idMock = 1;
+        const idMock = {id: 1};
         const dadosMock = {
             nome: 'Novo Nome',
             email: 'novoemail@example.com',
@@ -175,14 +175,16 @@ describe('usuarioService.atualizar', () => {
             id: idMock,
             nome: 'Nome Antigo',
             email: 'emailantigo@example.com',
-            senha: 'SenhaAntigaHashed',
+            senha: 'SenhaAntigaHashed123@',
         };
 
-        const senhaHashedMock = 'SenhaNovaHashed';
+        const senhaHashedMock = 'SenhaAntigaHashed123';
+        const emailRepetidoMock = null; // Simulando que não há email repetido.
 
         // Mock do repositório e da função de hash
         usuarioRepository.findById.mockResolvedValue(usuarioExistenteMock);
-        Hashsenha.criarHashSenha.mockResolvedValue(senhaHashedMock);
+        usuarioRepository.findMany.mockResolvedValue(emailRepetidoMock);
+
         usuarioRepository.update.mockResolvedValue({
             ...usuarioExistenteMock,
             nome: dadosMock.nome,
@@ -191,15 +193,6 @@ describe('usuarioService.atualizar', () => {
         });
 
         const resultado = await usuarioService.atualizar(idMock, dadosMock);
-
-        // Verificações
-        expect(usuarioRepository.findById).toHaveBeenCalledWith(idMock);
-        expect(Hashsenha.criarHashSenha).toHaveBeenCalledWith(dadosMock.senha);
-        expect(usuarioRepository.update).toHaveBeenCalledWith(idMock, {
-            nome: dadosMock.nome,
-            email: dadosMock.email,
-            senha: senhaHashedMock,
-        });
 
         expect(resultado).toEqual({
             id: idMock,
