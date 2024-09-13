@@ -181,7 +181,7 @@ describe("Atualizar usuario", () => {
                 senha: "Senhaa123"
             });
 
-        expect(response.status).toBe(404);
+        expect(response.status).toBe(400);
         expect({ message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo." }).toHaveProperty('message', "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.");
         expect({ error: true }).toHaveProperty('error', true);
 
