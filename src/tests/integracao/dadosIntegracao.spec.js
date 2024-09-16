@@ -50,7 +50,10 @@ describe('Testes de integração para as rotas /dados', () => {
                 .get('/dados')
                 .query({
                     temperature: '25.3',
-
+                    humidity: '60', 
+                    rainfall: '5', 
+                    wind_speed_kmh: '12',
+                    data_hora: '2024-09-16'
                 })
                 .expect(200)
                 .then((res) => {
