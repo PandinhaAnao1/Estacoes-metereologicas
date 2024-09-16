@@ -1,7 +1,7 @@
-FROM node
+FROM node:alpine
 WORKDIR /app
-COPY . /app
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
 RUN npx prisma generate
-ENV DATABASE_URL="mysql://root:admin@db:3306/estacao_meteorologica"
-ENTRYPOINT ["npm", "run", "dev"]
+ENTRYPOINT ["node", "serve.js"]

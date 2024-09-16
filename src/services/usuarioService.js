@@ -216,8 +216,6 @@ class UsuarioService {
             if (usuarioValidated.email != undefined) {
                 //  verificação do email repitido
                 const emailRepetido = await UsuarioRepository.findMany({ email: data.email });
-
-                console.log(id)
                 if (emailRepetido) {
                     if (id.id != emailRepetido[0].id) {
                         throw {
