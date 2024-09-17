@@ -4,6 +4,9 @@ JWT_SECRET="Auth"
 
 # banco de dados
 DATABASE_URL="mysql://estacao_meteorologica:admin@cloud.fslab.dev:8806/estacao_meteorologica"
+
+# DATABASE_URL="mysql://root:admin/estacao_meteorologica"
+
 SWAGGER_DEV_URL="http://localhost:7001"
 SWAGGER_PROD_URL="http://localhost:7001"
 
