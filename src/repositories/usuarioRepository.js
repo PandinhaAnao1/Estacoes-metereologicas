@@ -30,6 +30,7 @@ class UsuarioRepository {
     };
 
     static async update(id, data) {
+        console.log('dsdsdds',id)
         return await prisma.usuario.update({ where: { id: id }, data: data });
     };
 
