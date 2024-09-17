@@ -179,7 +179,7 @@ describe('usuarioService.atualizar', () => {
         };
 
         const senhaHashedMock = 'SenhaAntigaHashed123';
-        const emailRepetidoMock = null; // Simulando que não há email repetido.
+        const emailRepetidoMock = []; // Simulando que não há email repetido.
 
         // Mock do repositório e da função de hash
         usuarioRepository.findById.mockResolvedValue(usuarioExistenteMock);

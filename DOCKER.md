@@ -16,26 +16,8 @@ docker compose up --build
 
 ### Os próximos passos devem ser realizados em outro terminal
 
-### 2. Migrar o Banco de Dados
+### 2. Executar seed
 
 Execute o seguinte comando para realizar a migração do banco de dados:
 
-docker-compose exec node npx prisma migrate deploy
-
-### 3. Atualizar o Banco de Dados com a Estrutura Atual:
-
-Execute o seguinte comando para atualizar o banco de dados com a estrutura do schema.prisma:
-
-docker-compose exec node npx prisma db push
-
-### 4. Popular o Banco de Dados:
-
-Execute o seguinte comando para rodar o seed para popular o banco:
-
-docker-compose exec node npm run seed
-
-### Derrubar containers
-
-Execute o seguinte comando para derrubar os containers:
-
-docker compose down
+docker compose exec -it <nome do container> npm run seed
