@@ -45,13 +45,10 @@ const usuarioListar = {
                 type: "object",
                 properties: {
                   data: {
-                    type: "object", items: {}, example:
-                    {
-                      data: {
                         type: 'array', example: [
                           {
                             "id": 1,
-                            "nome": "usuario Atualizado",
+                            "nome": "Vitor Gabriel",
                             "email": "vitorgabriel123@gmail.com"
                           },
                           {
@@ -61,7 +58,7 @@ const usuarioListar = {
                           },
                           {
                             "id": 3,
-                            "nome": "vitorag",
+                            "nome": "Vitor Hag",
                             "email": "5vitorgabrielvha3@gmail.com"
                           },
                           {
@@ -121,7 +118,5 @@ const usuarioListar = {
         },
       }
     }
-  },
-};
 
 export default usuarioListar;
