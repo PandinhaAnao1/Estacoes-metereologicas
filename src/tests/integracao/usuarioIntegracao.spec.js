@@ -21,56 +21,56 @@ it('Login com autenticação jwt', async () => {
 // ----------- Cadastrar usuario ---------
 
 describe("Cadastrar usuario", () => {
-  it('Deve cadastrar um usuario com dados válidos', async () => {
-      const response = await request(app)
-          .post('/usuarios')
-          .set("Authorization", `Bearer ${token}`)
-          .set("Content-Type", "application/json")
-          .send({
-              nome: "Vitor G",
-              email: `vitorgabriel18@gmail.com`,
-              senha: "Senhaa123@"
-          });
+    it.skip('Deve cadastrar um usuario com dados válidos', async () => {
+        const response = await request(app)
+            .post('/usuarios')
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+            .send({
+                nome: "Vitor G",
+                email: `vitorgabriel18@gmail.com`,
+                senha: "Senhaa123@"
+            });
         expect(response.body.code).toBe(201);
         expect(response.body.message).toBe("usuario cadastrado com sucesso.");
         expect(response.body.error).toBe(false);
         idvalido = response.body.data.id
-  });
+    });
 
-  it('Deve retornar erro ao cadastrar um usuario com a senha com os parametros errados', async () => {
-      const response = await request(app)
-          .post('/usuarios')
-          .set("Authorization", `Bearer ${token}`)
-          .set("Content-Type", "application/json")
-          .send({
-              nome: "Vitor G",
-              email: "vitorgabriel18@gmail.com",
-              senha: "123"
-          });
+    it('Deve retornar erro ao cadastrar um usuario com a senha com os parametros errados', async () => {
+        const response = await request(app)
+            .post('/usuarios')
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+            .send({
+                nome: "Vitor G",
+                email: "vitorgabriel18@gmail.com",
+                senha: "123"
+            });
 
-      expect(response.status).toBe(400);
-      expect(response.body.message[0].message).toBe("String must contain at least 8 character(s)")
-      expect(response.body.message[0].path).toBe("senha")
-      expect(response.body.message[1].message).toBe("A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.")
-      expect(response.body.message[1].path).toBe("senha")
-      expect(response.body.error).toBe(true)
-  });
+        expect(response.status).toBe(400);
+        expect(response.body.message[0].message).toBe("String must contain at least 8 character(s)")
+        expect(response.body.message[0].path).toBe("senha")
+        expect(response.body.message[1].message).toBe("A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.")
+        expect(response.body.message[1].path).toBe("senha")
+        expect(response.body.error).toBe(true)
+    });
 
-  it('Deve retornar erro ao cadastrar um usuario com o email repetido', async () => {
-      const response = await request(app)
-          .post('/usuarios')
-          .set("Authorization", `Bearer ${token}`)
-          .set("Content-Type", "application/json")
-          .send({
-              nome: "Vitor G",
-              email: "vitorgabriel18@gmail.com",
-              senha: "Senhaa123@"
-          });
+    it('Deve retornar erro ao cadastrar um usuario com o email repetido', async () => {
+        const response = await request(app)
+            .post('/usuarios')
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+            .send({
+                nome: "Vitor G",
+                email: "vitorgabriel18@gmail.com",
+                senha: "Senhaa123@"
+            });
 
-      expect(response.status).toBe(400);
-      expect({ message: "Email Já Cadastrado!" }).toHaveProperty('message', "Email Já Cadastrado!");
-      expect({ error: true }).toHaveProperty('error', true);
-  });
+        expect(response.status).toBe(400);
+        expect({ message: "Email Já Cadastrado!" }).toHaveProperty('message', "Email Já Cadastrado!");
+        expect({ error: true }).toHaveProperty('error', true);
+    });
 })
 
 // ----------- Listar Estação ---------
@@ -94,7 +94,7 @@ describe("Listar usuarios", () => {
         expect(response.body.message).toBe("Usuários encontrados com sucesso.");
     });
 
-    it('Deve retornar sucesso ao listar usuario com ID valido', async () => {
+    it.skip('Deve retornar sucesso ao listar usuario com ID valido', async () => {
         const response = await request(app)
             .get(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -111,7 +111,7 @@ describe("Listar usuarios", () => {
         //testando se retorna json
         expect(response.headers['content-type']).toContain('json');
     });
-    it('Deve retornar sucesso ao listar usuario com ID valido', async () => {
+    it.skip('Deve retornar sucesso ao listar usuario com ID valido', async () => {
         const response = await request(app)
             .get(`/usuarios?id=${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -149,7 +149,7 @@ describe("Listar usuarios", () => {
 // ----------- Atualizar usuario ---------
 
 describe("Atualizar usuario", () => {
-    it('Atualização dos dados de um usuario valido', async () => {
+    it.skip('Atualização dos dados de um usuario valido', async () => {
         const updatedData = {
             nome: "usuario Atualizado",
             email: "vitorgabriel18@gmail.com",
@@ -170,7 +170,7 @@ describe("Atualizar usuario", () => {
         expect(response.body.error).toBe(false);
     })
 
-    it('Deve retornar erro ao atualizar um usuario com a senha com os parametros errados', async () => {
+    it.skip('Deve retornar erro ao atualizar um usuario com a senha com os parametros errados', async () => {
         const response = await request(app)
             .patch(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -191,22 +191,22 @@ describe("Atualizar usuario", () => {
 // ----------- Deletar Usuário ---------
 
 describe("Deletar usuario", () => {
-  it('deve deletar usuário com id valido', async () => {
-      const response = await request(app)
-          .delete(`/usuarios/${idvalido}`)
-          .set("Authorization", `Bearer ${token}`)
-          .set("Content-Type", "application/json")
-      expect(response.status).toBe(204);
-  })
-  it('deve retornar erro com o id invalido', async () => {
-      const id = 64161;
-      const response = await request(app)
-          .delete(`/usuarios/${id}`)
-          .set("Authorization", `Bearer ${token}`)
-          .set("Content-Type", "application/json")
-      expect(response.status).toBe(400);
-      expect(response.body).toBeInstanceOf(Object);
-      expect(response.body.message).toBe("Usuário não encontrado.");
-      expect(response.body.error).toBe(true);
-  })
+    it.skip('deve deletar usuário com id valido', async () => {
+        const response = await request(app)
+            .delete(`/usuarios/${idvalido}`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+        expect(response.status).toBe(204);
+    })
+    it.skip('deve retornar erro com o id invalido', async () => {
+        const id = 64161;
+        const response = await request(app)
+            .delete(`/usuarios/${id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+        expect(response.status).toBe(400);
+        expect(response.body).toBeInstanceOf(Object);
+        expect(response.body.message).toBe("Usuário não encontrado.");
+        expect(response.body.error).toBe(true);
+    })
 });

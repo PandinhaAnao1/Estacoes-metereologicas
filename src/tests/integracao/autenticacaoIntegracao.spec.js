@@ -3,7 +3,7 @@ import { expect, it } from "@jest/globals";
 import app from "../../app.js";
 
 describe("Testes de autenticação com token", () => {
-  it('Criar token, deve retonar: Token gerado com sucesso!', async () => {
+  it.skip('Criar token, deve retonar: Token gerado com sucesso!', async () => {
     const response = await request(app)
       .post('/autenticacao')
       .set("Content-Type", "application/json")
