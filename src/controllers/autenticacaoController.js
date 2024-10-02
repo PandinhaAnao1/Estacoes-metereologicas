@@ -14,7 +14,7 @@ class Autenticacao {
         code: 201,
         message: 'Token gerado com sucesso!',
         token: response,
-        data: null
+        data: []
       })
     } catch (error) {
       return res.status(error.code || 500).json(error)

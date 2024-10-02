@@ -1,17 +1,15 @@
 import bcrypt from 'bcryptjs';
 
-class Hashsenha {
+class HashSenha {
     static criarHashSenha = async (senha) => {
-        const hashedPassword = await bcrypt.hash(senha, 10)
-        return hashedPassword
+        return await bcrypt.hash(senha, 10);
     }
 
     static compararSenha = async (senha, hash) => {
-        const passwordMatch = await bcrypt.compare(senha, hash);
-        return passwordMatch
+        return await bcrypt.compare(senha, hash);
         
     }
 }
 
 
-export default Hashsenha
+export default HashSenha
