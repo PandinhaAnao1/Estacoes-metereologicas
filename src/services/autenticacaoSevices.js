@@ -2,37 +2,15 @@ import UsuarioRepository from '../repositories/usuarioRepository.js'
 import { z } from "zod";
 import Jwt from "jsonwebtoken";
 import Hashsenha from '../util/hashSenha.js';
+import AutenticaoSchema from '../schemas/autenticacaoSchema.js';
 
 class AutenticacaoServices {
   // valida os campos emial e senha
   static validarCampos = async (data) => {
     try {
-      const loginSchema = z.object({
-        email: z.string({
-          required_error: 'Campo email é obrigatório!',
-          invalid_type_error: 'Formato do email invalido, deve ser string!',
-        }).email({
-          message: 'Email invalido!',
-        }),
-        senha: z.string({
-          required_error: 'Campo senha é obrigatório!',
-          invalid_type_error: 'Formato da senha invalido, deve ser string!'
-        }).min(8, {
-          message: "A senha deve possuir no minimo 8 caracteres!"
-        }).refine(
-          (value) =>
-            /[a-z]/.test(value) &&  // Tem pelo menos uma letra minúscula
-            /[A-Z]/.test(value) &&  // Tem pelo menos uma letra maiúscula
-            /[0-9]/.test(value) &&  // Tem pelo menos um número
-            /[^a-zA-Z0-9]/.test(value),  // Tem pelo menos um símbolo
-          {
-            message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.",
-          }
-        )
-      });
+    
       
-
-      const loginValidated = loginSchema.required().parse(data)
+      const loginValidated = AutenticaoSchema.loginSchema.required().parse(data)
       return loginValidated
     } catch (error) {
       throw error
