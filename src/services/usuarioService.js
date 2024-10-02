@@ -1,4 +1,5 @@
 import UsuarioRepository from "../repositories/usuarioRepository.js";
+import UsuarioSchema from "../schemas/usuarioSchema.js";
 import Hashsenha from "../util/hashSenha.js";
 import { z } from "zod";
 
@@ -6,24 +7,7 @@ class UsuarioService {
 
     static async listar(filtro) {
         try {
-            const filtroSchema = z.object({
-                id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id informado não é do tipo number.",
-                }).int({
-                    message: "Id informado não é um número inteiro."
-                }).positive({
-                    message: "Id informado não é positivo."
-                })).optional(),
-                nome: z.string({
-                    invalid_type_error: "Nome informado não é do tipo string."
-                }).trim().optional(),
-                email: z.string({
-                    invalid_type_error: "Email informado deve ser do tipo string."
-                }).email({
-                    message: "Email invalido."
-                }).optional(),
-            });
-            const filtroValidated = filtroSchema.parse(filtro);
+            const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
             const response = await UsuarioRepository.findMany(filtroValidated);
             response.forEach((e) => delete e.senha);
             if (response.length === 0) throw {
