@@ -32,7 +32,7 @@ class AutenticacaoServices {
 
     const token = Jwt.sign({ email, senha }, process.env.JWT_SECRET, { expiresIn: '30d' });
     return {
-      tonken: token,
+      token: token,
       data: {
         id,
         nome,
