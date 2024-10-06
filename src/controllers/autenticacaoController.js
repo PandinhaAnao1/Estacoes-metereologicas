@@ -16,8 +16,7 @@ class Autenticacao {
     } catch (error) {
       if(error.code && error.message){
         return res.status(error.code).json({
-          mensage: error.message,
-          code:error.code,
+         ...error
         })
       }
       
