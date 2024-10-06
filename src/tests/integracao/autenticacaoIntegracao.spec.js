@@ -40,8 +40,21 @@ describe("Testes de autenticação com token", () => {
         email: 'maria@example.com',
         senha: 'SenhaErrada123@'
       });
-    console.log(response.body);
     expect(response.status).toBe(404);
+    expect(response.body.error).toBe(true);
+    expect(response.body.message).toBeDefined();
+ 
+  });
+
+  it('Deve retornar um erro da validação do zod!', async () => {
+    const response = await request(app)
+      .post('/autenticacao')
+      .set("Content-Type", "application/json")
+      .send({
+        email: 10,
+        senha: 'SenhaErrada123@'
+      });
+    expect(response.status).toBe(400);
     expect(response.body.error).toBe(true);
     expect(response.body.message).toBeDefined();
  
