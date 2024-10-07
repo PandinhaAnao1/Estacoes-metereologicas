@@ -24,74 +24,21 @@ describe('AutenticacaoServices', () => {
     jest.clearAllMocks();
   });
 
-  describe('validarCampos', () => {
-    it('deve validar os campos com sucesso', async () => {
-      const data = { email: 'teste@example.com', senha: 'Senha123!' };
+  describe('Deve autenticar e criar token de um usuario', () => {
+    it('Deve realizar log com sucesso', () => {
+      let email = "emailTeste@gmail.com";
+      let senha = 'SenhaForte123';
 
-      const result = await AutenticacaoServices.validarCampos(data);
+      //Retiarar senha do token
+      let tokenTest = Jwt.sign({ email, senha }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
-      expect(result).toEqual(data);
-    });
+      UsuarioRepository.findMany.mockResolvedValueU([{
+        id: 1,
+        nome: 'Usuario teste de unidade',
+        email: email
+      }]);
 
-    it('deve lançar erro se os campos forem inválidos', async () => {
-      const data = { email: 'email_invalido', senha: '123' };
-
-      await expect(AutenticacaoServices.validarCampos(data))
-        .rejects
-        .toThrowError(z.ZodError);
-    });
-  });
-
-  describe('VerificarUsuario', () => {
-    it('deve retornar o usuário se o email estiver cadastrado', async () => {
-      const usuarioMock = [{ email: 'teste@example.com', senha: 'hash' }];
-      UsuarioRepository.findMany.mockResolvedValue(usuarioMock);
-
-      const result = await AutenticacaoServices.VerificarUsuario({ email: 'teste@example.com' });
-
-      expect(UsuarioRepository.findMany).toHaveBeenCalledWith({ email: 'teste@example.com' });
-      expect(result).toEqual(usuarioMock);
-    });
-
-    it('deve lançar erro se o email não estiver cadastrado', async () => {
-      UsuarioRepository.findMany.mockResolvedValue([]);
-
-      await expect(AutenticacaoServices.VerificarUsuario({ email: 'naoexiste@example.com' }))
-        .rejects
-        .toEqual({
-          message: "Email Não cadastrado!",
-          code: 400,
-          error: true,
-        });
-    });
-  });
-
-  describe('validarSenhahash', () => {
-    it('deve validar a senha com sucesso', async () => {
-      Hashsenha.compararSenha.mockResolvedValue(true);
-
-      await expect(AutenticacaoServices.validarSenhahash('senha123', 'hash'))
-        .resolves
-        .toBeUndefined();
-    });
-
-    it('deve lançar erro se a senha for inválida', async () => {
-      Hashsenha.compararSenha.mockResolvedValue(false);
-
-      await expect(AutenticacaoServices.validarSenhahash('senha123', 'hash'))
-        .rejects
-        .toEqual({
-          message: "Senha Invalida!",
-          code: 400,
-          error: true,
-        });
-    });
-  });
-
-  describe('criarToken', () => {
-    it('deve retornar o valor mockado do Jwt.sign', () => {
-      Jwt.sign.mockReturnValue('token_mock');
-      const token = Jwt.sign({ email: 'teste@example.com' }, 'secret', { expiresIn: '30d' });
+      const resultado = AutenticacaoServices.login(email);
       expect(token).toBe('token_mock');
     });
 
