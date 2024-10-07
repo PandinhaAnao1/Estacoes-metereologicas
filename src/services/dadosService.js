@@ -3,7 +3,6 @@ import { z } from "zod";
 
 class dadosService {
     static async listar(filtro) {
-        console.log(filtro)
         try {
             const filtroSchema = z.object({
                 temperature: z.string({

@@ -109,13 +109,11 @@ class UsuarioService {
             const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
             if (emailRepetido.length > 0) {
                 throw new Error("Email já cadastrado.")
-                
+
             };
             //  hash senha
-            console.log('Antes do hash');
-            
+
             const hashSenha = await Hashsenha.criarHashSenha(data.senha);
-            console.log('Depois do hash');
             usuarioValidated.senha = hashSenha;
             const response = await UsuarioRepository.create(usuarioValidated);
             const userResponse = { //para não exibir a senha do usuário no corpo da resposta
