@@ -12,6 +12,8 @@ class Usuario {
         message: 'usuario cadastrado com sucesso.',
       });
     } catch (error) {
+      console.log(error);
+      
       return res.status(error.code || 500).json(error);
     };
   };

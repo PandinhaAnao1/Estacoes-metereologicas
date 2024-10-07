@@ -22,7 +22,7 @@ it('Login com autenticação jwt', async () => {
 // ----------- Cadastrar Estação ---------
 
 describe("Cadastrar estação", () => {
-    it.skip('Deve cadastrar uma estação com dados válidos', async () => {
+    it('Deve cadastrar uma estação com dados válidos', async () => {
         const response = await request(app)
             .post('/estacoes')
             .set("Authorization", `Bearer ${token}`)
@@ -40,7 +40,7 @@ describe("Cadastrar estação", () => {
         idvalido = response.body.data.id
     });
 
-    it.skip('Deve retornar erro ao cadastrar uma estação com usuário_id inválido', async () => {
+    it('Deve retornar erro ao cadastrar uma estação com usuário_id inválido', async () => {
         const response = await request(app)
             .post('/estacoes')
             .set("Authorization", `Bearer ${token}`)
@@ -58,14 +58,13 @@ describe("Cadastrar estação", () => {
         expect(response.status).toBe(400);
         expect(response.body.message).toBe('Usuário não encontrado.');
     });
-    it.skip('Deve retornar erro ao tentar cadastrar estação sem passar os atributos', async () => {
+    it('Deve retornar erro ao tentar cadastrar estação sem passar os atributos', async () => {
         const response = await request(app)
             .post('/estacoes')
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
             .send({
             });
-        //console.log(response.body.message[0].message)
         expect(response.status).toBe(400);
         expect(response.body.message[0].message).toBe("Nome é obrigatório.")
         expect(response.body.message[0].path).toBe("nome")
@@ -87,7 +86,7 @@ describe("Cadastrar estação", () => {
 // ----------- Atualizar Estação ---------
 
 describe("Atualizar estação", () => {
-    it.skip('Atualização dos dados de uma estação', async () => {
+    it('Atualização dos dados de uma estação', async () => {
         const updatedData = {
             nome: "Estação Atualizada 2.0",
             endereco: "Ifro - Campus Vilhena/RO"
@@ -110,7 +109,7 @@ describe("Atualizar estação", () => {
     });
 });
 describe("Deve retornar erro ao atualizar estação com id invalido", () => {
-    it.skip('Atualização dos dados de uma estação', async () => {
+    it('Atualização dos dados de uma estação', async () => {
         const response = await request(app)
             .patch(`/estacoes/e`)
             .set("Authorization", `Bearer ${token}`)
@@ -133,7 +132,7 @@ describe("Listar estação", () => {
         expect(response.body.message).toBe("Estações encontradas com sucesso.")
         expect(response.body.error).toBe(false)
     });
-    it.skip('Listagem das estações id params', async () => {
+    it('Listagem das estações id params', async () => {
         const response = await request(app)
             .get(`/estacoes?id=${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -144,7 +143,7 @@ describe("Listar estação", () => {
         expect(response.body.message).toBe("Estação encontrada com sucesso.")
         expect(response.body.error).toBe(false)
     });
-    it.skip('Listar estação por ID valido', async () => {
+    it('Listar estação por ID valido', async () => {
         const response = await request(app)
             .get(`/estacoes/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -164,7 +163,6 @@ describe("Listar estação", () => {
         expect(typeof response.body.data.ip).toBe('string');
         expect(typeof response.body.data.status).toBe('string');
         expect(typeof response.body.data.usuario_id).toBe('number');
-        //console.log(response.body.data.id)
     });
     it('Deve retornar que nao localizou as estações', async () => {
         const response = await request(app)
@@ -200,7 +198,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Id informado não é do tipo number.")
         expect(response.body.message[0].path).toBe("id")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por id 0 ou negativo', async () => {
         const response = await request(app)
@@ -213,7 +210,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Id informado não é positivo.")
         expect(response.body.message[0].path).toBe("id")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por id numero nao inteiro', async () => {
         const response = await request(app)
@@ -226,7 +222,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Id informado não é um número inteiro.")
         expect(response.body.message[0].path).toBe("id")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por latitude invalida', async () => {
         const response = await request(app)
@@ -239,7 +234,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Latitude informada não é do tipo number.")
         expect(response.body.message[0].path).toBe("latitude")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por longitude invalida', async () => {
         const response = await request(app)
@@ -252,7 +246,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Longitude informada não é do tipo number.")
         expect(response.body.message[0].path).toBe("longitude")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por ip invalido', async () => {
         const response = await request(app)
@@ -265,7 +258,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Ip informado não segue o padrão (IPv4 ou IPv6).")
         expect(response.body.message[0].path).toBe("ip")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por status invalido', async () => {
         const response = await request(app)
@@ -278,7 +270,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Status informado não corresponde ao formato indicado (ativo ou inativo).")
         expect(response.body.message[0].path).toBe("status")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
 
 
@@ -294,7 +285,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Id do usuário informado não é do tipo number.")
         expect(response.body.message[0].path).toBe("usuario_id")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por id 0 ou negativo', async () => {
         const response = await request(app)
@@ -307,7 +297,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Id do usuário informado não é um inteiro positivo.")
         expect(response.body.message[0].path).toBe("usuario_id")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
     it('Listagem das estações por id negativo', async () => {
         const response = await request(app)
@@ -320,8 +309,6 @@ describe("Listar estação", () => {
         expect(response.body.message[0].message).toBe("Id do usuário informado não é um inteiro positivo.")
         expect(response.body.message[0].path).toBe("usuario_id")
         expect(response.body.message).toBeInstanceOf(Object);
-        //console.log(response.body.message[0].message)
     });
-
 
 });

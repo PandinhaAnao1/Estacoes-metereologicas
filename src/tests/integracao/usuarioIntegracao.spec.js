@@ -21,7 +21,7 @@ it('Login com autenticação jwt', async () => {
 // ----------- Cadastrar usuario ---------
 
 describe("Cadastrar usuario", () => {
-    it.skip('Deve cadastrar um usuario com dados válidos', async () => {
+    it('Deve cadastrar um usuario com dados válidos', async () => {
         const response = await request(app)
             .post('/usuarios')
             .set("Authorization", `Bearer ${token}`)
@@ -31,6 +31,7 @@ describe("Cadastrar usuario", () => {
                 email: `vitorgabriel18@gmail.com`,
                 senha: "Senhaa123@"
             });
+        console.log(response.body);
         expect(response.body.code).toBe(201);
         expect(response.body.message).toBe("usuario cadastrado com sucesso.");
         expect(response.body.error).toBe(false);
@@ -94,7 +95,7 @@ describe("Listar usuarios", () => {
         expect(response.body.message).toBe("Usuários encontrados com sucesso.");
     });
 
-    it.skip('Deve retornar sucesso ao listar usuario com ID valido', async () => {
+    it('Deve retornar sucesso ao listar usuario com ID valido', async () => {
         const response = await request(app)
             .get(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -111,7 +112,7 @@ describe("Listar usuarios", () => {
         //testando se retorna json
         expect(response.headers['content-type']).toContain('json');
     });
-    it.skip('Deve retornar sucesso ao listar usuario com ID valido', async () => {
+    it('Deve retornar sucesso ao listar usuario com ID valido', async () => {
         const response = await request(app)
             .get(`/usuarios?id=${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -149,7 +150,7 @@ describe("Listar usuarios", () => {
 // ----------- Atualizar usuario ---------
 
 describe("Atualizar usuario", () => {
-    it.skip('Atualização dos dados de um usuario valido', async () => {
+    it('Atualização dos dados de um usuario valido', async () => {
         const updatedData = {
             nome: "usuario Atualizado",
             email: "vitorgabriel18@gmail.com",
@@ -170,7 +171,7 @@ describe("Atualizar usuario", () => {
         expect(response.body.error).toBe(false);
     })
 
-    it.skip('Deve retornar erro ao atualizar um usuario com a senha com os parametros errados', async () => {
+    it('Deve retornar erro ao atualizar um usuario com a senha com os parametros errados', async () => {
         const response = await request(app)
             .patch(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
@@ -191,14 +192,14 @@ describe("Atualizar usuario", () => {
 // ----------- Deletar Usuário ---------
 
 describe("Deletar usuario", () => {
-    it.skip('deve deletar usuário com id valido', async () => {
+    it('deve deletar usuário com id valido', async () => {
         const response = await request(app)
             .delete(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         expect(response.status).toBe(204);
     })
-    it.skip('deve retornar erro com o id invalido', async () => {
+    it('deve retornar erro com o id invalido', async () => {
         const id = 64161;
         const response = await request(app)
             .delete(`/usuarios/${id}`)
