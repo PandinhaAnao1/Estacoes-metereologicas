@@ -25,7 +25,7 @@ describe('AutenticacaoServices', () => {
   });
 
   describe('validarCampos', () => {
-    it.skip('deve validar os campos com sucesso', async () => {
+    it('deve validar os campos com sucesso', async () => {
       const data = { email: 'teste@example.com', senha: 'Senha123!' };
 
       const result = await AutenticacaoServices.validarCampos(data);
@@ -33,7 +33,7 @@ describe('AutenticacaoServices', () => {
       expect(result).toEqual(data);
     });
 
-    it.skip('deve lançar erro se os campos forem inválidos', async () => {
+    it('deve lançar erro se os campos forem inválidos', async () => {
       const data = { email: 'email_invalido', senha: '123' };
 
       await expect(AutenticacaoServices.validarCampos(data))
@@ -43,7 +43,7 @@ describe('AutenticacaoServices', () => {
   });
 
   describe('VerificarUsuario', () => {
-    it.skip('deve retornar o usuário se o email estiver cadastrado', async () => {
+    it('deve retornar o usuário se o email estiver cadastrado', async () => {
       const usuarioMock = [{ email: 'teste@example.com', senha: 'hash' }];
       UsuarioRepository.findMany.mockResolvedValue(usuarioMock);
 
@@ -53,7 +53,7 @@ describe('AutenticacaoServices', () => {
       expect(result).toEqual(usuarioMock);
     });
 
-    it.skip('deve lançar erro se o email não estiver cadastrado', async () => {
+    it('deve lançar erro se o email não estiver cadastrado', async () => {
       UsuarioRepository.findMany.mockResolvedValue([]);
 
       await expect(AutenticacaoServices.VerificarUsuario({ email: 'naoexiste@example.com' }))
@@ -67,7 +67,7 @@ describe('AutenticacaoServices', () => {
   });
 
   describe('validarSenhahash', () => {
-    it.skip('deve validar a senha com sucesso', async () => {
+    it('deve validar a senha com sucesso', async () => {
       Hashsenha.compararSenha.mockResolvedValue(true);
 
       await expect(AutenticacaoServices.validarSenhahash('senha123', 'hash'))
@@ -75,7 +75,7 @@ describe('AutenticacaoServices', () => {
         .toBeUndefined();
     });
 
-    it.skip('deve lançar erro se a senha for inválida', async () => {
+    it('deve lançar erro se a senha for inválida', async () => {
       Hashsenha.compararSenha.mockResolvedValue(false);
 
       await expect(AutenticacaoServices.validarSenhahash('senha123', 'hash'))
@@ -95,7 +95,7 @@ describe('AutenticacaoServices', () => {
       expect(token).toBe('token_mock');
     });
 
-    it.skip('deve lançar erro se os dados forem inválidos', async () => {
+    it('deve lançar erro se os dados forem inválidos', async () => {
       const data = { email: 'invalido', senha: '123' };
 
       await expect(AutenticacaoServices.criarToken(data))
@@ -107,7 +107,7 @@ describe('AutenticacaoServices', () => {
         }));
     });
 
-    it.skip('deve lançar erro se a senha for inválida', async () => {
+    it('deve lançar erro se a senha for inválida', async () => {
       const data = { email: 'teste@example.com', senha: 'Senha123!' };
       const usuarioMock = [{ email: 'teste@example.com', senha: 'hash' }];
       UsuarioRepository.findMany.mockResolvedValue(usuarioMock);

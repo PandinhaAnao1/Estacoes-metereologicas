@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 
 class HashSenha {
     static criarHashSenha = async (senha) => {
-        return await bcrypt.hash(senha, process.env.SALT);
+        return await bcrypt.hash(senha, 10);
     }
 
     static compararSenha = async (senha, hash) => {

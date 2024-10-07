@@ -7,15 +7,16 @@ class AutenticacaoServices {
 
   static login = async (data) => {
 
-    const { email, senha } = AutenticaoSchema.loginSchema.parse(data);;
+    const { email, senha } = AutenticaoSchema.loginSchema.parse(data);
 
     const usuario = await UsuarioRepository.findMany({ email: email });
 
     if (usuario.length === 0) {
       throw {
+        data: [],
+        error: true,
         message: "Usuario não existe por favor corrija o email!",
         code: 400,
-        error: true
       };
     }
     const response = await HashSenha.compararSenha(senha, usuario[0].senha);
@@ -24,7 +25,7 @@ class AutenticacaoServices {
         data: [],
         error: true,
         code: 404,
-        mensage: "A senha informada esta errada por favor tente"
+        message: "A senha informada esta errada por favor tente"
       }
     }
 
