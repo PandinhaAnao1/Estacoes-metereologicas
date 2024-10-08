@@ -1,3 +1,4 @@
+import res from "express/lib/response.js";
 import UsuarioRepository from "../repositories/usuarioRepository.js";
 import UsuarioSchema from "../schemas/usuarioSchema.js";
 import Hashsenha from "../util/hashSenha.js";
@@ -24,14 +25,12 @@ class UsuarioService {
                         message: issue.message
                     }
                 });
-                throw {
+                return res.status(400).json( {
                     error: true,
                     code: 400,
                     message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
+                });
+            } 
         };
     };
 
