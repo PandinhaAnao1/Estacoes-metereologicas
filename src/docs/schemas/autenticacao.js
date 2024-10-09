@@ -3,18 +3,18 @@ import { type } from "express/lib/response";
 const autenticaoSchemas = {
 
     usario: {
+        id: 9,
         nome: "Fernanda Alves",
         email: "fernanda@example.com"
     },
 
-    response: {
+    response201: {
         type: 'object',
         example: {
             error: false,
             code: 200,
             errors: [],
             data: {
-                id: 9,
                 ...usario
             }
         }
@@ -22,4 +22,4 @@ const autenticaoSchemas = {
 
 };
 
-export default bensSchemas;
+export default autenticaoSchemas;

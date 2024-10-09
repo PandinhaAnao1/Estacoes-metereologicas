@@ -10,7 +10,8 @@ import estacaoAtualizar from "../routes/estacao/estacaoAtualizar.js";
 import estacoeCadastrar from "../routes/estacao/estacaoCadastrar.js";
 import dadosCadastrar from "../routes/dados/dadosCadastrar.js";
 import dadosListar from "../routes/dados/dadosListar.js";
-
+//Schemas
+import autenticaoSchemas from "../../schemas/autenticacaoSchema.js";
 
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
@@ -84,8 +85,7 @@ const getSwaggerOptions = () => {
           }
         },
         schemas: {
-          // ...authSchemas,
-          // ...usersSchemas
+          ...autenticaoSchemas,
         }
       },
       security: [{

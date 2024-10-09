@@ -1,6 +1,4 @@
-// import authSchemas from "../schemas/authSchema.js";
 // import commonResponses from "../schemas/commonResponses.js";
-
 
 const autenticacao = {
   "/autenticacao": {
@@ -26,19 +24,28 @@ const autenticacao = {
         201: {
           content: {
             "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  data: {
-                    type: "object",
-                    properties: {
-                      token: { type: 'string', example: "tokenExemploAlld4D" },
-                      error: { type: "boolean", example: false },
-                      code: { type: "int", example: 201 },
-                      message: { type: "string", example: "Token gerado com sucesso!" }
-                    }
-                  }
+              content: {
+
+                schema: {
+                  $ref: "#/components/schemas/response201"
+
                 }
+
+                // schema: {
+                //     type: "object",
+                //     properties: autenticaoSchemas.response201
+                // {
+                //   response201
+                //   data: {
+                //     type: "object",
+                //     properties: {
+                //       token: { type: 'string', example: "tokenExemploAlld4D" },
+                //       error: { type: "boolean", example: false },
+                //       code: { type: "int", example: 201 },
+                //       message: { type: "string", example: "Token gerado com sucesso!" }
+                //     }
+                //   }
+                // }
               }
             }
           }
