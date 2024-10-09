@@ -1,5 +1,6 @@
-import { Prisma } from "@prisma/client";
 import UsuarioService from "../services/usuarioService.js";
+import { z } from "zod";
+import {sendError} from "../util/messages.js"
 
 class Usuario {
   static cadastrar = async (req, res) => {
