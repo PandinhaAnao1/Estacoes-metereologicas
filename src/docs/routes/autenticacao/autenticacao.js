@@ -1,15 +1,17 @@
 // import authSchemas from "../schemas/authSchema.js";
 // import commonResponses from "../schemas/commonResponses.js";
 
+
 const autenticacao = {
   "/autenticacao": {
     post: {
-      tags: ["Autenticacao"],   
-      summary: "Realiza login",
+      tags: ["Autenticacao"],
+      summary: "Rota para realizar o login na API.",
       requestBody: {
         content: {
           "application/json": {
             schema: {
+
               type: "object",
               required: ["email", "senha"], // Required definido corretamente
               properties: {
@@ -28,7 +30,7 @@ const autenticacao = {
                 type: "object",
                 properties: {
                   data: {
-                    type: "object", 
+                    type: "object",
                     properties: {
                       token: { type: 'string', example: "tokenExemploAlld4D" },
                       error: { type: "boolean", example: false },
@@ -49,18 +51,20 @@ const autenticacao = {
                 type: "object",
                 properties: {
                   data: {
-                    type: "object", 
+                    type: "object",
                     properties: {
                       error: { type: "boolean", example: true },
                       code: { type: "int", example: 400 },
-                      message: { type: "array", example: [
-                        "Campo email é obrigatório!", 
-                        "Email invalido!", 
-                        "Email Não cadastrado!", 
-                        "Campo senha é obrigatório!", 
-                        "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.", 
-                        "A senha deve possuir no minimo 8 caracteres!"
-                      ] }
+                      message: {
+                        type: "array", example: [
+                          "Campo email é obrigatório!",
+                          "Email invalido!",
+                          "Email Não cadastrado!",
+                          "Campo senha é obrigatório!",
+                          "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.",
+                          "A senha deve possuir no minimo 8 caracteres!"
+                        ]
+                      }
                     }
                   }
                 }
