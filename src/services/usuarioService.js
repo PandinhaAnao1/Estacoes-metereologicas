@@ -35,17 +35,7 @@ class UsuarioService {
     };
 
     static async listarPorID(id) {
-        try {
-            const idSchema = z.object({
-                id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id informado não é do tipo number.",
-                }).int({
-                    message: "Id informado não é um número inteiro."
-                }).positive({
-                    message: "Id informado não é positivo."
-                }))
-            });
-            const parsedIdSchema = idSchema.parse(id);
+            const parsedIdSchema = UsuarioSchema.listarUsuarioPorID.parse(id);
             const response = await UsuarioRepository.findById(parsedIdSchema.id);
             if (!response) {
                 throw {
@@ -55,23 +45,6 @@ class UsuarioService {
                 };
             };
             return response;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        };
     };
 
     static async inserir(data) {

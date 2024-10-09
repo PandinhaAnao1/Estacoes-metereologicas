@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import UsuarioService from "../services/usuarioService.js";
+import { z } from "zod";
 
 class Usuario {
   static cadastrar = async (req, res) => {
@@ -96,10 +97,27 @@ class Usuario {
         message: "Usuário encontrado com sucesso",
       });
     } catch (error) {
-      return res.status(error.code || 500).json(error);
+      if (error instanceof z.ZodError) {
+          const errorMessages = error.issues.map((issue) => ({
+                  path: issue.path[0],
+                  message: issue.message
+          }));
+          
+          return res.status(400).json({
+          error: true,
+          code: 400,
+          message: errorMessages,
+        })
+  }   else {
+          return res.status(error.code || 500).json({
+            error: true,
+            code: error.code || 500,
+            message: error.message || "Erro interno no servidor!",
+        })
+      }
     };
   };
-};
+}
 
 export default Usuario;
 
