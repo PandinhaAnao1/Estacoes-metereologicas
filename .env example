@@ -1,7 +1,7 @@
 # servidor
 PORT=7001
 JWT_SECRET="Auth"
-
+SALT=10
 # banco de dados
 DATABASE_URL="mysql://estacao_meteorologica:admin@cloud.fslab.dev:8806/estacao_meteorologica"
 

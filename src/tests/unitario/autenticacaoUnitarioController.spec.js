@@ -1,26 +1,27 @@
 import Autenticacao from '../../controllers/autenticacaoController.js';
+import AutenticacaoServices from '../../services/autenticacaoSevices.js';
 
 import { describe, expect } from '@jest/globals';
 
 jest.mock('../../services/autenticacaoSevices', () => ({
-    criarToken: jest.fn().mockRejectedValue(new Error('Erro interno do serviço')),
+    login: jest.fn().mockRejectedValue(),
 }));
 
 beforeEach(() => {
     jest.clearAllMocks();
 });
 
-describe('Testando o autenticacao controller', () => {
+describe('Testando o autenticação controller', () => {
 
     it('Deve retornar erro 500 ao criar token', async () => {
-        const sendErrorMock = jest.fn();
-        const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
+        const erroMock = new Error('Ocorreu um erro interno no servidor');
+        const res = { 
+            status: jest.fn(() => ({ json: jest.fn() })) 
+        };
+        AutenticacaoServices.login = jest.fn().mockRejectedValue(erroMock);
 
-        const req = { body: null };
-
-        await Autenticacao.login(req, res);
+        await Autenticacao.login({ body: null }, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
-
     });
 });
