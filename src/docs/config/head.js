@@ -11,7 +11,7 @@ import estacoeCadastrar from "../routes/estacao/estacaoCadastrar.js";
 import dadosCadastrar from "../routes/dados/dadosCadastrar.js";
 import dadosListar from "../routes/dados/dadosListar.js";
 //Schemas
-import autenticaoSchemas from "../../schemas/autenticacaoSchema.js";
+import autenticaoSchemas from "../schemas/autenticacao.js";
 
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
