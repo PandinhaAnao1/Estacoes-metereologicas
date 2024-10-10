@@ -36,7 +36,7 @@ const autenticaoSchemas = {
         example: {
             error: true,
             message: "Ocorreu um erro interno na aplicação por favor tente novamente mais tarde!",
-            code: 400,
+            code: 500,
             data: {},
             errors: [],
         }
