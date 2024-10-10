@@ -144,6 +144,22 @@ describe("Listar usuarios", () => {
         expect(response.headers['content-type']).toContain('json');
     });
 
+    it("Verificar se esta retornando erro do zod", async () => {
+        const emailErrado = 1;
+        const response = await request(app)
+            .get(`/usuarios`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+        //testando se retorna o motivo do erro
+        expect(response.body.message).toBe("Usuário não encontrado.");
+        //testando o status da resposta
+        expect(response.status).toBe(400);
+        //testando se o erro esta ativo
+        expect({ error: true }).toHaveProperty('error', true);
+        //testando se retorna json
+        expect(response.headers['content-type']).toContain('json');
+    })
+
 });
 
 // ----------- Atualizar usuario ---------
