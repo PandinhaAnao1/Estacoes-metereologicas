@@ -16,7 +16,7 @@ const autenticaoSchemas = {
             },
         }
     },
-    autenticao_404: {
+    autenticao_400: {
         type: 'object',
         example: {
             error: true,
@@ -29,6 +29,16 @@ const autenticaoSchemas = {
                     mensage: "Erro especifico para autenticação"
                 }
             ],
+        }
+    },
+    autenticao_500: {
+        type: 'object',
+        example: {
+            error: true,
+            message: "Ocorreu um erro interno na aplicação por favor tente novamente mais tarde!",
+            code: 400,
+            data: {},
+            errors: [],
         }
     }
 };

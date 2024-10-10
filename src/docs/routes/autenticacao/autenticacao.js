@@ -35,11 +35,20 @@ const autenticacao = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/autenticao_404"
+                $ref: "#/components/schemas/autenticao_400"
               }
             }
           }
         },
+        500: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/autenticao_500"
+              }
+            }
+          }
+        }
       }
     }
   }
