@@ -8,7 +8,6 @@ class UsuarioService {
 
     static async listar(filtro) {
         const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
-        console.log(filtroValidated);
         
         const response = await UsuarioRepository.findMany(filtroValidated);
         response.forEach((e) => delete e.senha);

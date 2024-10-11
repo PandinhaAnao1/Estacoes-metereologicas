@@ -33,7 +33,7 @@ describe("Cadastrar usuario", () => {
                 email: `vitorgabriel18@gmail.com`,
                 senha: "Senhaa123@"
             });
-        console.log(response.body);
+            
         expect(response.body.code).toBe(201);
         expect(response.body.message).toBe("usuario cadastrado com sucesso.");
         expect(response.body.error).toBe(false);
@@ -152,7 +152,6 @@ describe("Listar usuarios", () => {
         const response = await request(app)
             .get(`/usuarios?email=548`)
             .set("Content-Type", "application/json")
-            console.log(response.body);
             
             expect(response.body).toBeDefined();
             expect(response.body.code).toEqual(400);
@@ -164,7 +163,6 @@ describe("Listar usuarios", () => {
         const response = await request(app)
             .get(`/usuarios?nome=nãoexiste`)
             .set("Content-Type", "application/json")
-            console.log(response.body);
             
             expect(response.body).toBeDefined();
             expect(response.body.code).toEqual(400);

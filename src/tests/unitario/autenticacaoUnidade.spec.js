@@ -26,7 +26,6 @@ describe('Teste para verificar o middleware de autenticação', () => {
     });
 
     authentication(req, res, next);
-    console.log(res);
 
 
     expect(res.status).toHaveBeenCalledWith(401);
