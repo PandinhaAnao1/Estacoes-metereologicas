@@ -27,6 +27,7 @@ describe('Testando o usuario controller', () => {
         expect(res.status).toHaveBeenCalledWith(500);
 
     });
+    
     it('Deve retornar erro 500 ao listar usuarios por ID', async () => {
         const sendErrorMock = jest.fn();
         const res = { status: jest.fn(() => ({ json: sendErrorMock })) };

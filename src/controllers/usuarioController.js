@@ -1,4 +1,6 @@
 import UsuarioService from "../services/usuarioService.js";
+import { z } from "zod";
+import {sendError} from "../util/messages.js"
 
 class Usuario {
   static cadastrar = async (req, res) => {
@@ -68,6 +70,26 @@ class Usuario {
         message: response.length > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
       });
     } catch (error) {
+      
+      if(error.code && error.message){
+        return res.status(error.code).json({
+         ...error
+        })
+      }
+
+      if (error instanceof z.ZodError) {
+        const errorMessages = error.issues.map((issue) => {
+            return {
+                path: issue.path[0],
+                message: issue.message
+            }
+        });
+        return res.status(400).json( {
+            error: true,
+            code: 400,
+            message: errorMessages,
+        });
+    } 
       return res.status(error.code || 500).json(error);
     };
   };

@@ -9,6 +9,7 @@
     "test:watch": "jest --watchAll",
     "test:coverage": "node prisma/seed.js && jest --coverage",
     "dev": "nodemon server.js",
+    "prisma": "npx prisma db pull",
     "seed": "node prisma/seed.js"
   },
   "author": "",
