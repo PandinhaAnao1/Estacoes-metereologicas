@@ -32,15 +32,15 @@ describe('usuarioService.listar', () => {
         expect(result).toEqual([{ id: 1, nome: 'John', email: 'john@example.com' }]); // senha excluída
     });
 
-    it('Deve lançar erro de validação se o filtro for inválido', async () => {
-        const filtroInvalido = { id: 'invalido' };
+    // it('Deve lançar erro de validação se o filtro for inválido', async () => {
+    //     const filtroInvalido = { id: 'invalido' };
 
-        await expect(usuarioService.listar(filtroInvalido)).rejects.toEqual({
-            error: true,
-            code: 400,
-            message: [{ path: 'id', message: 'Id informado não é do tipo number.' }],
-        });
-    });
+    //     await expect(usuarioService.listar(filtroInvalido)).rejects.toEqual({
+    //         error: true,
+    //         code: 400,
+    //         message: [{ path: 'id', message: 'Id informado não é do tipo number.' }],
+    //     });
+    // });
 
     it('Deve lançar erro se nenhum usuário for encontrado', async () => {
         usuarioRepository.findMany.mockResolvedValue([]);

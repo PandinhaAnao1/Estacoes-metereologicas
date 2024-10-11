@@ -7,31 +7,17 @@ import { z } from "zod";
 class UsuarioService {
 
     static async listar(filtro) {
-        try {
-            const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
-            const response = await UsuarioRepository.findMany(filtroValidated);
-            response.forEach((e) => delete e.senha);
-            if (response.length === 0) throw {
-                error: true,
-                code: 400,
-                message: "Nenhum usuário encontrado.",
-            };
-            return response;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    }
-                });
-                return res.status(400).json( {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                });
-            } 
+        const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
+        console.log(filtroValidated);
+        
+        const response = await UsuarioRepository.findMany(filtroValidated);
+        response.forEach((e) => delete e.senha);
+        if (response.length === 0) throw {
+            error: true,
+            code: 400,
+            message: "Nenhum usuário encontrado.",
         };
+        return response;
     };
 
     static async listarPorID(id) {

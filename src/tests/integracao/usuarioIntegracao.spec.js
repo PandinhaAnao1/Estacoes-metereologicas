@@ -1,6 +1,8 @@
 import request from "supertest";
 import { expect, describe } from "@jest/globals";
 import app from "../../app.js";
+import UsuarioService from "../../services/usuarioService.js";
+
 
 // Apenas para teste depois irei refatorar
 // ---------------- Login ----------------
@@ -144,6 +146,33 @@ describe("Listar usuarios", () => {
         //testando se retorna json
         expect(response.headers['content-type']).toContain('json');
     });
+
+
+    it("Verificar se esta retornando erro 400 de não encontrado", async () => {
+        const response = await request(app)
+            .get(`/usuarios?email=548`)
+            .set("Content-Type", "application/json")
+            console.log(response.body);
+            
+            expect(response.body).toBeDefined();
+            expect(response.body.code).toEqual(400);
+            expect(response.body.error).toBe(true);
+            expect(response.body.message).toBeDefined();
+    });
+
+    it("Verificar se esta retornando erro 400 de não encontrado", async () => {
+        const response = await request(app)
+            .get(`/usuarios?nome=nãoexiste`)
+            .set("Content-Type", "application/json")
+            console.log(response.body);
+            
+            expect(response.body).toBeDefined();
+            expect(response.body.code).toEqual(400);
+            expect(response.body.error).toBe(true);
+            expect(response.body.message).toBeDefined();
+    });
+
+
 
 });
 
