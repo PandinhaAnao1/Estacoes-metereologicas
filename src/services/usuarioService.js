@@ -217,53 +217,32 @@ class UsuarioService {
         };
     };
 
-    static async deletar(id) {
-        try {
-            const idSchema = z.object({
-                id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id informado não é do tipo number.",
-                }).int({
-                    message: "Id informado não é um número inteiro."
-                }).positive({
-                    message: "Id informado não é positivo."
-                }))
-            });
-            const parsedIdSchema = idSchema.parse(id);
-            const usuario = await UsuarioRepository.findById(parsedIdSchema.id);
-            if (!usuario) {
+    static async deletar(filtro) {
+            //PARA ESSA MODELAGEM DEVO VERIFICAR DEPOIS SE
+            //Um usuario for deletado o que deve acontecer com
+            //As estações dele?
+            const {id} = UsuarioSchema.id.parse(filtro);
+            console.log(filtro);
+            const usuario = await UsuarioRepository.findById(id);
+            if (!usuario || usuario.length === 0) {
                 throw {
                     error: true,
                     code: 400,
-                    message: "Usuário não encontrado.",
+                    message: "O id do usuario informado é invalido!",
                 };
             };
-            const response = await UsuarioRepository.delete(parsedIdSchema.id);
+            const response = await UsuarioRepository.delete(id);
             if (!response) {
                 throw {
                     error: true,
                     code: 400,
-                    message: "Erro interno, não foi possível deletar este usuário.",
+                    message: "Erro não foi possível deletar este usuário.",
                 };
             };
+            console.log(response);
             delete response.senha;
             return response;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        };
+          
     };
 };
 

@@ -42,15 +42,29 @@ class Usuario {
 
   static deletar = async (req, res) => {
     try {
-      const id = { id: req.params.idUser };
-      await UsuarioService.deletar(id);
-      return res.status(204).json({
-        error: false,
-        code: 204,
-        message: "Usuario deletado com sucesso.",
+
+      const result = await UsuarioService.deletar(req.params);
+      return sendResponse(res,204,{
+        data:result,
+        message:"Usuario deletado com sucesso!"
       });
+
     } catch (error) {
-      return res.status(error.code || 500).json(error);
+      console.log(error);
+      if(error.code && error.message){
+        return sendError(res,400, {...error});
+      }
+      if (error instanceof z.ZodError) {
+        let erros = [];
+        error.issues.map((issue) => {
+            erros.push({
+                path: issue.path[0],
+                message: issue.message
+            });
+        });
+        return sendError(res,400,erros);
+      }
+      return sendError(res,500);
     };
   };
 
