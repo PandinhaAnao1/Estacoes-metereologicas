@@ -222,13 +222,13 @@ class UsuarioService {
             //Um usuario for deletado o que deve acontecer com
             //As estações dele?
             const {id} = UsuarioSchema.id.parse(filtro);
-            console.log(filtro);
+            console.log(`Esse é o id do schema zod: ${id}`);
             const usuario = await UsuarioRepository.findById(id);
             if (!usuario || usuario.length === 0) {
                 throw {
                     error: true,
                     code: 400,
-                    message: "O id do usuario informado é invalido!",
+                    message: "O id do usuario informado não existe!",
                 };
             };
             const response = await UsuarioRepository.delete(id);
@@ -239,7 +239,6 @@ class UsuarioService {
                     message: "Erro não foi possível deletar este usuário.",
                 };
             };
-            console.log(response);
             delete response.senha;
             return response;
           
