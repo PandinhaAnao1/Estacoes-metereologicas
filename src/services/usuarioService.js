@@ -235,7 +235,6 @@ class UsuarioService {
             };
             const response = await UsuarioRepository.delete(id);
            
-            console.log(response);
             delete response.senha;
             return response;
           
