@@ -51,8 +51,10 @@ class Usuario {
 
     } catch (error) {
       console.log(error);
-      if(error.code && error.message){
-        return sendError(res,400, {...error});
+      
+      if(error.code && error.errorDetail){
+        const {code,errorDetail} = error;
+        return sendError(res,code, [errorDetail]);
       }
       if (error instanceof z.ZodError) {
         let erros = [];

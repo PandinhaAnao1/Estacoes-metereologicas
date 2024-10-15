@@ -226,19 +226,16 @@ class UsuarioService {
             const usuario = await UsuarioRepository.findById(id);
             if (!usuario || usuario.length === 0) {
                 throw {
-                    error: true,
                     code: 400,
-                    message: "O id do usuario informado não existe!",
+                    errorDetail: {
+                        mensage:"O id do usuario informado não existe!",
+                        path:"id"
+                    },
                 };
             };
             const response = await UsuarioRepository.delete(id);
-            if (!response) {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: "Erro não foi possível deletar este usuário.",
-                };
-            };
+           
+            console.log(response);
             delete response.senha;
             return response;
           
