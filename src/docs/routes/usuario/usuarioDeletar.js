@@ -1,13 +1,13 @@
 const usuarioDeletar = {
 
   //Delete
-  "/usuarios/{idUser}": {
+  "/usuarios/{id}": {
     delete: {
       tags: ["Usuario"],
       summary: "Detela um usuário pelo id",
       parameters: [
         {
-          name: "idUser",
+          name: "id",
           in: "path",
           description: "ID do usuário",
           required: true,
