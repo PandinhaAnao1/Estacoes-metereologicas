@@ -18,7 +18,7 @@ const deletarSchemas = {
             }
         }
     },
-    autenticao_400: {
+    deltar_400: {
         type: 'object',
         example: {
             error: true,
@@ -33,7 +33,7 @@ const deletarSchemas = {
             ],
         }
     },
-    autenticao_500: {
+    deltar_500: {
         type: 'object',
         example: {
             error: true,
