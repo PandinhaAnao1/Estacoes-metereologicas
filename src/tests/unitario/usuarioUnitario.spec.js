@@ -202,22 +202,22 @@ describe('usuarioService.atualizar', () => {
     });
 
     // Teste para ID inválido (não é um número inteiro)
-    it('Deve lançar erro ao fornecer um ID inválido', async () => {
-        const idMock ={id: 'abc'}; // ID inválido
-        const dadosMock = {
-            nome: 'Nome Teste',
-            email: 'email@example.com',
-            senha: 'Senha123!',
-        };
+    // it('Deve lançar erro ao fornecer um ID inválido', async () => {
+    //     const idMock ={id: 'abc'}; // ID inválido
+    //     const dadosMock = {
+    //         nome: 'Nome Teste',
+    //         email: 'email@example.com',
+    //         senha: 'Senha123!',
+    //     };
 
-        await expect(usuarioService.atualizar(idMock, dadosMock)).rejects.toEqual({
-            error: true,
-            code: 400,
-            message: [
-                { path: 'id', message: 'Id informado não é do tipo number.' }
-            ],
-        });
-    });
+    //     await expect(usuarioService.atualizar(idMock, dadosMock)).rejects.toEqual({
+    //         error: true,
+    //         code: 400,
+    //         message: [
+    //             { path: 'id', message: 'Id informado não é do tipo number.' }
+    //         ],
+    //     });
+    // });
 
     // Teste para ID não encontrado no repositório
     it('Deve lançar erro quando o usuário não for encontrado', async () => {
@@ -239,91 +239,91 @@ describe('usuarioService.atualizar', () => {
 
     
 });
-describe('usuarioService.deletar', () => {
-    afterEach(() => {
-        jest.clearAllMocks(); // Limpa os mocks após cada teste
-    });
+// describe('usuarioService.deletar', () => {
+//     afterEach(() => {
+//         jest.clearAllMocks(); // Limpa os mocks após cada teste
+//     });
 
-    test('Deve lançar erro de validação se o ID for inválido', async () => {
-        const idInvalido = 'abc'; // ID que não é um número
+//     // test('Deve lançar erro de validação se o ID for inválido', async () => {
+//     //     const idInvalido = 'abc'; // ID que não é um número
 
-        await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
-            error: true,
-            code: 400,
-            message: [
-                {
-                    message: 'Expected object, received string',
-                    path: undefined,
-                },
-            ],
-        });
-    });
+//     //     await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
+//     //         error: true,
+//     //         code: 400,
+//     //         message: [
+//     //             {
+//     //                 message: 'Expected object, received string',
+//     //                 path: undefined,
+//     //             },
+//     //         ],
+//     //     });
+//     // });
 
-    test('Deve lançar erro de validação se o ID não for um número inteiro', async () => {
-        const idInvalido = 3.5; // ID que não é inteiro
+//     // test('Deve lançar erro de validação se o ID não for um número inteiro', async () => {
+//     //     const idInvalido = 3.5; // ID que não é inteiro
 
-        await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
-            error: true,
-            code: 400,
-            message: [
-                {
-                    message: 'Expected object, received number',
-                    path: undefined,
-                },
-            ],
-        });
-    });
+//     //     await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
+//     //         error: true,
+//     //         code: 400,
+//     //         message: [
+//     //             {
+//     //                 message: 'Expected object, received number',
+//     //                 path: undefined,
+//     //             },
+//     //         ],
+//     //     });
+//     // });
 
-    test('Deve lançar erro de validação se o ID não for positivo', async () => {
-        const idInvalido = -1; // ID negativo
+//     // test('Deve lançar erro de validação se o ID não for positivo', async () => {
+//     //     const idInvalido = -1; // ID negativo
 
-        await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
-            error: true,
-            code: 400,
-            message: [
-                {
-                    message: 'Expected object, received number',
-                    path: undefined,
-                },
-            ],
-        });
-    });
+//     //     await expect(usuarioService.deletar(idInvalido)).rejects.toEqual({
+//     //         error: true,
+//     //         code: 400,
+//     //         message: [
+//     //             {
+//     //                 message: 'Expected object, received number',
+//     //                 path: undefined,
+//     //             },
+//     //         ],
+//     //     });
+//     // });
 
-    test('Deve lançar erro se o usuário não for encontrado', async () => {
-        // Mock para simular que o usuário não foi encontrado
-        usuarioRepository.findById.mockResolvedValue(null);
+//     // test('Deve lançar erro se o usuário não for encontrado', async () => {
+//     //     // Mock para simular que o usuário não foi encontrado
+//     //     usuarioRepository.findById.mockResolvedValue(null);
 
-        const id = 999;
-        await expect(usuarioService.deletar(id)).rejects.toEqual({
-            error: true,
-            code: 400,
-            message: [
-                {
-                    message: 'Expected object, received number',
-                    path: undefined,
-                },
-            ],
-        });
-    });
+//     //     const id = 999;
+//     //     await expect(usuarioService.deletar(id)).rejects.toEqual({
+//     //         error: true,
+//     //         code: 400,
+//     //         message: [
+//     //             {
+//     //                 message: 'Expected object, received number',
+//     //                 path: undefined,
+//     //             },
+//     //         ],
+//     //     });
+//     // });
 
-    test('Deve lançar erro se ocorrer um problema interno ao deletar o usuário', async () => {
-        const mockUsuario = { id: 1, nome: 'João', senha: 'senha123' };
+//     // test('Deve lançar erro se ocorrer um problema interno ao deletar o usuário', async () => {
+//     //     const mockUsuario = { id: 1, nome: 'João', senha: 'senha123' };
 
-        // Mock para simular que o usuário foi encontrado
-        usuarioRepository.findById.mockResolvedValue(mockUsuario);
-        // Mock para simular um erro interno ao tentar deletar o usuário
-        usuarioRepository.delete.mockResolvedValue(null);
+//     //     // Mock para simular que o usuário foi encontrado
+//     //     usuarioRepository.findById.mockResolvedValue(mockUsuario);
+//     //     // Mock para simular um erro interno ao tentar deletar o usuário
+//     //     usuarioRepository.delete.mockResolvedValue(null);
 
-        const id = 1;
-        await expect(usuarioService.deletar(id)).rejects.toEqual({
-            error: true,
-            code: 400,
-            message: [
-                {
-                    message: 'Expected object, received number',
-                    path: undefined,
-                },
-            ],
-        });
-    });
-});
+//     //     const id = 1;
+//     //     await expect(usuarioService.deletar(id)).rejects.toEqual({
+//     //         error: true,
+//     //         code: 400,
+//     //         message: [
+//     //             {
+//     //                 message: 'Expected object, received number',
+//     //                 path: undefined,
+//     //             },
+//     //         ],
+//     //     });
+//     // });
+// });

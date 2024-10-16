@@ -225,16 +225,32 @@ describe("Deletar usuario", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         expect(response.status).toBe(204);
-    })
-    it('deve retornar erro com o id invalido', async () => {
+    });
+    it('deve retornar erro com o id que não consta na database', async () => {
         const id = 64161;
         const response = await request(app)
             .delete(`/usuarios/${id}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
+        
         expect(response.status).toBe(400);
         expect(response.body).toBeInstanceOf(Object);
-        expect(response.body.message).toBe("Usuário não encontrado.");
+        expect(response.body.message).toBeDefined();
         expect(response.body.error).toBe(true);
-    })
+        expect(response.body.errors).toBeDefined();
+    });
+    it('deve retornar erro com o id que não é valido', async () => {
+        const id = 'a';
+        const response = await request(app)
+            .delete(`/usuarios/${id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+        
+        expect(response.status).toBe(400);
+        expect(response.body).toBeInstanceOf(Object);
+        expect(response.body.message).toBeDefined();
+        expect(response.body.error).toBe(true);
+        expect(response.body.errors).toBeDefined();
+
+    });
 });

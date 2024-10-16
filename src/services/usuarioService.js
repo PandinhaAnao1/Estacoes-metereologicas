@@ -222,7 +222,6 @@ class UsuarioService {
             //Um usuario for deletado o que deve acontecer com
             //As estações dele?
             const {id} = UsuarioSchema.id.parse(filtro);
-            console.log(`Esse é o id do schema zod: ${id}`);
             const usuario = await UsuarioRepository.findById(id);
             if (!usuario || usuario.length === 0) {
                 throw {
