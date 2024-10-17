@@ -111,38 +111,25 @@ class EstacaoService {
     };
 
     static async inserir(data) {
-        try {
             const estacao = EstacoesSchemas.cadastrar.parse(data);
             const usuario = await UsuarioRepository.findById(estacao.usuario_id);
-            if (!usuario) throw {
-                error: true,
+            if (!usuario || usuario.length === 0) throw {
                 code: 400,
-                message: "Usuário não encontrado.",
+                error: {
+                    mensage:"Usuário não encontrado.",
+                    path: "usuario"
+                },
             };
             const resposta = await EstacaoRepository.create(estacao);
             if (!resposta) throw {
-                error: true,
                 code: 400,
-                message: "Erro ao cadastrar estação.",
+                error: {
+                    mensage: "Erro ao cadastrar estação por favor verifique os dados.",
+                    path: "estacao"
+                }
+                ,
             };
             return resposta;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        };
     };
 
     static async atualizar(id, data) {

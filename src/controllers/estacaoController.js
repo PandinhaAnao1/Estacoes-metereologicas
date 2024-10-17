@@ -1,5 +1,6 @@
 import env from "dotenv";
 import EstacaoService from "../services/estacaoService.js";
+import { sendError } from "../util/messages.js";
 
 
 env.config();
@@ -81,6 +82,22 @@ class Estacao {
         message: 'Estação cadastrada com sucesso.'
       });
     } catch (error) {
+      if(error.code && error.error){
+        return sendError(res,error.code, [error.error]);
+      }
+      if (error instanceof z.ZodError) {
+        let errors = [];
+        error.issues.map((issue) => {
+          errors.add(
+            {
+              path: issue.path[0],
+              message: issue.message
+            }
+          );
+        });
+        return sendError(res,400,errors);
+        
+      }
       return res.status(error.code || 500).json(error);
     };
   };
