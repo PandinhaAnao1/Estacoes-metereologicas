@@ -38,6 +38,16 @@ const usuarioDeletar = {
             }
           }
         },
+        500: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/deltar_500"
+
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -23,7 +23,9 @@ const deletarSchemas = {
             data: {
                 type: "array",
                 example: [],
-                items: {},
+                items: {
+                    type: "object"
+                },
                 description: "Array de dados. Vazio em caso de erro."
             },
             error: {
@@ -63,15 +65,43 @@ const deletarSchemas = {
         }
     },
     deltar_500: {
-        type: 'object',
-        example: {
-            error: true,
-            message: "Ocorreu um erro interno na aplicação por favor tente novamente mais tarde!",
-            code: 500,
-            data: {},
-            errors: [],
+        type: "object",
+        properties: {
+            data: {
+                type: "array",
+                example: [],
+                items: {
+                    type: "object"
+                },
+                description: "Array de dados. Vazio em caso de erro."
+            },
+            error: {
+                type: "boolean",
+                description: "Indica se houve erro na requisição.",
+                example: true
+            },
+            code: {
+                type: "integer",
+                description: "Código de status HTTP retornado.",
+                example: 500
+            },
+            message: {
+                type: "string",
+                description: "Descrição do erro geral ocorrido na requisição.",
+                example: "Servidor encontrou um erro interno."
+            },
+            errors: {
+                type: "array",
+                description: "Lista de erros específicos encontrados.",
+                items: {
+                    type: "object"
+                },
+                example: []
+            }
         }
-    }
+    },
+
+
 };
 
 export default deletarSchemas;
