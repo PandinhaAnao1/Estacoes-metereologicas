@@ -22,40 +22,18 @@ const usuarioDeletar = {
           content: {
             "application/json": {
               schema: {
-                type: "object",
-                properties: {
-                  error: {
-                    type: "boolean",
-                    example: false
-                  },
-                  code: {
-                    type: "integer",
-                    example: 204
-                  },
-                  message: {
-                    type: "string",
-                    example: "Usuario deletado com sucesso."
-                  }
-                }
+                $ref: "#/components/schemas/deltar_204"
+
               }
             }
           }
-        },        
+        },
         400: {
           content: {
             "application/json": {
               schema: {
-                type: "object",
-                properties: {
-                  data: {
-                    type: "object", items: {}, example:
-                    {
-                      error: { type: "boolean", example: true },
-                      code: { type: "int", example: 400 },
-                      message: { type: "array", example: ["Não existe usuário com este id: 9"] }
-                    }
-                  },
-                }
+                $ref: "#/components/schemas/deltar_400"
+
               }
             }
           }
