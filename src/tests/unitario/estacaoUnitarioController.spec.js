@@ -45,7 +45,7 @@ describe('Testando o usuario controller', () => {
 
         await estacaoController.cadastrar(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.status).toHaveBeenCalledWith(400);
 
     });
     it('Deve retornar erro 500 ao atualizar um estação', async () => {

@@ -73,17 +73,7 @@ class Estacao {
 
   static cadastrar = async (req, res) => {
     try {
-      const { nome, endereco, latitude, longitude, ip, status, usuario_id } = req.body;
-      const data = {
-        nome: nome,
-        endereco: endereco,
-        latitude: latitude,
-        longitude: longitude,
-        ip: ip,
-        status: status,
-        usuario_id: usuario_id
-      }
-      const response = await EstacaoService.inserir(data);
+      const response = await EstacaoService.inserir(req.body);
       return res.status(201).json({
         data: response,
         error: false,

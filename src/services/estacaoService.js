@@ -113,15 +113,13 @@ class EstacaoService {
     static async inserir(data) {
         try {
             const estacao = EstacoesSchemas.cadastrar.parse(data);
-            const estacaoValidated = estacao;
-            const filtroUsuarioId = estacaoValidated.usuario_id;
-            const usuario = await UsuarioRepository.findById(filtroUsuarioId);
+            const usuario = await UsuarioRepository.findById(estacao.usuario_id);
             if (!usuario) throw {
                 error: true,
                 code: 400,
                 message: "Usuário não encontrado.",
             };
-            const resposta = await EstacaoRepository.create(estacaoValidated);
+            const resposta = await EstacaoRepository.create(estacao);
             if (!resposta) throw {
                 error: true,
                 code: 400,
