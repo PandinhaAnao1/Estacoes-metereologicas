@@ -1,5 +1,6 @@
 import EstacaoRepository from "../repositories/estacaoRepository.js";
 import UsuarioRepository from "../repositories/usuarioRepository.js";
+import EstacoesSchemas from "../schemas/estacoesSchemas.js";
 import { z } from "zod";
 
 class EstacaoService {
@@ -111,44 +112,8 @@ class EstacaoService {
 
     static async inserir(data) {
         try {
-            const estacaoSchema = z.object({
-                nome: z.string({
-                    invalid_type_error: "Nome informado não é do tipo string.",
-                    required_error: "Nome é obrigatório.",
-                }),
-                endereco: z.string({
-                    invalid_type_error: "Email informado não é do tipo string.",
-                    required_error: "Email é obrigatório.",
-                }),
-                latitude: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Latitude informada não é do tipo number.",
-                    required_error: "Latitude é obrigatória."
-                })),
-                longitude: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Longitude informada não é do tipo number.",
-                    required_error: "Longitude é obrigatória."
-                })),
-                ip: z.string({
-                    invalid_type_error: "Ip informado não é do tipo string.",
-                    required_error: "Ip é obrigatório.",
-                }).ip({
-                    message: "Formato de ip inválido."
-                }),
-                status: z.enum(["ativo", "inativo"], {
-                    invalid_type_error: "Status não é do tipo string.",
-                    required_error: "Status é obrigatório",
-                    message: "Status informado não corresponde ao formato indicado (ativo ou inativo)."
-                }),
-                usuario_id: z.number({
-                    required_error: "Estação sem vínculo com usuário.",
-                    invalid_type_error: "Id não é do tipo number."
-                }).int({
-                    message: "Id não é um tipo inteiro."
-                }).positive({
-                    message: "Id não é um inteiro positivo."
-                })
-            });
-            const estacaoValidated = estacaoSchema.parse(data);
+            const estacao = EstacoesSchemas.cadastrar.parse(data);
+            const estacaoValidated = estacao;
             const filtroUsuarioId = estacaoValidated.usuario_id;
             const usuario = await UsuarioRepository.findById(filtroUsuarioId);
             if (!usuario) throw {
@@ -156,13 +121,13 @@ class EstacaoService {
                 code: 400,
                 message: "Usuário não encontrado.",
             };
-            const estacao = await EstacaoRepository.create(estacaoValidated);
-            if (!estacao) throw {
+            const resposta = await EstacaoRepository.create(estacaoValidated);
+            if (!resposta) throw {
                 error: true,
                 code: 400,
                 message: "Erro ao cadastrar estação.",
             };
-            return estacao;
+            return resposta;
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const errorMessages = error.issues.map((issue) => {
