@@ -18,16 +18,16 @@ const usuarioDeletar = {
         }
       ],
       responses: {
-        204: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/deltar_204"
+        // 204: {
+        //   content: {
+        //     "application/json": {
+        //       schema: {
+        //         $ref: "#/components/schemas/deltar_204"
 
-              }
-            }
-          }
-        },
+        //       }
+        //     }
+        //   }
+        // },
         400: {
           content: {
             "application/json": {
