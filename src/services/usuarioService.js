@@ -61,73 +61,24 @@ class UsuarioService {
     };
 
     static async inserir(data) {
-        try {
-            const validacao = z.object({
-                nome: z.string({
-                    required_error: "Campo nome é obrigatório.",
-                    invalid_type_error: "Nome deve ser do tipo string."
-                }).min(3, {
-                    message: "Nome deve conter pelo menos 3 letras."
-                }),
-                email: z.string({
-                    required_error: "Campo email é obrigatório.",
-                    invalid_type_error: "Email deve ser do tipo string."
-                }).email({
-                    message: "Email invalido."
-                }),
-                senha: z.string({
-                    required_error: "Campo senha é obrigatório.",
-                    invalid_type_error: "Senha deve ser do tipo string."
-                }).min(8).refine(
-                    (value) =>
-                        /[a-z]/.test(value) &&  // Tem pelo menos uma letra minúscula
-                        /[A-Z]/.test(value) &&  // Tem pelo menos uma letra maiúscula
-                        /[0-9]/.test(value) &&  // Tem pelo menos um número
-                        /[^a-zA-Z0-9]/.test(value),  // Tem pelo menos um símbolo
-                    {
-                        message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.",
-                    }
-                )
-            });
-            const usuarioValidated = validacao.parse(data);
-            //  verificação do email repetido
-            const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
-            if (emailRepetido.length > 0) {
-                throw new Error("Email já cadastrado.")
+        const usuarioValidated = UsuarioSchema.cadastrarUsuario.parse(data);
+        //  verificação do email repetido
+        const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
+        if (emailRepetido.length > 0) {
+            throw new Error("Email já cadastrado.")
 
-            };
-            //  hash senha
-
-            const hashSenha = await Hashsenha.criarHashSenha(data.senha);
-            usuarioValidated.senha = hashSenha;
-            const response = await UsuarioRepository.create(usuarioValidated);
-            const userResponse = { //para não exibir a senha do usuário no corpo da resposta
-                id: response.id,
-                nome: response.nome,
-                email: response.email
-            };
-            return userResponse;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: error.message
-                };
-            };
         };
+        //  hash senha
+
+        const hashSenha = await Hashsenha.criarHashSenha(data.senha);
+        usuarioValidated.senha = hashSenha;
+        const response = await UsuarioRepository.create(usuarioValidated);
+        const userResponse = { //para não exibir a senha do usuário no corpo da resposta
+            id: response.id,
+            nome: response.nome,
+            email: response.email
+        };
+        return userResponse;
     };
 
     static async atualizar(id, data) {
