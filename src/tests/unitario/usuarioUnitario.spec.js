@@ -125,7 +125,7 @@ describe('usuarioService.inserir', () => {
         expect(result).toEqual(mockUsuario);
     });
 
-    it.only('Deve lançar erro se o email já estiver cadastrado', async () => {
+    it('Deve lançar erro se o email já estiver cadastrado', async () => {
         const data = { nome: 'John', email: 'john@example.com', senha: 'StrongPass1!' };
         usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
 
@@ -135,6 +135,8 @@ describe('usuarioService.inserir', () => {
             message: 'Email já cadastrado.',
         });
     });
+
+
     it('Deve lançar erro se os campos estiverem vazios', async () => {
         const data = {};
         usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
