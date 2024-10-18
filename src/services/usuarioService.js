@@ -62,24 +62,25 @@ class UsuarioService {
 
     static async inserir(data) {
         const usuarioValidated = UsuarioSchema.cadastrarUsuario.parse(data);
-        //  verificação do email repetido
-        const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
-        if (emailRepetido.length > 0) {
-            throw new Error("Email já cadastrado.")
+            //  verificação do email repetido
+            const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
+            if (emailRepetido.length > 0) throw {
+                error: true,
+                code: 400,
+                message: "Email já cadastrado.",
+            };
+            //  hash senha
 
+            const hashSenha = await Hashsenha.criarHashSenha(data.senha);
+            usuarioValidated.senha = hashSenha;
+            const response = await UsuarioRepository.create(usuarioValidated);
+            const userResponse = { //para não exibir a senha do usuário no corpo da resposta
+                id: response.id,
+                nome: response.nome,
+                email: response.email
+            };
+            return userResponse;
         };
-        //  hash senha
-
-        const hashSenha = await Hashsenha.criarHashSenha(data.senha);
-        usuarioValidated.senha = hashSenha;
-        const response = await UsuarioRepository.create(usuarioValidated);
-        const userResponse = { //para não exibir a senha do usuário no corpo da resposta
-            id: response.id,
-            nome: response.nome,
-            email: response.email
-        };
-        return userResponse;
-    };
 
     static async atualizar(id, data) {
         try {
