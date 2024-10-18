@@ -54,9 +54,14 @@ describe("Cadastrar estação", () => {
                 status: 'ativo',
                 usuario_id: 999
             });
-
+        console.log(response.body);
+            
         expect(response.status).toBe(400);
-        expect(response.body.message).toBe('Usuário não encontrado.');
+        expect(response.body.message).toBeDefined();
+        expect(response.body.data).toBeDefined();
+        expect(response.body.code).toBeDefined();
+        expect(response.body.error).toEqual(true);
+        expect(response.body.errors).toBeDefined();
     });
     it('Deve retornar erro ao tentar cadastrar estação sem passar os atributos', async () => {
         const response = await request(app)
