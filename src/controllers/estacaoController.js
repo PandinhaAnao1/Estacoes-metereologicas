@@ -1,7 +1,7 @@
 import env from "dotenv";
 import EstacaoService from "../services/estacaoService.js";
 import { sendError } from "../util/messages.js";
-
+import  { z } from 'zod';
 
 env.config();
 
@@ -88,7 +88,7 @@ class Estacao {
       if (error instanceof z.ZodError) {
         let errors = [];
         error.issues.map((issue) => {
-          errors.add(
+          errors.push(
             {
               path: issue.path[0],
               message: issue.message
