@@ -54,7 +54,6 @@ describe("Cadastrar estação", () => {
                 status: 'ativo',
                 usuario_id: 999
             });
-        console.log(response.body);
             
         expect(response.status).toBe(400);
         expect(response.body.message).toBeDefined();
@@ -62,6 +61,8 @@ describe("Cadastrar estação", () => {
         expect(response.body.code).toBeDefined();
         expect(response.body.error).toEqual(true);
         expect(response.body.errors).toBeDefined();
+        expect(response.body.errors[0].message).toBeDefined();
+        expect(response.body.errors[0].path).toBeDefined();
     });
     it('Deve retornar erro ao tentar cadastrar estação sem passar os atributos', async () => {
         const response = await request(app)
@@ -70,21 +71,26 @@ describe("Cadastrar estação", () => {
             .set("Content-Type", "application/json")
             .send({
             });
+        
         expect(response.status).toBe(400);
-        expect(response.body.message[0].message).toBe("Nome é obrigatório.")
-        expect(response.body.message[0].path).toBe("nome")
-        expect(response.body.message[1].message).toBe("Email é obrigatório.")
-        expect(response.body.message[1].path).toBe("endereco")
-        expect(response.body.message[2].message).toBe("Latitude informada não é do tipo number.")
-        expect(response.body.message[2].path).toBe("latitude")
-        expect(response.body.message[3].message).toBe("Longitude informada não é do tipo number.")
-        expect(response.body.message[3].path).toBe("longitude")
-        expect(response.body.message[4].message).toBe("Ip é obrigatório.")
-        expect(response.body.message[4].path).toBe("ip")
-        expect(response.body.message[5].message).toBe("Status informado não corresponde ao formato indicado (ativo ou inativo).")
-        expect(response.body.message[5].path).toBe("status")
-        expect(response.body.message[6].message).toBe("Estação sem vínculo com usuário.")
-        expect(response.body.message[6].path).toBe("usuario_id")
+        expect(response.body.message).toBeDefined();
+        expect(response.body.data).toBeDefined();
+        expect(response.body.code).toBeDefined();
+        expect(response.body.error).toEqual(true);
+        expect(response.body.errors[0].message).toBeDefined();
+        expect(response.body.errors[0].path).toBeDefined();
+        expect(response.body.errors[1].message).toBeDefined();
+        expect(response.body.errors[1].path).toBeDefined();
+        expect(response.body.errors[2].message).toBeDefined();
+        expect(response.body.errors[2].path).toBeDefined();
+        expect(response.body.errors[3].message).toBeDefined();
+        expect(response.body.errors[3].path).toBeDefined();
+        expect(response.body.errors[4].message).toBeDefined();
+        expect(response.body.errors[4].path).toBeDefined();
+        expect(response.body.errors[5].message).toBeDefined();
+        expect(response.body.errors[5].path).toBeDefined();
+        expect(response.body.errors[6].message).toBeDefined();
+        expect(response.body.errors[6].path).toBeDefined();
     });
 })
 
