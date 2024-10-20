@@ -1,4 +1,4 @@
-import estacaoController from '../../../controllers/estacaoController.js';
+import EstacaoController from '../../../controllers/estacaoController.js';
 import {describe, expect} from '@jest/globals';
 
 jest.mock('../../../services/usuarioService', () => ({
@@ -20,7 +20,7 @@ describe('Testando o usuario controller', () => {
 
         const req = {body: null};
 
-        await estacaoController.listar(req, res);
+        await EstacaoController.listar(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
 
@@ -31,7 +31,7 @@ describe('Testando o usuario controller', () => {
 
         const req = {body: null};
 
-        await estacaoController.listarPorId(req, res);
+        await EstacaoController.listarPorId(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
 
@@ -42,7 +42,7 @@ describe('Testando o usuario controller', () => {
 
         const req = {body: null};
 
-        await estacaoController.cadastrar(req, res);
+        await EstacaoController.cadastrar(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
 
@@ -53,7 +53,7 @@ describe('Testando o usuario controller', () => {
 
         const req = {body: null};
 
-        await estacaoController.atualizar(req, res);
+        await EstacaoController.atualizar(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
 
