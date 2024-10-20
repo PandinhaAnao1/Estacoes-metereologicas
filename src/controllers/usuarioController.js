@@ -14,14 +14,18 @@ class Usuario {
         message: 'usuario cadastrado com sucesso.',
       });
     } catch (error) {
-
+      if(error.code && error.message){
+        return res.status(error.code).json({
+         ...error
+        })
+      } 
       return res.status(error.code || 500).json(error);
     };
   };
 
   static atualizar = async (req, res) => {
     try {
-      const id = { id: req.params.id };
+      const id = {id: req.params.id};
       const { nome, email, senha } = req.body;
       const data = { nome, email, senha };
       const response = await UsuarioService.atualizar(id, data);
@@ -83,8 +87,7 @@ class Usuario {
         message: response.length > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
       });
     } catch (error) {
-
-      if (error.code && error.message) {
+      if(error.code && error.message){
         return res.status(error.code).json({
           ...error
         })

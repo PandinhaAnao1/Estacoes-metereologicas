@@ -125,6 +125,8 @@ describe('usuarioService.inserir', () => {
             message: 'Email já cadastrado.',
         });
     });
+
+
     it('Deve lançar erro se os campos estiverem vazios', async () => {
         const data = {};
         usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
