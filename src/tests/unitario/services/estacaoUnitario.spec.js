@@ -1,16 +1,16 @@
 import { describe, expect, test } from '@jest/globals';
-import EstacaoService from '../../services/estacaoService.js';
-import EstacaoRepository from '../../repositories/estacaoRepository.js';
-import UsuarioRepository from '../../repositories/usuarioRepository.js';
+import EstacaoService from '../../../services/estacaoService.js';
+import EstacaoRepository from '../../../repositories/estacaoRepository.js';
+import UsuarioRepository from '../../../repositories/usuarioRepository.js';
 
-jest.mock('../../repositories/estacaoRepository.js', () => ({
+jest.mock('../../../repositories/estacaoRepository.js', () => ({
     findMany: jest.fn(),
     findById: jest.fn(),
     create: jest.fn(),
     update: jest.fn()
 }));
 
-jest.mock('../../repositories/usuarioRepository.js', () => ({
+jest.mock('../../../repositories/usuarioRepository.js', () => ({
     findById: jest.fn()
 }));
 

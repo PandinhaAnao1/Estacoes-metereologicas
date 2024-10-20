@@ -1,4 +1,4 @@
-import authentication from '../../middleware/authenticationUser.js';
+import authentication from '../../../middleware/authenticationUser.js';
 import Jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
