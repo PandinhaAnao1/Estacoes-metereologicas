@@ -1,4 +1,5 @@
 import EstacaoController from '../../../controllers/estacaoController.js';
+import EstacaoService from '../../../services/estacaoService.js';
 import { describe, expect } from '@jest/globals';
 
 jest.mock('../../../services/usuarioService', () => ({
@@ -27,48 +28,65 @@ describe('Teste que verifica o controller de estações', () => {
         };
     });
 
-    it('Deve retornar erro 500 ao listar estações', async () => {
-        const sendErrorMock = jest.fn();
-        const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
+    describe('Teste de listar controller estações.', () => {
 
-        const req = { body: null };
+        it('Deve retornar erro 500 ao listar estações', async () => {
+            const sendErrorMock = jest.fn();
+            const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
 
-        await EstacaoController.listar(req, res);
+            const req = { body: null };
 
-        expect(res.status).toHaveBeenCalledWith(500);
+            await EstacaoController.listar(req, res);
 
+            expect(res.status).toHaveBeenCalledWith(500);
+
+        });
+        it('Deve retornar erro 500 ao listar estação por ID', async () => {
+            const sendErrorMock = jest.fn();
+            const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
+
+            const req = { body: null };
+
+            await EstacaoController.listarPorId(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+
+        });
     });
-    it('Deve retornar erro 500 ao listar estação por ID', async () => {
-        const sendErrorMock = jest.fn();
-        const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
+    describe('Teste de cadastrar controller estações.', () => {
+        it('Deve retornar erro 400 ao cadastrar uma estação', async () => {
+            const sendErrorMock = jest.fn();
+            const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
 
-        const req = { body: null };
+            const req = { body: null };
 
-        await EstacaoController.listarPorId(req, res);
+            await EstacaoController.cadastrar(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.status).toHaveBeenCalledWith(400);
 
+        });
+        it('Deve retornar erro 500 quando ocorrer um erro inesperado', async () => {
+            const error = new Error('Erro no servidor');
+            EstacaoService.inserir = jest.fn().mockRejectedValue(error);
+
+            const response = await EstacaoController.cadastrar(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith(error);
+        });
     });
-    it('Deve retornar erro 500 ao cadastrar uma estação', async () => {
-        const sendErrorMock = jest.fn();
-        const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
+    describe('Teste de atualizar controller estações.', () => {
 
-        const req = { body: null };
+        it('Deve retornar erro 500 ao atualizar um estação', async () => {
+            const sendErrorMock = jest.fn();
+            const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
 
-        await EstacaoController.cadastrar(req, res);
+            const req = { body: null };
 
-        expect(res.status).toHaveBeenCalledWith(400);
+            await EstacaoController.atualizar(req, res);
 
-    });
-    it('Deve retornar erro 500 ao atualizar um estação', async () => {
-        const sendErrorMock = jest.fn();
-        const res = { status: jest.fn(() => ({ json: sendErrorMock })) };
+            expect(res.status).toHaveBeenCalledWith(500);
 
-        const req = { body: null };
-
-        await EstacaoController.atualizar(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(500);
-
+        });
     });
 });
