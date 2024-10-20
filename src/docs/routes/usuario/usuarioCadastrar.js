@@ -35,7 +35,7 @@ const usuarioCadastrar = {
       },
       responses: {
         201: {
-          description: "usuario cadastrado com sucesso!",
+          description: "Usuário cadastrado com sucesso!",
           content: {
             "application/json": {
               schema: {
