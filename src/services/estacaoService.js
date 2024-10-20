@@ -116,7 +116,7 @@ class EstacaoService {
             if (!usuario || usuario.length === 0) throw {
                 code: 400,
                 error: {
-                    mensage:"Usuário não encontrado.",
+                    message:"Usuário não encontrado.",
                     path: "usuario"
                 },
             };
@@ -124,7 +124,7 @@ class EstacaoService {
             if (!resposta) throw {
                 code: 400,
                 error: {
-                    mensage: "Erro ao cadastrar estação por favor verifique os dados.",
+                    message: "Erro ao cadastrar estação por favor verifique os dados.",
                     path: "estacao"
                 }
                 ,
