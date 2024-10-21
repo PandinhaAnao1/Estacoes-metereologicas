@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, jest, test } from '@jest/globals';
 import EstacaoService from '../../../services/estacaoService.js';
 import EstacaoRepository from '../../../repositories/estacaoRepository.js';
 import UsuarioRepository from '../../../repositories/usuarioRepository.js';
@@ -61,18 +61,18 @@ describe('EstacaoSevices.listarPorId', () => {
     });
 
     it('Deve retornar erro: "Id informado não é do tipo number."', async () => {
-    try {
-        await EstacaoService.listarPorID({ id: 'errado' });
-    } catch (error) {
-        expect(error).toEqual({
-            error: true,
-            code: 400,
-            message: [
-                { message: 'Id informado não é do tipo number.', path: 'id' }
-            ]
-        });
-    }
-});
+        try {
+            await EstacaoService.listarPorID({ id: 'errado' });
+        } catch (error) {
+            expect(error).toEqual({
+                error: true,
+                code: 400,
+                message: [
+                    { message: 'Id informado não é do tipo number.', path: 'id' }
+                ]
+            });
+        }
+    });
 
 });
 
@@ -181,58 +181,8 @@ describe('EstacaoService.inserir', () => {
         expect(resultado).toEqual(estacaoValida);
     });
 
-    // it('Deve lançar erro se o usuário não for encontrado.', async () => {
-    //     UsuarioRepository.findById.mockResolvedValue(null);
 
-    //     await expect(EstacaoService.inserir(estacaoValida))
-    //         .rejects
-    //         .toEqual({
-    //             error: true,
-    //             code: 400,
-    //             message: "Usuário não encontrado.",
-    //         });
 
-    //     expect(UsuarioRepository.findById).toHaveBeenCalledWith(estacaoValida.usuario_id);
-    //     expect(EstacaoRepository.create).not.toHaveBeenCalled();
-    // });
-
-    // it('Deve lançar erro de validação para dados inválidos.', async () => {
-    //     const dadosInvalidos = {
-    //         nome: 'Estação Teste',
-    //         endereco: 'Rua Teste, 123',
-    //         latitude: 'inválido',  // Valor inválido
-    //         longitude: -46.633308,
-    //         ip: '192.168.0.1',
-    //         status: 'ativo',
-    //         usuario_id: 1
-    //     };
-
-    //     await expect(EstacaoService.inserir(dadosInvalidos))
-    //         .rejects
-    //         .toEqual(expect.objectContaining({
-    //             error: true,
-    //             code: 400,
-    //         }));
-
-    //     expect(UsuarioRepository.findById).not.toHaveBeenCalled();
-    //     expect(EstacaoRepository.create).not.toHaveBeenCalled();
-    // });
-
-    // it('Deve lançar erro ao tentar inserir uma estação e falhar.', async () => {
-    //     UsuarioRepository.findById.mockResolvedValue(usuarioValido);
-    //     EstacaoRepository.create.mockResolvedValue(null);
-
-    //     await expect(EstacaoService.inserir(estacaoValida))
-    //         .rejects
-    //         .toEqual({
-    //             error: true,
-    //             code: 400,
-    //             message: "Erro ao cadastrar estação.",
-    //         });
-
-    //     expect(UsuarioRepository.findById).toHaveBeenCalledWith(estacaoValida.usuario_id);
-    //     expect(EstacaoRepository.create).toHaveBeenCalledWith(estacaoValida);
-    // });
 });
 
 describe('EstacaoService.atualizar', () => {

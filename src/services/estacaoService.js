@@ -111,25 +111,18 @@ class EstacaoService {
     };
 
     static async inserir(data) {
-            const estacao = EstacoesSchemas.cadastrar.parse(data);
-            const usuario = await UsuarioRepository.findById(estacao.usuario_id);
-            if (!usuario || usuario.length === 0) throw {
-                code: 400,
-                error: {
-                    message:"Usuário não encontrado.",
-                    path: "usuario"
-                },
-            };
-            const resposta = await EstacaoRepository.create(estacao);
-            if (!resposta) throw {
-                code: 400,
-                error: {
-                    message: "Erro ao cadastrar estação por favor verifique os dados.",
-                    path: "estacao"
-                }
-                ,
-            };
-            return resposta;
+        const estacao = EstacoesSchemas.cadastrar.parse(data);
+        const usuario = await UsuarioRepository.findById(estacao.usuario_id);
+        if (!usuario || usuario.length === 0) throw {
+            code: 400,
+            error: {
+                message: "Usuário não encontrado.",
+                path: "usuario"
+            },
+        };
+        const resposta = await EstacaoRepository.create(estacao);
+
+        return resposta;
     };
 
     static async atualizar(id, data) {
