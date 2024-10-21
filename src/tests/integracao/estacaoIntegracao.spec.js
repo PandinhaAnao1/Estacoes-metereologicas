@@ -54,8 +54,7 @@ describe("Cadastrar estação", () => {
                 status: 'ativo',
                 usuario_id: 999
             });
-        console.log(response.body);
-            
+
         expect(response.status).toBe(400);
         expect(response.body.message).toBeDefined();
         expect(response.body.data).toBeDefined();
@@ -72,7 +71,7 @@ describe("Cadastrar estação", () => {
             .set("Content-Type", "application/json")
             .send({
             });
-        
+
         expect(response.status).toBe(400);
         expect(response.body.message).toBeDefined();
         expect(response.body.data).toBeDefined();
