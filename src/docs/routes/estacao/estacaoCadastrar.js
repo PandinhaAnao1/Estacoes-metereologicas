@@ -8,38 +8,7 @@ const estacoeCadastrar = {
         content: {
           "application/json": {
             schema: {
-              type: "object",
-              properties: {
-                nome: {
-                  type: "string",
-                  example: "vindcator"
-                },
-                endereco: {
-                  type: "string",
-                  example: "rua teste api 2024"
-                },
-                latitude: {
-                  type: "string",
-                  example: "11"
-                },
-                longitude: {
-                  type: "string",
-                  example: "11"
-                },
-                ip: {
-                  type: "string",
-                  example: "192.158.1.38"
-                },
-                status: {
-                  type: "string",
-                  example: "ativo"
-                },
-                usuario_id: {
-                  type: "integer",
-                  example: 1
-                }
-              },
-              required: ["nome", "endereco", "latitude", "longitude", "ip", "status", "usuario_id"]
+              $ref: "#/components/schemas/estacoes_cadastrar_post_body"
             }
           }
         }

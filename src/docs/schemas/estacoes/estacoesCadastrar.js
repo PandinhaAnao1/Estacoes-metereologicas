@@ -1,21 +1,38 @@
-const deletarSchemas = {
+const estacoesCadastrarSchemas = {
 
-    deltar_204: {
+    estacoes_cadastrar_post_body: {
         type: "object",
         properties: {
-            error: {
-                type: "boolean",
-                example: false
-            },
-            code: {
-                type: "integer",
-                example: 204
-            },
-            message: {
+            nome: {
                 type: "string",
-                example: "Usuario deletado com sucesso."
+                example: "vindcator"
+            },
+            endereco: {
+                type: "string",
+                example: "rua teste api 2024"
+            },
+            latitude: {
+                type: "string",
+                example: "11"
+            },
+            longitude: {
+                type: "string",
+                example: "11"
+            },
+            ip: {
+                type: "string",
+                example: "192.158.1.38"
+            },
+            status: {
+                type: "string",
+                example: "ativo"
+            },
+            usuario_id: {
+                type: "integer",
+                example: 1
             }
-        }
+        },
+        required: ["nome", "endereco", "latitude", "longitude", "ip", "status", "usuario_id"]
     },
     deltar_400: {
         type: "object",
@@ -104,4 +121,4 @@ const deletarSchemas = {
 
 };
 
-export default deletarSchemas;
+export default estacoesCadastrarSchemas;
