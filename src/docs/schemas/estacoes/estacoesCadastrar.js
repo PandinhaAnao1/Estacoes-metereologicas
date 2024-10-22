@@ -5,31 +5,45 @@ const estacoesCadastrarSchemas = {
         properties: {
             nome: {
                 type: "string",
-                example: "vindcator"
+                example: "vindcator",
+                description: "Nome de uma nova estação."
+
             },
             endereco: {
                 type: "string",
-                example: "rua teste api 2024"
+                example: "rua teste api 2024",
+                description: "Decrição de endereço da estação."
+
             },
             latitude: {
                 type: "string",
-                example: "11"
+                example: "11",
+                description: "Posição de latitude no globo que se localiza a estação."
+
             },
             longitude: {
                 type: "string",
-                example: "11"
+                example: "11",
+                description: "Posição de longitude no globo que se localiza a estação."
+
             },
             ip: {
                 type: "string",
-                example: "192.158.1.38"
+                example: "192.158.1.38",
+                description: "Ip campo que representa uma estalção estaticca."
+
             },
             status: {
                 type: "string",
-                example: "ativo"
+                example: "ativo",
+                description: "Campo que representa se uma estação esta ativa ou não."
+
             },
             usuario_id: {
                 type: "integer",
-                example: 1
+                example: 1,
+                description: "Numero que representa a referencia de um usuario."
+
             }
         },
         required: ["nome", "endereco", "latitude", "longitude", "ip", "status", "usuario_id"]
