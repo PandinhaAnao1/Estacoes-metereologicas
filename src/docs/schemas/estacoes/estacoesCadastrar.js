@@ -88,41 +88,45 @@ const estacoesCadastrarSchemas = {
         }
     },
     estacoes_cadastrar_400: {
-        type: "object",
 
-        properties:{
-            type: "object",
-            properties: {
-                error: { type: "boolean", example: true },
-                code: { type: "int", example: 400 },
-                message: {
-                    type: "array", example:
-                        [
-                            { "mensagem": "Nome informado não é do tipo string", "path": "estacoes" },
-                            { "mensagem": "Nome é obrigatório", "path": "estacoes" },
-                            { "mensagem": "Email informado não é do tipo string", "path": "estacoes" },
-                            { "mensagem": "Email é obrigatório", "path": "estacoes" },
-                            { "mensagem": "Latitude informada não é do tipo number", "path": "estacoes" },
-                            { "mensagem": "Latitude é obrigatória", "path": "estacoes" },
-                            { "mensagem": "Longitude informada não é do tipo number", "path": "estacoes" },
-                            { "mensagem": "Longitude é obrigatória", "path": "estacoes" },
-                            { "mensagem": "IP informado não é do tipo string", "path": "estacoes" },
-                            { "mensagem": "IP é obrigatório", "path": "estacoes" },
-                            { "mensagem": "Formato de IP inválido", "path": "estacoes" },
-                            { "mensagem": "Status não é do tipo string", "path": "estacoes" },
-                            { "mensagem": "Status é obrigatório", "path": "estacoes" },
-                            { "mensagem": "Status informado não corresponde ao formato indicado (ativo ou inativo)", "path": "estacoes" },
-                            { "mensagem": "Estação sem vínculo com usuário", "path": "estacoes" },
-                            { "mensagem": "ID não é do tipo number", "path": "estacoes" },
-                            { "mensagem": "ID não é um tipo inteiro", "path": "estacoes" },
-                            { "mensagem": "ID não é um inteiro positivo", "path": "estacoes" },
-                            { "mensagem": "Usuário não encontrado", "path": "estacoes" },
-                            { "mensagem": "Erro ao cadastrar estação", "path": "estacoes" },
-                        ]
-                }
+        properties: {
+            error: { type: "boolean", example: true },
+            code: { type: "int", example: 400 },
+            errors: {
+                type: "array", example:
+                    [
+                        {
+                            "path": "nome",
+                            "message": "Nome é obrigatório."
+                        },
+                        {
+                            "path": "endereco",
+                            "message": "Email é obrigatório."
+                        },
+                        {
+                            "path": "latitude",
+                            "message": "Latitude informada não é do tipo number."
+                        },
+                        {
+                            "path": "longitude",
+                            "message": "Longitude informada não é do tipo number."
+                        },
+                        {
+                            "path": "ip",
+                            "message": "Ip é obrigatório."
+                        },
+                        {
+                            "path": "status",
+                            "message": "Status informado não corresponde ao formato indicado (ativo ou inativo)."
+                        },
+                        {
+                            "path": "usuario_id",
+                            "message": "Estação sem vínculo com usuário."
+                        }
+                    ]
             }
         },
-       
+
     },
 
 

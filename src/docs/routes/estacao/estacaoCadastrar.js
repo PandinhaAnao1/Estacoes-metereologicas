@@ -29,7 +29,7 @@ const estacoeCadastrar = {
           content: {
             "application/json": {
               schema: {
-                $ref:''
+                $ref:'#/components/schemas/estacoes_cadastrar_400'
               }
             }
           }
