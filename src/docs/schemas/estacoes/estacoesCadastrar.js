@@ -64,64 +64,65 @@ const estacoesCadastrarSchemas = {
                     usuario_id: 1
                 }
             },
-            error: { 
+            error: {
                 description: "Variavel que indica se ocorreu um erro ou não.",
-                type: "boolean", 
-                example: false, 
+                type: "boolean",
+                example: false,
             },
-            code: { 
-                type: "int", 
+            code: {
+                type: "int",
                 example: 201,
                 description: "Codigo http da requisição.",
 
             },
             message: {
                 description: "Campo que mostra uma mensagem de resultado da requisição.",
-                type: "string", 
+                type: "string",
                 example: "Estação cadastrada com sucesso!",
             },
             errors: {
                 description: "Lista de erros que ocorreram durante a requisição.",
-                type: "Array", 
+                type: "Array",
                 example: [],
             }
         }
     },
-    deltar_500: {
+    estacoes_cadastrar_400: {
         type: "object",
-        properties: {
-            data: {
-                type: "array",
-                example: [],
-                items: {
-                    type: "object"
-                },
-                description: "Array de dados. Vazio em caso de erro."
-            },
-            error: {
-                type: "boolean",
-                description: "Indica se houve erro na requisição.",
-                example: true
-            },
-            code: {
-                type: "integer",
-                description: "Código de status HTTP retornado.",
-                example: 500
-            },
-            message: {
-                type: "string",
-                description: "Descrição do erro geral ocorrido na requisição.",
-                example: "Servidor encontrou um erro interno."
-            },
-            errors: {
-                type: "array",
-                description: "Lista de erros específicos encontrados.",
-                items: {
-                    type: "object"
-                },
-                example: []
+
+        properties:{
+            type: "object",
+            properties: {
+                error: { type: "boolean", example: true },
+                code: { type: "int", example: 400 },
+                message: {
+                    type: "array", example:
+                        [
+                            { "mensagem": "Nome informado não é do tipo string", "path": "estacoes" },
+                            { "mensagem": "Nome é obrigatório", "path": "estacoes" },
+                            { "mensagem": "Email informado não é do tipo string", "path": "estacoes" },
+                            { "mensagem": "Email é obrigatório", "path": "estacoes" },
+                            { "mensagem": "Latitude informada não é do tipo number", "path": "estacoes" },
+                            { "mensagem": "Latitude é obrigatória", "path": "estacoes" },
+                            { "mensagem": "Longitude informada não é do tipo number", "path": "estacoes" },
+                            { "mensagem": "Longitude é obrigatória", "path": "estacoes" },
+                            { "mensagem": "IP informado não é do tipo string", "path": "estacoes" },
+                            { "mensagem": "IP é obrigatório", "path": "estacoes" },
+                            { "mensagem": "Formato de IP inválido", "path": "estacoes" },
+                            { "mensagem": "Status não é do tipo string", "path": "estacoes" },
+                            { "mensagem": "Status é obrigatório", "path": "estacoes" },
+                            { "mensagem": "Status informado não corresponde ao formato indicado (ativo ou inativo)", "path": "estacoes" },
+                            { "mensagem": "Estação sem vínculo com usuário", "path": "estacoes" },
+                            { "mensagem": "ID não é do tipo number", "path": "estacoes" },
+                            { "mensagem": "ID não é um tipo inteiro", "path": "estacoes" },
+                            { "mensagem": "ID não é um inteiro positivo", "path": "estacoes" },
+                            { "mensagem": "Usuário não encontrado", "path": "estacoes" },
+                            { "mensagem": "Erro ao cadastrar estação", "path": "estacoes" },
+                        ]
+                }
             }
-        }
+        },
+       
     },
 
 
