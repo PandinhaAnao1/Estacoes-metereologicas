@@ -19,25 +19,7 @@ const estacoeCadastrar = {
           content: {
             "application/json": {
               schema: {
-                type: "object",
-                properties: {
-                  data: {
-                    type: "object",
-                    example: {
-                      id: 1,
-                      nome: "vindcator",
-                      endereco: "rua teste api 2024",
-                      latitude: "11",
-                      longitude: "11",
-                      ip: "192.158.1.38",
-                      status: "ativo",
-                      usuario_id: 1
-                    }
-                  },
-                  error: { type: "boolean", example: false },
-                  code: { type: "int", example: 201 },
-                  message: { type: "string", example: "Estação cadastrada com sucesso!" }
-                }
+                $ref: "#/components/schemas/estacoes_cadastrar_201",
               }
             }
           }

@@ -48,51 +48,25 @@ const estacoesCadastrarSchemas = {
         },
         required: ["nome", "endereco", "latitude", "longitude", "ip", "status", "usuario_id"]
     },
-    deltar_400: {
+    estacoes_cadastrar_201: {
         type: "object",
         properties: {
             data: {
-                type: "array",
-                example: [],
-                items: {
-                    type: "object"
-                },
-                description: "Array de dados. Vazio em caso de erro."
-            },
-            error: {
-                type: "boolean",
-                description: "Indica se houve erro na requisição.",
-                example: true
-            },
-            code: {
-                type: "integer",
-                description: "Código de status HTTP retornado.",
-                example: 400
-            },
-            message: {
-                type: "string",
-                description: "Descrição do erro geral ocorrido na requisição.",
-                example: "Requisição com sintaxe incorreta ou outros problemas."
-            },
-            errors: {
-                type: "array",
-                description: "Lista de erros específicos encontrados.",
-                items: {
-                    type: "object",
-                    properties: {
-                        mensage: {
-                            type: "string",
-                            description: "Mensagem específica do erro.",
-                            example: "O id do usuario informado não existe!"
-                        },
-                        path: {
-                            type: "string",
-                            description: "Caminho do campo com erro.",
-                            example: "id"
-                        }
-                    }
+                type: "object",
+                example: {
+                    id: 1,
+                    nome: "vindcator",
+                    endereco: "rua teste api 2024",
+                    latitude: "11",
+                    longitude: "11",
+                    ip: "192.158.1.38",
+                    status: "ativo",
+                    usuario_id: 1
                 }
-            }
+            },
+            error: { type: "boolean", example: false },
+            code: { type: "int", example: 201 },
+            message: { type: "string", example: "Estação cadastrada com sucesso!" }
         }
     },
     deltar_500: {
