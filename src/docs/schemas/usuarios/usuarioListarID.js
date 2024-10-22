@@ -1,5 +1,5 @@
 const ListarPorIDSchemas = {
-    listar_ID_200:{
+    usuario_listar_ID_200:{
         type: "object",
         properties: {
           
@@ -26,7 +26,7 @@ const ListarPorIDSchemas = {
       
     },
 
-    listar_ID_404:{
+    usuario_listar_ID_404:{
         
         type: "object",
         properties: {
@@ -42,7 +42,7 @@ const ListarPorIDSchemas = {
       
     },
 
-    listar_ID_400:{
+    usuario_listar_ID_400:{
         
         type: "object",
         properties: {
