@@ -79,6 +79,11 @@ const estacoesCadastrarSchemas = {
                 description: "Campo que mostra uma mensagem de resultado da requisição.",
                 type: "string", 
                 example: "Estação cadastrada com sucesso!",
+            },
+            errors: {
+                description: "Lista de erros que ocorreram durante a requisição.",
+                type: "Array", 
+                example: [],
             }
         }
     },
