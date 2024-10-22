@@ -49,9 +49,9 @@ const estacoesCadastrarSchemas = {
         required: ["nome", "endereco", "latitude", "longitude", "ip", "status", "usuario_id"]
     },
     estacoes_cadastrar_201: {
-        type: "object",
         properties: {
             data: {
+                description: "Obejto resultado, cadastrado no banco de dados.",
                 type: "object",
                 example: {
                     id: 1,
@@ -64,9 +64,22 @@ const estacoesCadastrarSchemas = {
                     usuario_id: 1
                 }
             },
-            error: { type: "boolean", example: false },
-            code: { type: "int", example: 201 },
-            message: { type: "string", example: "Estação cadastrada com sucesso!" }
+            error: { 
+                description: "Variavel que indica se ocorreu um erro ou não.",
+                type: "boolean", 
+                example: false, 
+            },
+            code: { 
+                type: "int", 
+                example: 201,
+                description: "Codigo http da requisição.",
+
+            },
+            message: {
+                description: "Campo que mostra uma mensagem de resultado da requisição.",
+                type: "string", 
+                example: "Estação cadastrada com sucesso!",
+            }
         }
     },
     deltar_500: {
