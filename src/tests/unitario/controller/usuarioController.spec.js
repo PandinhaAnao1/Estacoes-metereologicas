@@ -1,8 +1,7 @@
-import usuarioController from '../../controllers/usuarioController.js';
-
+import usuarioController from '../../../controllers/usuarioController.js';
 import {describe, expect} from '@jest/globals';
 
-jest.mock('../../services/usuarioService.js', () => ({
+jest.mock('../../../services/usuarioService', () => ({
     listar: jest.fn().mockRejectedValue(new Error('Erro interno do serviço')),
     cadastrar: jest.fn().mockRejectedValue(new Error('Erro interno do serviço')),
     atualizar: jest.fn().mockRejectedValue(new Error('Erro interno do serviço')),
