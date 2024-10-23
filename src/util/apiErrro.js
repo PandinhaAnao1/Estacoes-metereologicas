@@ -9,5 +9,13 @@ export class APIErro extends Error {
             errors: this.errors ?? [],
         }
     }
+
+    get getErrors() {
+        return this.errors ?? [];
+    }
+
+    get getCode() {
+        return this.errors ?? [];
+    }
 }
 
