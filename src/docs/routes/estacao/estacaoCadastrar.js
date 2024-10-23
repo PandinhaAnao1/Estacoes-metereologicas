@@ -33,6 +33,16 @@ const estacoeCadastrar = {
               }
             }
           }
+        },
+        500: {
+          description: "Erro na requisição",
+          content: {
+            "application/json": {
+              schema: {
+                $ref:'#/components/schemas/estacoes_cadastrar_500'
+              }
+            }
+          }
         }
       }
     }
