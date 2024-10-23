@@ -213,4 +213,25 @@ describe("usuarioService.atualizar", () => {
       message: "Usuário não encontrado.",
     });
   });
+
+  it("Deve lançar erro de email já cadastrado ao tentar atualizar usuário", async () => {
+    const idMock = {id: 1}
+    const data = {
+        email: "fernanda@example.com",
+      };
+
+      usuarioRepository.findById.mockResolvedValue(idMock);
+
+      usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
+  
+      await expect(usuarioService.atualizar(idMock, data)).rejects.toEqual({
+        code: 400,
+        errors: [
+          {
+            message: "Email já cadastrado!",
+            path: "email",
+          },
+        ],
+      });
+    });
 });

@@ -75,7 +75,7 @@ class UsuarioService {
                 usuarioValidated.senha = hashSenha;
             }
             if (usuarioValidated.email != undefined) {
-                //  verificação do email repitido
+                //  verificação do email repetido
                 const emailRepetido = await UsuarioRepository.findMany({ email: data.email });
                 if (emailRepetido.length != 0) {
                     if (parsedIdSchema.id != emailRepetido[0].id) {
