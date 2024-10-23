@@ -1,8 +1,8 @@
 import { jest, describe, it, expect, afterEach } from '@jest/globals';
-import DadosRepository from '../../repositories/dadosRepository.js';
-import dadosService from '../../services/dadosService.js';
+import DadosRepository from '../../../repositories/dadosRepository.js';
+import dadosService from '../../../services/dadosService.js';
 
-jest.mock('../../repositories/dadosRepository.js', () => ({
+jest.mock('../../../repositories/dadosRepository', () => ({
     findMany: jest.fn(),
     create: jest.fn(),
 }));

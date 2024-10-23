@@ -1,6 +1,7 @@
 import env from "dotenv";
 import EstacaoService from "../services/estacaoService.js";
-
+import { sendError, sendResponse } from "../util/messages.js";
+import  { z } from 'zod';
 
 env.config();
 
@@ -73,25 +74,30 @@ class Estacao {
 
   static cadastrar = async (req, res) => {
     try {
-      const { nome, endereco, latitude, longitude, ip, status, usuario_id } = req.body;
-      const data = {
-        nome: nome,
-        endereco: endereco,
-        latitude: latitude,
-        longitude: longitude,
-        ip: ip,
-        status: status,
-        usuario_id: usuario_id
-      }
-      const response = await EstacaoService.inserir(data);
-      return res.status(201).json({
+      const response = await EstacaoService.inserir(req.body);
+      return sendResponse(res,201,{
         data: response,
-        error: false,
-        code: 201,
-        message: 'Estação cadastrada com sucesso.'
+
       });
+  
     } catch (error) {
-      return res.status(error.code || 500).json(error);
+      if(error.code && error.error){
+        return sendError(res,error.code, [error.error]);
+      }
+      if (error instanceof z.ZodError) {
+        let errors = [];
+        error.issues.map((issue) => {
+          errors.push(
+            {
+              path: issue.path[0],
+              message: issue.message
+            }
+          );
+        });
+        return sendError(res,400,errors);
+        
+      }
+      return sendError(res,500,[]);
     };
   };
 

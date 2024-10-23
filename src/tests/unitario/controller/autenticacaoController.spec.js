@@ -1,9 +1,9 @@
-import Autenticacao from '../../controllers/autenticacaoController.js';
-import AutenticacaoServices from '../../services/autenticacaoSevices.js';
+import Autenticacao from '../../../controllers/autenticacaoController.js';
+import AutenticacaoServices from '../../../services/autenticacaoSevices.js';
 
 import { describe, expect } from '@jest/globals';
 
-jest.mock('../../services/autenticacaoSevices', () => ({
+jest.mock('../../../services/autenticacaoSevices.js', () => ({
     login: jest.fn().mockRejectedValue(),
 }));
 

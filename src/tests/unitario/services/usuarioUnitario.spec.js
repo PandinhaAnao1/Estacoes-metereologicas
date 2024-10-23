@@ -1,7 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
-import usuarioService from '../../services/usuarioService.js';
-import usuarioRepository from '../../repositories/usuarioRepository.js';
-import Hashsenha from '../../util/hashSenha.js';
+import usuarioService from '../../../services/usuarioService.js';
+import usuarioRepository from '../../../repositories/usuarioRepository.js';
 import { z, ZodError } from 'zod';
 
 
@@ -9,7 +8,7 @@ beforeEach(() => {
     usuarioRepository.findById = jest.fn();
 });
 
-jest.mock('../../repositories/usuarioRepository.js', () => ({
+jest.mock('../../../repositories/usuarioRepository.js', () => ({
     findMany: jest.fn(),
     findById: jest.fn(),
     create: jest.fn(),
