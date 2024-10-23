@@ -13,6 +13,7 @@ import dadosListar from "../routes/dados/dadosListar.js";
 //Schemas
 import autenticaoSchemas from "../schemas/autenticacao.js";
 import deletarSchemas from "../schemas/usuarios/usuariosDeletar.js";
+import estacoesCadastrarSchemas from "../schemas/estacoes/estacoesCadastrar.js";
 import cadastrarSchemas from "../schemas/usuarios/usuarioCadastrar.js";
 import listarSchemas from "../schemas/usuarios/usuarioListar.js";
 
@@ -91,6 +92,7 @@ const getSwaggerOptions = () => {
           //Schemas
           ...autenticaoSchemas,
           ...deletarSchemas,
+          ...estacoesCadastrarSchemas,
           ...cadastrarSchemas,
           ...listarSchemas,
         }
