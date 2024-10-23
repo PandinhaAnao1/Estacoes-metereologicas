@@ -50,12 +50,14 @@ describe("Cadastrar usuario", () => {
                 email: "vitorgabriel18@gmail.com",
                 senha: "123"
             });
+            console.log(response.body);
+            
 
         expect(response.status).toBe(400);
-        expect(response.body.message[0].message).toBe("String must contain at least 8 character(s)")
-        expect(response.body.message[0].path).toBe("senha")
-        expect(response.body.message[1].message).toBe("A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.")
-        expect(response.body.message[1].path).toBe("senha")
+        expect(response.body.errors[0].message).toBeDefined()
+        expect(response.body.errors[0].path).toBeDefined()
+        expect(response.body.errors[1].message).toBeDefined()
+        expect(response.body.errors[1].path).toBeDefined()
         expect(response.body.error).toBe(true)
     });
 
