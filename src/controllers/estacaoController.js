@@ -1,6 +1,6 @@
 import env from "dotenv";
 import EstacaoService from "../services/estacaoService.js";
-import { sendError } from "../util/messages.js";
+import { sendError, sendResponse } from "../util/messages.js";
 import  { z } from 'zod';
 
 env.config();
@@ -75,12 +75,11 @@ class Estacao {
   static cadastrar = async (req, res) => {
     try {
       const response = await EstacaoService.inserir(req.body);
-      return res.status(201).json({
+      return sendResponse(res,201,{
         data: response,
-        error: false,
-        code: 201,
-        message: 'Estação cadastrada com sucesso.'
+
       });
+  
     } catch (error) {
       if(error.code && error.error){
         return sendError(res,error.code, [error.error]);
@@ -98,7 +97,7 @@ class Estacao {
         return sendError(res,400,errors);
         
       }
-      return res.status(error.code || 500).json(error);
+      return sendError(res,500,[]);
     };
   };
 

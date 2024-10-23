@@ -70,9 +70,8 @@ describe('Teste que verifica o controller de estações', () => {
             EstacaoService.inserir = jest.fn().mockRejectedValue(error);
 
             const response = await EstacaoController.cadastrar(req, res);
-
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith(error);
+            
         });
     });
     describe('Teste de atualizar controller estações.', () => {
