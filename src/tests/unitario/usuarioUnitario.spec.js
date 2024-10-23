@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import usuarioService from '../../services/usuarioService.js';
 import usuarioRepository from '../../repositories/usuarioRepository.js';
 import Hashsenha from '../../util/hashSenha.js';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 
 beforeEach(() => {
@@ -56,26 +56,30 @@ describe('usuarioService.listarId', () => {
         expect(result).toEqual([{ id: 1, nome: 'John', email: 'john@example.com', senha: 'secret' }]);
     });
 
-    it('Deve retonar error no id', async () => {
+    it('Deve retornar error no id', async () => {
         try {
             const usuarioMock = [{ id: -1.5, nome: 'John', email: 'john@example.com', senha: 'secret' }];
             usuarioRepository.findById.mockResolvedValue(usuarioMock);
     
-            const filtro = {id: -1.5 };
+            const filtro = { id: -1.5 };
     
+            await usuarioService.listarPorID(filtro);
     
-            await usuarioService.listarPorID(filtro)
-    
-            
         } catch (error) {
-            expect(error).toEqual({
-                error: true,
-                code: 400,
-                message: [
-                  { path: 'id', message: 'Id informado não é um número inteiro.' },
-                  { path: 'id', message: 'Id informado não é positivo.' }
-                ]
-              });
+            if (error instanceof ZodError) {
+                const errorMessages = error.errors.map(err => ({
+                    path: err.path[0],
+                    message: err.message,
+                }));
+    
+                expect(errorMessages).toEqual([
+                    { path: 'id', message: 'Id informado não é um número inteiro.' },
+                    { path: 'id', message: 'Id informado não é positivo.' }
+                ]);
+            } else {
+                
+                throw error;
+            }
         }
     });
 
@@ -91,13 +95,19 @@ describe('usuarioService.listarId', () => {
     
             
         } catch (error) {
-            expect(error).toEqual({
-                error: true,
-                code: 400,
-                message: [
-                  { path: 'id', message: 'Id informado não é do tipo number.' },
-                ]
-              });
+
+            if (error instanceof ZodError) {
+                const errorMessages = error.errors.map(err => ({
+                    path: err.path[0],
+                    message: err.message,
+                }))
+
+                expect(errorMessages).toEqual([
+                      { path: 'id', message: 'Id informado não é do tipo number.' },
+                    ]);
+            }else {
+                throw error;
+            }
         }
     });
 

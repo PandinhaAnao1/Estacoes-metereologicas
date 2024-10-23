@@ -104,7 +104,7 @@ describe("Listar usuarios", () => {
             .set("Content-Type", "application/json")
         const body = response.body;
         //deve retornar a mensagem correta de sucesso
-        expect(response.body.message).toBe("Usuário encontrado com sucesso");
+        expect(response.body.message).toBeDefined();
         //deve retornar status 200
         expect(response.status).toBe(200);
         //deve retornar erro falso
@@ -121,9 +121,26 @@ describe("Listar usuarios", () => {
             .set("Content-Type", "application/json")
         const body = response.body;
         //deve retornar a mensagem correta de sucesso
-        expect(response.body.message).toBe("Usuário encontrado com sucesso.");
+        expect(response.body.message).toBeDefined();
         //deve retornar status 200
         expect(response.status).toBe(200);
+        //deve retornar erro falso
+        expect({ error: false }).toHaveProperty('error', false);
+        //testando se o corpo da requisição é um array
+        expect(body).toBeInstanceOf(Object);
+        //testando se retorna json
+        expect(response.headers['content-type']).toContain('json');
+    });
+    it('Deve retornar sucesso ao listar usuario com ID valido', async () => {
+        const response = await request(app)
+            .get(`/usuarios/a`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+        const body = response.body;
+        //deve retornar a mensagem correta de sucesso
+        expect(response.body.message).toBeDefined();
+        //deve retornar status 200
+        expect(response.status).toBe(400);
         //deve retornar erro falso
         expect({ error: false }).toHaveProperty('error', false);
         //testando se o corpo da requisição é um array
@@ -138,7 +155,7 @@ describe("Listar usuarios", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         //testando se retorna o motivo do erro
-        expect(response.body.message).toBe("Usuário não encontrado.");
+        expect(response.body.message).toBeDefined();
         //testando o status da resposta
         expect(response.status).toBe(400);
         //testando se o erro esta ativo

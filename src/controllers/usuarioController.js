@@ -14,18 +14,18 @@ class Usuario {
         message: 'usuario cadastrado com sucesso.',
       });
     } catch (error) {
-      if(error.code && error.message){
+      if (error.code && error.message) {
         return res.status(error.code).json({
-         ...error
+          ...error
         })
-      } 
+      }
       return res.status(error.code || 500).json(error);
     };
   };
 
   static atualizar = async (req, res) => {
     try {
-      const id = {id: req.params.id};
+      const id = { id: req.params.id };
       const { nome, email, senha } = req.body;
       const data = { nome, email, senha };
       const response = await UsuarioService.atualizar(id, data);
@@ -49,8 +49,8 @@ class Usuario {
 
       const response = await UsuarioService.deletar(req.params);
 
-      return sendResponse(res,204);
-     
+      return sendResponse(res, 204);
+
     } catch (error) {
 
       if (error.code && error.errorDetail) {
@@ -87,7 +87,7 @@ class Usuario {
         message: response.length > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
       });
     } catch (error) {
-      if(error.code && error.message){
+      if (error.code && error.message) {
         return res.status(error.code).json({
           ...error
         })
@@ -112,19 +112,37 @@ class Usuario {
 
   static listarPorId = async (req, res) => {
     try {
-      const id = { id: req.params.id };
-      const response = await UsuarioService.listarPorID(id);
-      res.status(200).json({
-        data: response,
-        error: false,
-        code: 200,
-        message: "Usuário encontrado com sucesso",
+      const response = await UsuarioService.listarPorID(req.params);
+      return sendResponse(res, 200, {
+        data: response
       });
+      
     } catch (error) {
-      return res.status(error.code || 500).json(error);
-    };
+
+      if (error.code && error.message) {
+        return sendError(res, error.code, [])
+      }
+
+
+      if (error instanceof z.ZodError) {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
+            path: issue.path[0],
+            message: issue.message
+          })));
+
+        return sendError(res, 400, errors);
+      }
+
+    }
+    return sendError(res,500,[]);
+    
+
   };
 };
+
 
 export default Usuario;
 
