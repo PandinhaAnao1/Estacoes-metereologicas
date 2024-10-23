@@ -13,6 +13,8 @@ import dadosListar from "../routes/dados/dadosListar.js";
 //Schemas
 import autenticaoSchemas from "../schemas/autenticacao.js";
 import deletarSchemas from "../schemas/usuarios/usuariosDeletar.js";
+import cadastrarSchemas from "../schemas/usuarios/usuarioCadastrar.js";
+import listarSchemas from "../schemas/usuarios/usuarioListar.js";
 
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
@@ -89,6 +91,8 @@ const getSwaggerOptions = () => {
           //Schemas
           ...autenticaoSchemas,
           ...deletarSchemas,
+          ...cadastrarSchemas,
+          ...listarSchemas,
         }
       },
       security: [{
