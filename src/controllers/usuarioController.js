@@ -1,6 +1,7 @@
 import UsuarioService from "../services/usuarioService.js";
 import { z } from "zod";
 import { sendError, sendResponse } from "../util/messages.js"
+import { APIErro } from "../util/apiErrro.js";
 
 class Usuario {
   static cadastrar = async (req, res) => {
@@ -52,10 +53,16 @@ class Usuario {
       return sendResponse(res, 204);
 
     } catch (error) {
+      console.log(error instanceof APIErro);
 
-      if (error.code && error.errorDetail) {
-        const { code, errorDetail } = error;
-        return sendError(res, code, [errorDetail]);
+
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        console.log(error.toJson());
+        // console.log(code);
+        // console.log(errors);
+
+        return sendError(res, code, ...errors);
       }
       if (error instanceof z.ZodError) {
         let erros = [];
@@ -116,7 +123,7 @@ class Usuario {
       return sendResponse(res, 200, {
         data: response
       });
-      
+
     } catch (error) {
 
       if (error.code && error.message) {
@@ -137,8 +144,8 @@ class Usuario {
       }
 
     }
-    return sendError(res,500,[]);
-    
+    return sendError(res, 500, []);
+
 
   };
 };

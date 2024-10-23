@@ -3,12 +3,13 @@ import UsuarioRepository from "../repositories/usuarioRepository.js";
 import UsuarioSchema from "../schemas/usuarioSchema.js";
 import Hashsenha from "../util/hashSenha.js";
 import { z } from "zod";
+import { APIErro } from "../util/apiErrro.js";
 
 class UsuarioService {
 
     static async listar(filtro) {
         const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
-        
+
         const response = await UsuarioRepository.findMany(filtroValidated);
         response.forEach((e) => delete e.senha);
         if (response.length === 0) throw {
@@ -20,16 +21,16 @@ class UsuarioService {
     };
 
     static async listarPorID(filtro) {
-            const {id} = UsuarioSchema.id.parse(filtro);
-            const response = await UsuarioRepository.findById(id);
-            if (!response) {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: "Usuário não encontrado.",
-                };
+        const { id } = UsuarioSchema.id.parse(filtro);
+        const response = await UsuarioRepository.findById(id);
+        if (!response) {
+            throw {
+                error: true,
+                code: 400,
+                message: "Usuário não encontrado.",
             };
-            return response;
+        };
+        return response;
     };
 
     static async inserir(data) {
@@ -47,14 +48,14 @@ class UsuarioService {
 
             const hashSenha = await Hashsenha.criarHashSenha(data.senha);
             usuarioValidated.senha = hashSenha;
-    
+
             const response = await UsuarioRepository.create(usuarioValidated);
             return {
                 id: response.id,
                 nome: response.nome,
                 email: response.email
             };
-    
+
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const errorMessages = error.issues.map(issue => ({
@@ -160,25 +161,26 @@ class UsuarioService {
     };
 
     static async deletar(filtro) {
-            //PARA ESSA MODELAGEM DEVO VERIFICAR DEPOIS SE
-            //Um usuario for deletado o que deve acontecer com
-            //As estações dele?
-            const {id} = UsuarioSchema.id.parse(filtro);
-            const usuario = await UsuarioRepository.findById(id);
-            if (!usuario || usuario.length === 0) {
-                throw {
-                    code: 400,
-                    errorDetail: {
-                        mensage:"O id do usuario informado não existe!",
-                        path:"id"
-                    },
-                };
-            };
-            const response = await UsuarioRepository.delete(id);
-           
-            delete response.senha;
-            return response;
-          
+        //PARA ESSA MODELAGEM DEVO VERIFICAR DEPOIS SE
+        //Um usuario for deletado o que deve acontecer com
+        //As estações dele?
+        const { id } = UsuarioSchema.id.parse(filtro);
+        const usuario = await UsuarioRepository.findById(id);
+        if (!usuario || usuario.length === 0) {
+            throw new APIErro(
+                400,
+                [{
+                    mensage: "O id do usuario informado não existe!",
+                    path: "id"
+                }]
+            );
+
+        };
+        const response = await UsuarioRepository.delete(id);
+
+        delete response.senha;
+        return response;
+
     };
 };
 
