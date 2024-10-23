@@ -8,7 +8,6 @@ class UsuarioService {
 
     static async listar(filtro) {
         const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
-        console.log(filtroValidated);
         
         const response = await UsuarioRepository.findMany(filtroValidated);
         response.forEach((e) => delete e.senha);
@@ -20,9 +19,9 @@ class UsuarioService {
         return response;
     };
 
-    static async listarPorID(id) {
-            const parsedIdSchema = UsuarioSchema.listarUsuarioPorID.parse(id);
-            const response = await UsuarioRepository.findById(parsedIdSchema.id);
+    static async listarPorID(filtro) {
+            const {id} = UsuarioSchema.id.parse(filtro);
+            const response = await UsuarioRepository.findById(id);
             if (!response) {
                 throw {
                     error: true,
@@ -35,72 +34,41 @@ class UsuarioService {
 
     static async inserir(data) {
         try {
-            const validacao = z.object({
-                nome: z.string({
-                    required_error: "Campo nome é obrigatório.",
-                    invalid_type_error: "Nome deve ser do tipo string."
-                }).min(3, {
-                    message: "Nome deve conter pelo menos 3 letras."
-                }),
-                email: z.string({
-                    required_error: "Campo email é obrigatório.",
-                    invalid_type_error: "Email deve ser do tipo string."
-                }).email({
-                    message: "Email invalido."
-                }),
-                senha: z.string({
-                    required_error: "Campo senha é obrigatório.",
-                    invalid_type_error: "Senha deve ser do tipo string."
-                }).min(8).refine(
-                    (value) =>
-                        /[a-z]/.test(value) &&  // Tem pelo menos uma letra minúscula
-                        /[A-Z]/.test(value) &&  // Tem pelo menos uma letra maiúscula
-                        /[0-9]/.test(value) &&  // Tem pelo menos um número
-                        /[^a-zA-Z0-9]/.test(value),  // Tem pelo menos um símbolo
-                    {
-                        message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.",
-                    }
-                )
-            });
-            const usuarioValidated = validacao.parse(data);
-            //  verificação do email repetido
+            const usuarioValidated = UsuarioSchema.cadastrarUsuario.parse(data);
+
             const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
             if (emailRepetido.length > 0) {
-                throw new Error("Email já cadastrado.")
-
-            };
-            //  hash senha
+                throw {
+                    error: true,
+                    code: 400,
+                    message: "Email já cadastrado.",
+                };
+            }
 
             const hashSenha = await Hashsenha.criarHashSenha(data.senha);
             usuarioValidated.senha = hashSenha;
+    
             const response = await UsuarioRepository.create(usuarioValidated);
-            const userResponse = { //para não exibir a senha do usuário no corpo da resposta
+            return {
                 id: response.id,
                 nome: response.nome,
                 email: response.email
             };
-            return userResponse;
+    
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
+                const errorMessages = error.issues.map(issue => ({
+                    path: issue.path[0],
+                    message: issue.message
+                }));
                 throw {
                     error: true,
                     code: 400,
                     message: errorMessages,
                 };
-            } else {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: error.message
-                };
-            };
-        };
+            }
+            throw error;
+        }
     };
 
     static async atualizar(id, data) {
@@ -191,53 +159,26 @@ class UsuarioService {
         };
     };
 
-    static async deletar(id) {
-        try {
-            const idSchema = z.object({
-                id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id informado não é do tipo number.",
-                }).int({
-                    message: "Id informado não é um número inteiro."
-                }).positive({
-                    message: "Id informado não é positivo."
-                }))
-            });
-            const parsedIdSchema = idSchema.parse(id);
-            const usuario = await UsuarioRepository.findById(parsedIdSchema.id);
-            if (!usuario) {
+    static async deletar(filtro) {
+            //PARA ESSA MODELAGEM DEVO VERIFICAR DEPOIS SE
+            //Um usuario for deletado o que deve acontecer com
+            //As estações dele?
+            const {id} = UsuarioSchema.id.parse(filtro);
+            const usuario = await UsuarioRepository.findById(id);
+            if (!usuario || usuario.length === 0) {
                 throw {
-                    error: true,
                     code: 400,
-                    message: "Usuário não encontrado.",
+                    errorDetail: {
+                        mensage:"O id do usuario informado não existe!",
+                        path:"id"
+                    },
                 };
             };
-            const response = await UsuarioRepository.delete(parsedIdSchema.id);
-            if (!response) {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: "Erro interno, não foi possível deletar este usuário.",
-                };
-            };
+            const response = await UsuarioRepository.delete(id);
+           
             delete response.senha;
             return response;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        };
+          
     };
 };
 

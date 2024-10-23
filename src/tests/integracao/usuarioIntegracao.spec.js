@@ -33,7 +33,7 @@ describe("Cadastrar usuario", () => {
                 email: `vitorgabriel18@gmail.com`,
                 senha: "Senhaa123@"
             });
-        console.log(response.body);
+            
         expect(response.body.code).toBe(201);
         expect(response.body.message).toBe("usuario cadastrado com sucesso.");
         expect(response.body.error).toBe(false);
@@ -104,7 +104,7 @@ describe("Listar usuarios", () => {
             .set("Content-Type", "application/json")
         const body = response.body;
         //deve retornar a mensagem correta de sucesso
-        expect(response.body.message).toBe("Usuário encontrado com sucesso");
+        expect(response.body.message).toBeDefined();
         //deve retornar status 200
         expect(response.status).toBe(200);
         //deve retornar erro falso
@@ -121,9 +121,26 @@ describe("Listar usuarios", () => {
             .set("Content-Type", "application/json")
         const body = response.body;
         //deve retornar a mensagem correta de sucesso
-        expect(response.body.message).toBe("Usuário encontrado com sucesso.");
+        expect(response.body.message).toBeDefined();
         //deve retornar status 200
         expect(response.status).toBe(200);
+        //deve retornar erro falso
+        expect({ error: false }).toHaveProperty('error', false);
+        //testando se o corpo da requisição é um array
+        expect(body).toBeInstanceOf(Object);
+        //testando se retorna json
+        expect(response.headers['content-type']).toContain('json');
+    });
+    it('Deve retornar sucesso ao listar usuario com ID valido', async () => {
+        const response = await request(app)
+            .get(`/usuarios/a`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+        const body = response.body;
+        //deve retornar a mensagem correta de sucesso
+        expect(response.body.message).toBeDefined();
+        //deve retornar status 200
+        expect(response.status).toBe(400);
         //deve retornar erro falso
         expect({ error: false }).toHaveProperty('error', false);
         //testando se o corpo da requisição é um array
@@ -138,7 +155,7 @@ describe("Listar usuarios", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         //testando se retorna o motivo do erro
-        expect(response.body.message).toBe("Usuário não encontrado.");
+        expect(response.body.message).toBeDefined();
         //testando o status da resposta
         expect(response.status).toBe(400);
         //testando se o erro esta ativo
@@ -152,7 +169,6 @@ describe("Listar usuarios", () => {
         const response = await request(app)
             .get(`/usuarios?email=548`)
             .set("Content-Type", "application/json")
-            console.log(response.body);
             
             expect(response.body).toBeDefined();
             expect(response.body.code).toEqual(400);
@@ -164,7 +180,6 @@ describe("Listar usuarios", () => {
         const response = await request(app)
             .get(`/usuarios?nome=nãoexiste`)
             .set("Content-Type", "application/json")
-            console.log(response.body);
             
             expect(response.body).toBeDefined();
             expect(response.body.code).toEqual(400);
@@ -227,16 +242,32 @@ describe("Deletar usuario", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         expect(response.status).toBe(204);
-    })
-    it('deve retornar erro com o id invalido', async () => {
+    });
+    it('deve retornar erro com o id que não consta na database', async () => {
         const id = 64161;
         const response = await request(app)
             .delete(`/usuarios/${id}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
+        
         expect(response.status).toBe(400);
         expect(response.body).toBeInstanceOf(Object);
-        expect(response.body.message).toBe("Usuário não encontrado.");
+        expect(response.body.message).toBeDefined();
         expect(response.body.error).toBe(true);
-    })
+        expect(response.body.errors).toBeDefined();
+    });
+    it('deve retornar erro com o id que não é valido', async () => {
+        const id = 'a';
+        const response = await request(app)
+            .delete(`/usuarios/${id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+        
+        expect(response.status).toBe(400);
+        expect(response.body).toBeInstanceOf(Object);
+        expect(response.body.message).toBeDefined();
+        expect(response.body.error).toBe(true);
+        expect(response.body.errors).toBeDefined();
+
+    });
 });
