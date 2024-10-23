@@ -90,38 +90,54 @@ const estacoesCadastrarSchemas = {
     estacoes_cadastrar_400: {
 
         properties: {
+            data: {
+                description: "Obejto resultado, cadastrado no banco de dados.",
+                type: "array",
+                example: []
+            },
+            code: {
+                type: "int",
+                example: 201,
+                description: "Codigo http da requisição.",
+
+            },
+            message: {
+                description: "Campo que mostra uma mensagem de resultado da requisição.",
+                type: "string",
+                example: "Requisição com sintaxe incorreta ou outros problemas!",
+            },
             error: { type: "boolean", example: true },
             code: { type: "int", example: 400 },
             errors: {
                 type: "array", example:
                     [
                         {
-                            "path": "nome",
-                            "message": "Nome é obrigatório."
+                            path: "nome",
+                            message: "Nome é obrigatório."
                         },
                         {
-                            "path": "endereco",
-                            "message": "Email é obrigatório."
+                            path: "endereco",
+                            message: "Email é obrigatório."
                         },
                         {
-                            "path": "latitude",
-                            "message": "Latitude informada não é do tipo number."
+                            path: "latitude",
+                            message: "Latitude informada não é do tipo number."
                         },
                         {
-                            "path": "longitude",
-                            "message": "Longitude informada não é do tipo number."
+                            path: "longitude",
+                            message: "Longitude informada não é do tipo number."
                         },
                         {
-                            "path": "ip",
-                            "message": "Ip é obrigatório."
+                            path: "ip",
+                            message: "Ip é obrigatório."
                         },
                         {
-                            "path": "status",
-                            "message": "Status informado não corresponde ao formato indicado (ativo ou inativo)."
+                            path: "status",
+                            message: "Status informado não corresponde ao formato indicado (ativo ou inativo)."
                         },
                         {
-                            "path": "usuario_id",
-                            "message": "Estação sem vínculo com usuário."
+                            path: "usuario_id",
+                            message: "Estação sem vínculo com usuário."
                         }
                     ]
             }
