@@ -16,8 +16,8 @@ class UsuarioService {
             throw new APIErro(
                 400,
                 [{
-                    mensage: "Nenhum usuário encontrado verifique os paramentros!",
-                    path: "paramentros"
+                    message: "Nenhum usuário encontrado verifique os parâmetros!",
+                    path: "parâmetros"
                 }]
             );
         };
@@ -28,11 +28,12 @@ class UsuarioService {
         const { id } = UsuarioSchema.id.parse(filtro);
         const response = await UsuarioRepository.findById(id);
         if (!response) {
-            throw {
-                error: true,
-                code: 400,
-                message: "Usuário não encontrado.",
-            };
+            throw new APIErro(
+                400,
+                [{
+                    message: "Nenhum usuário encontrado verifique o id!",
+                    path: "id"
+                }]);
         };
         return response;
     };
@@ -111,7 +112,7 @@ class UsuarioService {
             throw new APIErro(
                 400,
                 [{
-                    mensage: "O id do usuario informado não existe!",
+                    message: "O id do usuario informado não existe!",
                     path: "id"
                 }]
             );
