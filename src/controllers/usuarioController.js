@@ -15,12 +15,26 @@ class Usuario {
         message: 'usuario cadastrado com sucesso.',
       });
     } catch (error) {
-      if (error.code && error.message) {
-        return res.status(error.code).json({
-          ...error
-        })
+      
+      if (error.code && error.errors) {
+        return sendError(res, error.code, error.errors)
       }
-      return res.status(error.code || 500).json(error);
+
+
+      if (error instanceof z.ZodError) {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
+            path: issue.path[0],
+            message: issue.message
+          })));
+
+        return sendError(res, 400, errors);
+      }
+
+      return sendError(res,500,[]);
+      
     };
   };
 
@@ -37,11 +51,26 @@ class Usuario {
         message: "Usuario atualizado com sucesso.",
       });
     } catch (error) {
-      return res.status(error.code || 500).json({
-        error: false,
-        code: error.code || 500,
-        message: error.message,
-      });
+      
+      if (error.code && error.errors) {
+        return sendError(res, error.code, error.errors)
+      }
+
+
+      if (error instanceof z.ZodError) {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
+            path: issue.path[0],
+            message: issue.message
+          })));
+
+        return sendError(res, 400, errors);
+      }
+
+      return sendError(res,500,[]);
+
     };
   };
 
@@ -94,26 +123,26 @@ class Usuario {
         message: response.length > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
       });
     } catch (error) {
+      
       if (error.code && error.message) {
-        return res.status(error.code).json({
-          ...error
-        })
+        return sendError(res, error.code, [])
       }
 
+
       if (error instanceof z.ZodError) {
-        const errorMessages = error.issues.map((issue) => {
-          return {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
             path: issue.path[0],
             message: issue.message
-          }
-        });
-        return res.status(400).json({
-          error: true,
-          code: 400,
-          message: errorMessages,
-        });
+          })));
+
+        return sendError(res, 400, errors);
       }
-      return res.status(error.code || 500).json(error);
+
+      return sendError(res,500,[]);
+
     };
   };
 
@@ -143,10 +172,9 @@ class Usuario {
         return sendError(res, 400, errors);
       }
 
+      return sendError(res,500,[]);
     }
-    return sendError(res, 500, []);
-
-
+    
   };
 };
 
