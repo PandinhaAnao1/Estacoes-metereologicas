@@ -87,10 +87,6 @@ class Usuario {
 
       if (error instanceof APIErro) {
         const { code, errors } = error.toJson();
-        console.log(error.toJson());
-        // console.log(code);
-        // console.log(errors);
-
         return sendError(res, code, ...errors);
       }
       if (error instanceof z.ZodError) {
@@ -124,8 +120,9 @@ class Usuario {
       });
     } catch (error) {
       
-      if (error.code && error.message) {
-        return sendError(res, error.code, [])
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
 
 

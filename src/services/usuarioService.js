@@ -12,10 +12,14 @@ class UsuarioService {
 
         const response = await UsuarioRepository.findMany(filtroValidated);
         response.forEach((e) => delete e.senha);
-        if (response.length === 0) throw {
-            error: true,
-            code: 400,
-            message: "Nenhum usuário encontrado.",
+        if (response.length === 0) {
+            throw new APIErro(
+                400,
+                [{
+                    mensage: "Nenhum usuário encontrado verifique os paramentros!",
+                    path: "paramentros"
+                }]
+            );
         };
         return response;
     };
@@ -58,24 +62,6 @@ class UsuarioService {
                 nome: response.nome,
                 email: response.email
             };
-<<<<<<< HEAD
-
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map(issue => ({
-                    path: issue.path[0],
-                    message: issue.message
-                }));
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            }
-            throw error;
-        }
-=======
->>>>>>> b9c798027d42a32ffdb6b0f7ff3ef36e8b60fcc4
     };
 
     static async atualizar(id, data) {

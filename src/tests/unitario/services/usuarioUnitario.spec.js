@@ -2,6 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import usuarioService from "../../../services/usuarioService.js";
 import usuarioRepository from "../../../repositories/usuarioRepository.js";
 import { z, ZodError } from "zod";
+import { APIErro } from "../../../util/apiErrro.js";
 
 beforeEach(() => {
   usuarioRepository.findById = jest.fn();
@@ -43,11 +44,8 @@ describe("usuarioService.listar", () => {
 
     const filtro = { id: 999 };
 
-    await expect(usuarioService.listar(filtro)).rejects.toEqual({
-      error: true,
-      code: 400,
-      message: "Nenhum usuário encontrado.",
-    });
+    await expect(usuarioService.listar(filtro)).rejects.toBeInstanceOf(APIErro);
+    
   });
 });
 
