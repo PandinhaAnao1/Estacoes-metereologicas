@@ -82,8 +82,6 @@ class Usuario {
       return sendResponse(res, 204);
 
     } catch (error) {
-      console.log(error instanceof APIErro);
-
 
       if (error instanceof APIErro) {
         const { code, errors } = error.toJson();
@@ -151,9 +149,11 @@ class Usuario {
       });
 
     } catch (error) {
+      console.log(error);
 
-      if (error.code && error.message) {
-        return sendError(res, error.code, [])
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
 
 

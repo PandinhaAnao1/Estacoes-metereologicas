@@ -156,6 +156,11 @@ describe("Listar usuarios", () => {
             .get(`/usuarios/${idinvalido}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
+        
+        
+        
+        console.log(response.body);
+            
         //testando se retorna o motivo do erro
         expect(response.body.message).toBeDefined();
         //testando o status da resposta
@@ -205,7 +210,6 @@ describe("Atualizar usuario", () => {
             .patch(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
             .send(updatedData);
-            console.log(response.body);
             
 
         expect(response.status).toBe(200);
@@ -252,7 +256,6 @@ describe("Deletar usuario", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json");
 
-        console.log(response.body);
 
 
         expect(response.status).toBe(400);
