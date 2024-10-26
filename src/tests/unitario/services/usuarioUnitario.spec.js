@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import usuarioService from "../../../services/usuarioService.js";
 import usuarioRepository from "../../../repositories/usuarioRepository.js";
+import { sendError } from "../../../util/messages.js";
 import { z, ZodError } from "zod";
 
 beforeEach(() => {
@@ -22,6 +23,8 @@ jest.mock("bcryptjs", () => ({
       "$2a$10$sAYH1jr9ohI8spU0ENZFXe1NJcJg/UQRbvYzHQT1jbBUIASrg00am"
     ),
 }));
+
+jest.mock("../../../util/messages.js")
 
 describe("usuarioService.listar", () => {
   it("Deve retornar usuários válidos quando o filtro é correto", async () => {
