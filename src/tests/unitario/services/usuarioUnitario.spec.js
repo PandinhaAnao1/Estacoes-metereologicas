@@ -214,11 +214,12 @@ describe("usuarioService.atualizar", () => {
     });
   });
 
+
   it("Deve lançar erro de email já cadastrado ao tentar atualizar usuário", async () => {
     const idMock = {id: 1}
     const data = {
         email: "fernanda@example.com",
-      };
+    };
 
       usuarioRepository.findById.mockResolvedValue(idMock);
 
