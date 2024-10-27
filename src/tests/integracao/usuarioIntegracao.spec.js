@@ -50,7 +50,6 @@ describe("Cadastrar usuario", () => {
                 email: "vitorgabriel18@gmail.com",
                 senha: "123"
             });
-            console.log(response.body);
             
 
         expect(response.status).toBe(400);
@@ -197,7 +196,7 @@ describe("Atualizar usuario", () => {
     it('Atualização dos dados de um usuario valido', async () => {
         const updatedData = {
             nome: "usuario Atualizado",
-            email: "vitorgabriel18@gmail.com",
+            email: "vitorgabriel18@outlook.com",
             senha: "Senhaa123@"
         }
 
@@ -205,7 +204,7 @@ describe("Atualizar usuario", () => {
             .patch(`/usuarios/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
             .send(updatedData);
-            console.log(response.body);
+        
             
 
         expect(response.status).toBe(200);
@@ -215,6 +214,27 @@ describe("Atualizar usuario", () => {
         expect(response.body.data).toHaveProperty('nome', updatedData.nome);
         expect(response.body.data).toHaveProperty('email', updatedData.email);
         expect(response.body.error).toBe(false);
+    });
+    it('Atualização de um usuario invalido com dados validos', async () => {
+        const updatedData = {
+            nome: "usuario Atualizado",
+            email: "vitorgabriel18@outlook.com",
+            senha: "Senhaa123@"
+        }
+
+        const response = await request(app)
+            .patch(`/usuarios/99999999999`)
+            .set("Authorization", `Bearer ${token}`)
+            .send(updatedData);
+        
+            
+
+        expect(response.status).toBe(400);
+        expect(response.headers["content-type"]).toContain('json');
+        expect(response.body.error).toBe(true);
+        expect(response.body.data).toBeDefined();
+        expect(response.body.errors).toBeDefined();
+        expect(response.body.message).toBeDefined();
     })
 
     it('Deve retornar erro ao atualizar um usuario com a senha com os parametros errados', async () => {

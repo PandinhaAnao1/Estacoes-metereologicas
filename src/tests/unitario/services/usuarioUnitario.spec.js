@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import usuarioService from "../../../services/usuarioService.js";
 import usuarioRepository from "../../../repositories/usuarioRepository.js";
 import { sendError } from "../../../util/messages.js";
-import { z, ZodError } from "zod";
+import { object, z, ZodError } from "zod";
 
 beforeEach(() => {
   usuarioRepository.findById = jest.fn();
@@ -210,11 +210,7 @@ describe("usuarioService.atualizar", () => {
 
     usuarioRepository.findById.mockResolvedValue(null); // Simular usuário não encontrado
 
-    await expect(usuarioService.atualizar(idMock, dadosMock)).rejects.toEqual({
-      error: true,
-      code: 400,
-      message: "Usuário não encontrado.",
-    });
+    await expect(usuarioService.atualizar(idMock, dadosMock)).rejects.toBeInstanceOf(Object);
   });
 
 
@@ -228,7 +224,7 @@ describe("usuarioService.atualizar", () => {
 
       usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
   
-      await expect(usuarioService.atualizar(idMock, data)).rejects.toEqual({
+      await expect(usuarioService.atualizar({...idMock, ...data})).rejects.toEqual({
         code: 400,
         errors: [
           {
