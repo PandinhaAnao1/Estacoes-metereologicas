@@ -69,14 +69,14 @@ class UsuarioService {
 
         const {id} = UsuarioSchema.id.parse(filtro);
             const usuario = await UsuarioRepository.findById(id);
-            if (!usuario || usuario.length == 0) throw {
-                code: 400,
-                errors:[
-                    {
+            if (!usuario || usuario.length == 0) {
+                throw new APIErro(
+                    400,
+                    [{
                         path:"id",
                         message:"Usuário não encontrado."
-                    }
-                ],
+                    }]
+                );
             };
 
             const {nome,email,senha} = UsuarioSchema.atualizarUsuario.parse(filtro);
@@ -94,15 +94,13 @@ class UsuarioService {
                 const emailRepetido = await UsuarioRepository.findMany({ email: email });
                 if (emailRepetido.length != 0) {
                     if (id != emailRepetido[0].id) {
-                        throw {
-                            code: 400,
-                            errors: [
-                                {
+                        throw new APIErro(
+                            400,
+                            [{
                                     message: "Email já cadastrado!",
                                     path: "email"
-                                }
-                            ]
-                        };
+                            }]
+                        );
                     };
                 };
                 usuarioAtualizado.email = email;

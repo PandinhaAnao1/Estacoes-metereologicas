@@ -47,11 +47,11 @@ class Usuario {
         message: "Usuario atualizado com sucesso.",
       });
     } catch (error) {
-      
-      if (error.code && error.errors) {
-        return sendError(res, error.code, error.errors)
+  
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
-
 
       if (error instanceof z.ZodError) {
 

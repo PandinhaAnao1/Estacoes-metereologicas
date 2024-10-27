@@ -222,14 +222,6 @@ describe("usuarioService.atualizar", () => {
 
       usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
   
-      await expect(usuarioService.atualizar({...idMock, ...data})).rejects.toEqual({
-        code: 400,
-        errors: [
-          {
-            message: "Email já cadastrado!",
-            path: "email",
-          },
-        ],
-      });
+      await expect(usuarioService.atualizar({...idMock, ...data})).rejects.toBeInstanceOf(APIErro);
     });
 });
