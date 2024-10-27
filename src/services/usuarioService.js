@@ -59,26 +59,35 @@ class UsuarioService {
             };
     };
 
-    static async atualizar(id, data) {
-        const parsedIdSchema = UsuarioSchema.id.parse(id);
-            const usuario = await UsuarioRepository.findById(parsedIdSchema.id);
-            if (!usuario) throw {
-                error: true,
+    static async atualizar(filtro) {
+
+        const {id} = UsuarioSchema.id.parse(filtro);
+            const usuario = await UsuarioRepository.findById(id);
+            if (!usuario || usuario.length == 0) throw {
                 code: 400,
-                message: "Usuário não encontrado.",
+                errors:[
+                    {
+                        path:"id",
+                        message:"Usuário não encontrado."
+                    }
+                ],
             };
 
-            const usuarioValidated = UsuarioSchema.atualizarUsuario.parse(data);
-            if (usuarioValidated.senha != undefined) {
-                //  hash senha
-                const hashSenha = await Hashsenha.criarHashSenha(data.senha);
-                usuarioValidated.senha = hashSenha;
+            const {nome,email,senha} = UsuarioSchema.atualizarUsuario.parse(filtro);
+            let usuarioAtualizado = {};
+            if(nome != undefined){
+                usuarioAtualizado.nome = nome;
             }
-            if (usuarioValidated.email != undefined) {
+            if (senha != undefined) {
+                //  hash senha
+                const hashSenha = await Hashsenha.criarHashSenha(senha);
+                usuarioAtualizado.senha = hashSenha;
+            }
+            if (email != undefined) {
                 //  verificação do email repetido
-                const emailRepetido = await UsuarioRepository.findMany({ email: data.email });
+                const emailRepetido = await UsuarioRepository.findMany({ email: email });
                 if (emailRepetido.length != 0) {
-                    if (parsedIdSchema.id != emailRepetido[0].id) {
+                    if (id != emailRepetido[0].id) {
                         throw {
                             code: 400,
                             errors: [
@@ -90,8 +99,9 @@ class UsuarioService {
                         };
                     };
                 };
+                usuarioAtualizado.email = email;
             };
-            const response = await UsuarioRepository.update(parsedIdSchema.id, usuarioValidated);
+            const response = await UsuarioRepository.update(id, usuarioAtualizado);
             delete response.senha;
             return response;
     };
