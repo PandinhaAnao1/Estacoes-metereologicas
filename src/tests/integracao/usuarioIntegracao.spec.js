@@ -50,7 +50,6 @@ describe("Cadastrar usuario", () => {
                 email: "vitorgabriel18@gmail.com",
                 senha: "123"
             });
-            console.log(response.body);
             
 
         expect(response.status).toBe(400);
@@ -206,7 +205,6 @@ describe("Atualizar usuario", () => {
             .set("Authorization", `Bearer ${token}`)
             .send(updatedData);
         
-        console.log(response.body);
             
 
         expect(response.status).toBe(200);
@@ -229,7 +227,6 @@ describe("Atualizar usuario", () => {
             .set("Authorization", `Bearer ${token}`)
             .send(updatedData);
         
-        console.log(response.body);
             
 
         expect(response.status).toBe(400);
@@ -250,7 +247,6 @@ describe("Atualizar usuario", () => {
                 email: "vitorgabriel18@gmail.com",
                 senha: "Senhaa123"
             });
-        console.log(response.body);
 
         expect(response.status).toBe(400);
         expect({ message: "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo." }).toHaveProperty('message', "A senha deve conter pelo menos uma letra minúscula, uma letra maiúscula, um número e um símbolo.");
