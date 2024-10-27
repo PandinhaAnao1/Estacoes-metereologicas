@@ -3,33 +3,39 @@ import UsuarioRepository from "../repositories/usuarioRepository.js";
 import UsuarioSchema from "../schemas/usuarioSchema.js";
 import Hashsenha from "../util/hashSenha.js";
 import { z } from "zod";
+import { APIErro } from "../util/apiErrro.js";
 
 class UsuarioService {
 
     static async listar(filtro) {
         const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
-        
+
         const response = await UsuarioRepository.findMany(filtroValidated);
         response.forEach((e) => delete e.senha);
-        if (response.length === 0) throw {
-            error: true,
-            code: 400,
-            message: "Nenhum usuário encontrado.",
+        if (response.length === 0) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "Nenhum usuário encontrado verifique os parâmetros!",
+                    path: "parâmetros"
+                }]
+            );
         };
         return response;
     };
 
     static async listarPorID(filtro) {
-            const {id} = UsuarioSchema.id.parse(filtro);
-            const response = await UsuarioRepository.findById(id);
-            if (!response) {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: "Usuário não encontrado.",
-                };
-            };
-            return response;
+        const { id } = UsuarioSchema.id.parse(filtro);
+        const response = await UsuarioRepository.findById(id);
+        if (!response) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "Nenhum usuário encontrado verifique o id!",
+                    path: "id"
+                }]);
+        };
+        return response;
     };
 
     static async inserir(data) {
@@ -50,7 +56,7 @@ class UsuarioService {
 
             const hashSenha = await Hashsenha.criarHashSenha(data.senha);
             usuarioValidated.senha = hashSenha;
-    
+
             const response = await UsuarioRepository.create(usuarioValidated);
             return {
                 id: response.id,
@@ -63,14 +69,14 @@ class UsuarioService {
 
         const {id} = UsuarioSchema.id.parse(filtro);
             const usuario = await UsuarioRepository.findById(id);
-            if (!usuario || usuario.length == 0) throw {
-                code: 400,
-                errors:[
-                    {
+            if (!usuario || usuario.length == 0) {
+                throw new APIErro(
+                    400,
+                    [{
                         path:"id",
                         message:"Usuário não encontrado."
-                    }
-                ],
+                    }]
+                );
             };
 
             const {nome,email,senha} = UsuarioSchema.atualizarUsuario.parse(filtro);
@@ -88,15 +94,13 @@ class UsuarioService {
                 const emailRepetido = await UsuarioRepository.findMany({ email: email });
                 if (emailRepetido.length != 0) {
                     if (id != emailRepetido[0].id) {
-                        throw {
-                            code: 400,
-                            errors: [
-                                {
+                        throw new APIErro(
+                            400,
+                            [{
                                     message: "Email já cadastrado!",
                                     path: "email"
-                                }
-                            ]
-                        };
+                            }]
+                        );
                     };
                 };
                 usuarioAtualizado.email = email;
@@ -107,25 +111,26 @@ class UsuarioService {
     };
 
     static async deletar(filtro) {
-            //PARA ESSA MODELAGEM DEVO VERIFICAR DEPOIS SE
-            //Um usuario for deletado o que deve acontecer com
-            //As estações dele?
-            const {id} = UsuarioSchema.id.parse(filtro);
-            const usuario = await UsuarioRepository.findById(id);
-            if (!usuario || usuario.length === 0) {
-                throw {
-                    code: 400,
-                    errorDetail: {
-                        mensage:"O id do usuario informado não existe!",
-                        path:"id"
-                    },
-                };
-            };
-            const response = await UsuarioRepository.delete(id);
-           
-            delete response.senha;
-            return response;
-          
+        //PARA ESSA MODELAGEM DEVO VERIFICAR DEPOIS SE
+        //Um usuario for deletado o que deve acontecer com
+        //As estações dele?
+        const { id } = UsuarioSchema.id.parse(filtro);
+        const usuario = await UsuarioRepository.findById(id);
+        if (!usuario || usuario.length === 0) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "O id do usuario informado não existe!",
+                    path: "id"
+                }]
+            );
+
+        };
+        const response = await UsuarioRepository.delete(id);
+
+        delete response.senha;
+        return response;
+
     };
 };
 

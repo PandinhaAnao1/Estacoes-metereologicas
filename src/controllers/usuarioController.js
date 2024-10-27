@@ -1,6 +1,7 @@
 import UsuarioService from "../services/usuarioService.js";
 import { z } from "zod";
 import { sendError, sendResponse } from "../util/messages.js"
+import { APIErro } from "../util/apiErrro.js";
 
 class Usuario {
   static cadastrar = async (req, res) => {
@@ -46,11 +47,11 @@ class Usuario {
         message: "Usuario atualizado com sucesso.",
       });
     } catch (error) {
-      
-      if (error.code && error.errors) {
-        return sendError(res, error.code, error.errors)
+  
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
-
 
       if (error instanceof z.ZodError) {
 
@@ -78,9 +79,9 @@ class Usuario {
 
     } catch (error) {
 
-      if (error.code && error.errorDetail) {
-        const { code, errorDetail } = error;
-        return sendError(res, code, [errorDetail]);
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
       if (error instanceof z.ZodError) {
         let erros = [];
@@ -113,8 +114,9 @@ class Usuario {
       });
     } catch (error) {
       
-      if (error.code && error.message) {
-        return sendError(res, error.code, [])
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
 
 
@@ -141,11 +143,12 @@ class Usuario {
       return sendResponse(res, 200, {
         data: response
       });
-      
+
     } catch (error) {
 
-      if (error.code && error.message) {
-        return sendError(res, error.code, [])
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
 
 
@@ -164,7 +167,6 @@ class Usuario {
       return sendError(res,500,[]);
     }
     
-
   };
 };
 

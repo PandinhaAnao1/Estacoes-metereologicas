@@ -33,7 +33,7 @@ describe("Cadastrar usuario", () => {
                 email: `vitorgabriel18@gmail.com`,
                 senha: "Senhaa123@"
             });
-            
+
         expect(response.body.code).toBe(201);
         expect(response.body.message).toBe("usuario cadastrado com sucesso.");
         expect(response.body.error).toBe(false);
@@ -155,6 +155,10 @@ describe("Listar usuarios", () => {
             .get(`/usuarios/${idinvalido}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
+        
+        
+        
+            
         //testando se retorna o motivo do erro
         expect(response.body.message).toBeDefined();
         //testando o status da resposta
@@ -170,22 +174,22 @@ describe("Listar usuarios", () => {
         const response = await request(app)
             .get(`/usuarios?email=548`)
             .set("Content-Type", "application/json")
-            
-            expect(response.body).toBeDefined();
-            expect(response.body.code).toEqual(400);
-            expect(response.body.error).toBe(true);
-            expect(response.body.message).toBeDefined();
+
+        expect(response.body).toBeDefined();
+        expect(response.body.code).toEqual(400);
+        expect(response.body.error).toBe(true);
+        expect(response.body.message).toBeDefined();
     });
 
     it("Verificar se esta retornando erro 400 de não encontrado", async () => {
         const response = await request(app)
             .get(`/usuarios?nome=nãoexiste`)
             .set("Content-Type", "application/json")
-            
-            expect(response.body).toBeDefined();
-            expect(response.body.code).toEqual(400);
-            expect(response.body.error).toBe(true);
-            expect(response.body.message).toBeDefined();
+
+        expect(response.body).toBeDefined();
+        expect(response.body.code).toEqual(400);
+        expect(response.body.error).toBe(true);
+        expect(response.body.message).toBeDefined();
     });
 
 });
@@ -270,8 +274,10 @@ describe("Deletar usuario", () => {
         const response = await request(app)
             .delete(`/usuarios/${id}`)
             .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        
+            .set("Content-Type", "application/json");
+
+
+
         expect(response.status).toBe(400);
         expect(response.body).toBeInstanceOf(Object);
         expect(response.body.message).toBeDefined();
@@ -284,7 +290,7 @@ describe("Deletar usuario", () => {
             .delete(`/usuarios/${id}`)
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        
+
         expect(response.status).toBe(400);
         expect(response.body).toBeInstanceOf(Object);
         expect(response.body.message).toBeDefined();
