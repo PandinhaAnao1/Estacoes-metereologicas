@@ -158,7 +158,6 @@ describe("Listar usuarios", () => {
         
         
         
-        console.log(response.body);
             
         //testando se retorna o motivo do erro
         expect(response.body.message).toBeDefined();
