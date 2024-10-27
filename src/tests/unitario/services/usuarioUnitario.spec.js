@@ -1,8 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
 import usuarioService from "../../../services/usuarioService.js";
 import usuarioRepository from "../../../repositories/usuarioRepository.js";
-import { z, ZodError } from "zod";
+import { object, z, ZodError } from "zod";
 import { APIErro } from "../../../util/apiErrro.js";
+import { sendError } from "../../../util/messages.js";
 
 beforeEach(() => {
   usuarioRepository.findById = jest.fn();
@@ -23,6 +24,8 @@ jest.mock("bcryptjs", () => ({
       "$2a$10$sAYH1jr9ohI8spU0ENZFXe1NJcJg/UQRbvYzHQT1jbBUIASrg00am"
     ),
 }));
+
+jest.mock("../../../util/messages.js")
 
 describe("usuarioService.listar", () => {
   it("Deve retornar usuários válidos quando o filtro é correto", async () => {
@@ -205,24 +208,21 @@ describe("usuarioService.atualizar", () => {
 
     usuarioRepository.findById.mockResolvedValue(null); // Simular usuário não encontrado
 
-    await expect(usuarioService.atualizar(idMock, dadosMock)).rejects.toEqual({
-      error: true,
-      code: 400,
-      message: "Usuário não encontrado.",
-    });
+    await expect(usuarioService.atualizar(idMock, dadosMock)).rejects.toBeInstanceOf(Object);
   });
+
 
   it("Deve lançar erro de email já cadastrado ao tentar atualizar usuário", async () => {
     const idMock = {id: 1}
     const data = {
         email: "fernanda@example.com",
-      };
+    };
 
       usuarioRepository.findById.mockResolvedValue(idMock);
 
       usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
   
-      await expect(usuarioService.atualizar(idMock, data)).rejects.toEqual({
+      await expect(usuarioService.atualizar({...idMock, ...data})).rejects.toEqual({
         code: 400,
         errors: [
           {

@@ -40,14 +40,10 @@ class Usuario {
 
   static atualizar = async (req, res) => {
     try {
-      const id = { id: req.params.id };
-      const { nome, email, senha } = req.body;
-      const data = { nome, email, senha };
-      const response = await UsuarioService.atualizar(id, data);
-      return res.status(200).json({
+      const response = await UsuarioService.atualizar({...req.params, ...req.body});
+      return sendResponse(res, 200,{
         data: response,
         error: false,
-        code: 200,
         message: "Usuario atualizado com sucesso.",
       });
     } catch (error) {
