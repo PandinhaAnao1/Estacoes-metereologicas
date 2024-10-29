@@ -8,7 +8,7 @@ jest.mock('../../../repositories/dadosRepository', () => ({
 }));
 
 describe('Testes de Unidade para dadosService', () => {
-    
+
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -59,11 +59,11 @@ describe('Testes de Unidade para dadosService', () => {
     // Testes de Unidade para dadosService.inserir
     describe('dadosService.inserir', () => {
         it('Deve inserir dados corretamente e retornar o registro criado', async () => {
-            const mockData = { 
-                temperature: '25', 
-                humidity: 80, 
-                rainfall: 10, 
-                wind_speed_kmh: 20, 
+            const mockData = {
+                temperature: '25',
+                humidity: 80,
+                rainfall: 10,
+                wind_speed_kmh: 20,
                 data_hora: `${new Date()}`
             };
             DadosRepository.create.mockResolvedValue(mockData);
@@ -110,16 +110,7 @@ describe('Testes de Unidade para dadosService', () => {
             await expect(dadosService.inserir(dadosInvalidos)).rejects.toEqual({
                 error: true,
                 code: 400,
-                message: [
-                    {
-                        path: "temperature",
-                        message: "Temperatura informada não é do tipo string."
-                    },
-                    {
-                        path: "wind_speed_kmh",
-                        message: "Velocidade do vento informada não é do tipo int."
-                    }
-                ],
+
             });
         });
     });

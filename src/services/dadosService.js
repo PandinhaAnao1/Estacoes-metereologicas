@@ -1,6 +1,7 @@
 import dadosRepository from "../repositories/dadosRepository.js"
 import { z } from "zod";
 import DadosSchemas from "../schemas/dadosSchemas.js";
+import { APIErro } from "../util/apiErrro.js";
 
 class dadosService {
     static async listar(filtro) {
@@ -49,32 +50,26 @@ class dadosService {
         };
     };
     static async inserir(data) {
-        try {
-            const { temperature, humidity, rainfall, wind_speed_kmh, data_hora } = DadosSchemas.cadastrar.parse(data);
-            const response = await dadosRepository.create({ temperature: temperature, humidity: humidity, rainfall: rainfall, wind_speed_kmh: wind_speed_kmh, data_hora: data_hora });
-            if (!response) throw {
-                error: true,
-                code: 400,
-                message: "Não foi possível inserir os dados climáticos no banco de dados.",
-            }
-            return response;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        }
+        const { temperature, humidity, rainfall, wind_speed_kmh, data_hora } = DadosSchemas.cadastrar.parse(data);
+        const response = await dadosRepository.create({
+            temperature: temperature,
+            humidity: humidity,
+            rainfall: rainfall,
+            wind_speed_kmh: wind_speed_kmh,
+            data_hora: data_hora
+        });
+        if (!response)
+            throw new APIErro(
+                400,
+                [
+                    {
+                        message: "Não foi possível inserir os dados climáticos no banco de dados.",
+                        path: 'message',
+                    }
+                ],
+            );
+
+        return response;
     }
 }
 
