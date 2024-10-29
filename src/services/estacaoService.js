@@ -2,6 +2,7 @@ import EstacaoRepository from "../repositories/estacaoRepository.js";
 import UsuarioRepository from "../repositories/usuarioRepository.js";
 import EstacoesSchemas from "../schemas/estacoesSchemas.js";
 import { z } from "zod";
+import { APIErro } from "../util/apiErrro.js";
 
 class EstacaoService {
     static async listar(filtro) {
@@ -70,45 +71,22 @@ class EstacaoService {
         };
     };
 
-    static async listarPorID(id) {
-        try {
-            const idSchema = z.object({
-                id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id informado não é do tipo number.",
-                }).int({
-                    message: "Id informado não é um número inteiro."
-                }).positive({
-                    message: "Id informado não é positivo."
-                }))
-            });
-            const parsedIdSchema = idSchema.parse(id);
-            const response = await EstacaoRepository.findById(parsedIdSchema.id);
+    static async listarPorID(filtro) {
+           
+            const { id } = EstacoesSchemas.id.parse(filtro);
+            const response = await EstacaoRepository.findById(id);
             if (!response) {
-                throw {
-                    error: true,
-                    code: 400,
-                    message: "Estação não encontrada.",
+                throw (
+                    400,
+                    [{
+                        message: "Estação não encontrada.",
+                        path: "id"
+    
+                    }])
                 };
+                return response;
             };
-            return response;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        };
-    };
+    ;
 
     static async inserir(data) {
         const estacao = EstacoesSchemas.cadastrar.parse(data);
