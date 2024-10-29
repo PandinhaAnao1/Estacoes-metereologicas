@@ -41,13 +41,13 @@ describe('Testes de integração para as rotas /dados', () => {
 
 
         it('Deve filtrar dados climáticos usando humidity, rainfall, wind_speed_kmh e data_hora', async () => {
-            
+
             await request(app)
                 .get('/dados')
                 .query({
                     temperature: '25.3',
-                    humidity: '60', 
-                    rainfall: '5', 
+                    humidity: '60',
+                    rainfall: '5',
                     wind_speed_kmh: '12'
                 })
                 .expect(200)
@@ -75,7 +75,9 @@ describe('Testes de integração para as rotas /dados', () => {
                     humidity: 80,
                     rainfall: 10,
                     wind_speed_kmh: 20
-                })
+                });
+            console.log(response.body);
+
             expect(response.body.error).toBe(false);
             expect(response.body.data).toHaveProperty('temperature');
             expect(response.body.data).toHaveProperty('humidity');

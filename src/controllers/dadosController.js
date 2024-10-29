@@ -1,4 +1,4 @@
-import dadosService from "../services/dadosService.js";
+import DadosService from "../services/dadosService.js";
 
 class Dados {
     static async listar(req, res) {
@@ -32,7 +32,7 @@ class Dados {
             }
 
 
-            const response = await dadosService.listar(filtro)
+            const response = await DadosService.listar(filtro)
             return res.status(200).json({
                 data: response,
                 error: false,
@@ -46,15 +46,7 @@ class Dados {
 
     static async inserir(req, res) {
         try {
-            const { temperature, humidity, rainfall, wind_speed_kmh } = req.body;
-            const data = {
-                temperature: temperature,
-                humidity: humidity,
-                rainfall: rainfall,
-                wind_speed_kmh: wind_speed_kmh,
-                data_hora: new Date(),
-            };
-            const response = await dadosService.inserir(data)
+            const response = await DadosService.inserir(req.body)
             return res.status(201).json({
                 data: response,
                 error: false,
