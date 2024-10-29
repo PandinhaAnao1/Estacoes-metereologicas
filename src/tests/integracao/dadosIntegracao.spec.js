@@ -74,7 +74,8 @@ describe('Testes de integração para as rotas /dados', () => {
                     temperature: '25',
                     humidity: 80,
                     rainfall: 10,
-                    wind_speed_kmh: 20
+                    wind_speed_kmh: 20,
+                    data_hora: '2021-09-01',
                 });
             console.log(response.body);
 

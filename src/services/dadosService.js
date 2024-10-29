@@ -1,5 +1,6 @@
 import dadosRepository from "../repositories/dadosRepository.js"
 import { z } from "zod";
+import DadosSchemas from "../schemas/dadosSchemas.js";
 
 class dadosService {
     static async listar(filtro) {
@@ -49,8 +50,8 @@ class dadosService {
     };
     static async inserir(data) {
         try {
-            const dadosValidated = dadosSchema.parse(data);
-            const response = await dadosRepository.create(dadosValidated);
+            const { temperature, humidity, rainfall, wind_speed_kmh, data_hora } = DadosSchemas.cadastrar.parse(data);
+            const response = await dadosRepository.create({ temperature: temperature, humidity: humidity, rainfall: rainfall, wind_speed_kmh: wind_speed_kmh, data_hora: data_hora });
             if (!response) throw {
                 error: true,
                 code: 400,

@@ -1,11 +1,11 @@
-const { z } = require('zod');
+import { z } from 'zod';
 
 class DadosSchemas {
-    static listaSchema = null;
+    static listar = null;
 
-    static listarPorIdSchema = null;
+    static listarPorId = null;
 
-    static cadastrarSchema = z.object({
+    static cadastrar = z.object({
         temperature: z.string({
             invalid_type_error: "Temperatura informada não é do tipo string."
         }).nullable().optional(),
@@ -24,7 +24,6 @@ class DadosSchemas {
     });
     ;
 
-    static listaSchema = null;
 }
 
-module.exports = DadosSchemas;
+export default DadosSchemas;
