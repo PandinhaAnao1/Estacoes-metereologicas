@@ -76,7 +76,7 @@ class EstacaoService {
             const { id } = EstacoesSchemas.id.parse(filtro);
             const response = await EstacaoRepository.findById(id);
             if (!response) {
-                throw (
+                throw new APIErro(
                     400,
                     [{
                         message: "Estação não encontrada.",
