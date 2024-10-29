@@ -47,6 +47,36 @@ class UsuarioSchema{
         }).optional(),
     });
 
+    static atualizarUsuario = z.object({
+        nome: z.string({
+            // required_error: "Campo Nome É Obrigatório!",
+            invalid_type_error: "Nome deve ser uma string."
+        }).min(3, {
+            message: "Nome deve conter pelo menos 3 letras."
+        }).optional(),
+        email: z.string({
+            // required_error: "Campo Email É Obrigatório!",
+            invalid_type_error: "Email deve ser string."
+        }).email({
+            message: "Email invalido."
+        }).optional(),
+        senha: z.string({
+            // required_error: "Campo Senha É Obrigatório!",
+            invalid_type_error: "Senha deve ser string."
+        }).min(8, {
+            message: "Senha deve conter pelo menos 8 caracteres, uma letra minúscula, uma letra maiúscula, um número e um símbolo.",
+        }).refine(
+            (value) =>
+                /[a-z]/.test(value) &&  // Tem pelo menos uma letra minúscula
+                /[A-Z]/.test(value) &&  // Tem pelo menos uma letra maiúscula
+                /[0-9]/.test(value) &&  // Tem pelo menos um número
+                /[^a-zA-Z0-9]/.test(value),  // Tem pelo menos um símbolo
+            {
+                message: "Senha deve conter pelo menos 8 caracteres, uma letra minúscula, uma letra maiúscula, um número e um símbolo.",
+            }
+        ).optional()
+    });
+
     static id = z.object({
         id: z.preprocess((val) => Number(val),
             z.number({

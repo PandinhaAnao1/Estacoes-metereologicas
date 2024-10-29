@@ -1,6 +1,7 @@
 import UsuarioService from "../services/usuarioService.js";
 import { z } from "zod";
 import { sendError, sendResponse } from "../util/messages.js"
+import { APIErro } from "../util/apiErrro.js";
 
 class Usuario {
   static cadastrar = async (req, res) => {
@@ -14,33 +15,58 @@ class Usuario {
         message: 'usuario cadastrado com sucesso.',
       });
     } catch (error) {
-      if(error.code && error.message){
-        return res.status(error.code).json({
-         ...error
-        })
-      } 
-      return res.status(error.code || 500).json(error);
+      
+      if (error.code && error.errors) {
+        return sendError(res, error.code, error.errors)
+      }
+
+
+      if (error instanceof z.ZodError) {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
+            path: issue.path[0],
+            message: issue.message
+          })));
+
+        return sendError(res, 400, errors);
+      }
+
+      return sendError(res,500,[]);
+      
     };
   };
 
   static atualizar = async (req, res) => {
     try {
-      const id = {id: req.params.id};
-      const { nome, email, senha } = req.body;
-      const data = { nome, email, senha };
-      const response = await UsuarioService.atualizar(id, data);
-      return res.status(200).json({
+      const response = await UsuarioService.atualizar({...req.params, ...req.body});
+      return sendResponse(res, 200,{
         data: response,
         error: false,
-        code: 200,
         message: "Usuario atualizado com sucesso.",
       });
     } catch (error) {
-      return res.status(error.code || 500).json({
-        error: false,
-        code: error.code || 500,
-        message: error.message,
-      });
+  
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
+      }
+
+      if (error instanceof z.ZodError) {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
+            path: issue.path[0],
+            message: issue.message
+          })));
+
+        return sendError(res, 400, errors);
+      }
+
+      return sendError(res,500,[]);
+
     };
   };
 
@@ -49,13 +75,13 @@ class Usuario {
 
       const response = await UsuarioService.deletar(req.params);
 
-      return sendResponse(res,204);
-     
+      return sendResponse(res, 204);
+
     } catch (error) {
 
-      if (error.code && error.errorDetail) {
-        const { code, errorDetail } = error;
-        return sendError(res, code, [errorDetail]);
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
       if (error instanceof z.ZodError) {
         let erros = [];
@@ -87,44 +113,63 @@ class Usuario {
         message: response.length > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
       });
     } catch (error) {
-      if(error.code && error.message){
-        return res.status(error.code).json({
-          ...error
-        })
+      
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
 
+
       if (error instanceof z.ZodError) {
-        const errorMessages = error.issues.map((issue) => {
-          return {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
             path: issue.path[0],
             message: issue.message
-          }
-        });
-        return res.status(400).json({
-          error: true,
-          code: 400,
-          message: errorMessages,
-        });
+          })));
+
+        return sendError(res, 400, errors);
       }
-      return res.status(error.code || 500).json(error);
+
+      return sendError(res,500,[]);
+
     };
   };
 
   static listarPorId = async (req, res) => {
     try {
-      const id = { id: req.params.id };
-      const response = await UsuarioService.listarPorID(id);
-      res.status(200).json({
-        data: response,
-        error: false,
-        code: 200,
-        message: "Usuário encontrado com sucesso",
+      const response = await UsuarioService.listarPorID(req.params);
+      return sendResponse(res, 200, {
+        data: response
       });
+
     } catch (error) {
-      return res.status(error.code || 500).json(error);
-    };
+
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
+      }
+
+
+      if (error instanceof z.ZodError) {
+
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
+            path: issue.path[0],
+            message: issue.message
+          })));
+
+        return sendError(res, 400, errors);
+      }
+
+      return sendError(res,500,[]);
+    }
+    
   };
 };
+
 
 export default Usuario;
 

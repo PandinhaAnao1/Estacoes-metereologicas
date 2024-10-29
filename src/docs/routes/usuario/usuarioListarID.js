@@ -1,7 +1,6 @@
 const usuarioListarId = {
 
-  //getId
-  "/usuarios/{id}": {
+  "/usuarios/{id} ": {
     get: {
       tags: ["Usuario"],
       summary: "Lista o usuário pelo ID",
@@ -12,7 +11,7 @@ const usuarioListarId = {
           description: "ID do usuário",
           required: true,
           schema: {
-            type: "integer",
+            type: "integer", 
             example: 9
           }
         }
