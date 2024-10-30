@@ -56,7 +56,6 @@ class Dados {
                 message: 'Dados climáticos salvos com sucesso.',
             });
         } catch (error) {
-            console.log(error);
 
             if (error instanceof APIErro) {
                 const { code, errors } = error.toJson();
@@ -64,7 +63,6 @@ class Dados {
             }
 
             if (error instanceof z.ZodError) {
-
                 let errors = [];
                 error.issues.map((issue) => (
                     errors.push({
