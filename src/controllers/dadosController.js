@@ -1,5 +1,7 @@
-import dadosService from "../services/dadosService.js";
-
+import DadosService from "../services/dadosService.js";
+import { APIErro } from "../util/apiErrro.js";
+import { z } from "zod";
+import { sendError, sendResponse } from "../util/messages.js";
 class Dados {
     static async listar(req, res) {
         try {
@@ -32,7 +34,7 @@ class Dados {
             }
 
 
-            const response = await dadosService.listar(filtro)
+            const response = await DadosService.listar(filtro)
             return res.status(200).json({
                 data: response,
                 error: false,
@@ -46,23 +48,31 @@ class Dados {
 
     static async inserir(req, res) {
         try {
-            const { temperature, humidity, rainfall, wind_speed_kmh } = req.body;
-            const data = {
-                temperature: temperature,
-                humidity: humidity,
-                rainfall: rainfall,
-                wind_speed_kmh: wind_speed_kmh,
-                data_hora: new Date(),
-            };
-            const response = await dadosService.inserir(data)
-            return res.status(201).json({
+            const response = await DadosService.inserir(req.body);
+            return sendResponse(res, 201, {
                 data: response,
-                error: false,
                 code: 201,
-                message: 'Dados climáticos salvos com sucesso.',
             });
         } catch (error) {
-            return res.status(error.code || 500).json(error);
+
+            if (error instanceof APIErro) {
+                const { code, errors } = error.toJson();
+                return sendError(res, code, ...errors);
+            }
+
+            if (error instanceof z.ZodError) {
+                let errors = [];
+                error.issues.map((issue) => (
+                    errors.push({
+                        path: issue.path[0],
+                        message: issue.message
+                    })));
+
+                return sendError(res, 400, errors);
+            }
+
+            return sendError(res, 500, []);
+
         };
     };
 };
