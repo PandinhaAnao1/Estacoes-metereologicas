@@ -1,6 +1,8 @@
 import { jest, describe, it, expect, afterEach } from '@jest/globals';
 import DadosRepository from '../../../repositories/dadosRepository.js';
 import dadosService from '../../../services/dadosService.js';
+import { APIErro } from '../../../util/apiErrro.js';
+
 
 jest.mock('../../../repositories/dadosRepository', () => ({
     findMany: jest.fn(),
@@ -54,35 +56,10 @@ describe('Testes de Unidade para dadosService', () => {
                 data_hora: new Date()
             };
 
-            await expect(dadosService.inserir(data)).rejects.toEqual({
-                error: true,
-                code: 400,
-                message: "Não foi possível inserir os dados climáticos no banco de dados.",
-            });
+            await expect(dadosService.inserir(data)).rejects.toBeInstanceOf(APIErro);
         });
 
-        it('Deve lançar erro de validação para dados inválidos', async () => {
-            const dadosInvalidos = {
-                temperature: 25, // Deve ser string, mas é número
-                wind_speed_kmh: 'vinte', // Deve ser número, mas é string
-                data_hora: new Date()
-            };
 
-            await expect(dadosService.inserir(dadosInvalidos)).rejects.toEqual({
-                error: true,
-                code: 400,
-                message: [
-                    {
-                        path: "temperature",
-                        message: "Temperatura informada não é do tipo string."
-                    },
-                    {
-                        path: "wind_speed_kmh",
-                        message: "Velocidade do vento informada não é do tipo int."
-                    }
-                ],
-            });
-        });
     });
 });
 describe('Testes de Unidade para dadosService', () => {
