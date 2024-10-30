@@ -52,10 +52,7 @@ class Dados {
             return sendResponse(res, 201, {
                 data: response,
                 code: 201,
-
             });
-
-
         } catch (error) {
 
             if (error instanceof APIErro) {
