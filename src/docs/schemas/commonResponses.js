@@ -1,4 +1,4 @@
-import messages from "../../utils/messages.js";
+import messages from "../../util/messages.js";
 
 const commonResponses = {
     200: (schemaRef = null, description = "Sucesso") => ({
