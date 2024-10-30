@@ -2,13 +2,12 @@ import request from 'supertest';
 import app from '../../../app.js';
 import DadosService from '../../../services/dadosService.js';
 import { APIErro } from '../../../util/apiErrro.js';
-import { z } from 'zod';
 
 jest.mock('../../../services/dadosService.js');
 
 
 describe('Teste de unidade para o controller de dados', () => {
-    describe('Post', () => {
+    describe('POST', () => {
         it('Deve retornar erro de APIErro corretamente', async () => {
             const mockError = new APIErro(400, [{ path: 'temperature', message: 'Temperatura inválida' }]);
             DadosService.inserir.mockRejectedValue(mockError);
