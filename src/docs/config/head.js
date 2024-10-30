@@ -16,6 +16,7 @@ import deletarSchemas from "../schemas/usuarios/usuariosDeletar.js";
 import estacoesCadastrarSchemas from "../schemas/estacoes/estacoesCadastrar.js";
 import cadastrarSchemas from "../schemas/usuarios/usuarioCadastrar.js";
 import listarSchemas from "../schemas/usuarios/usuarioListar.js";
+import atualizarSchemas from "../schemas/usuarios/usuarioAtualizar.js";
 
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
@@ -95,6 +96,7 @@ const getSwaggerOptions = () => {
           ...estacoesCadastrarSchemas,
           ...cadastrarSchemas,
           ...listarSchemas,
+          ...atualizarSchemas,
         }
       },
       security: [{
