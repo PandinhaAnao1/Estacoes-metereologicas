@@ -72,7 +72,6 @@ describe('Testes de Integração para DadosController', () => {
                         wind_speed_kmh: 20,
                         data_hora: '2021-09-01',
                     });
-                console.log(response.body);
 
                 expect(response.body.error).toBe(false);
                 expect(response.body.data).toHaveProperty('temperature');
