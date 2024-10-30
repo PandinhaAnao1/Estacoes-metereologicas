@@ -1,5 +1,7 @@
 import DadosService from "../services/dadosService.js";
-
+import { APIErro } from "../util/apiErrro.js";
+import { z } from "zod";
+import { sendError, sendResponse } from "../util/messages.js";
 class Dados {
     static async listar(req, res) {
         try {
