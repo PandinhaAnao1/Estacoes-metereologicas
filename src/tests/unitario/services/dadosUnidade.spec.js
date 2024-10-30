@@ -7,6 +7,84 @@ jest.mock('../../../repositories/dadosRepository', () => ({
     create: jest.fn(),
 }));
 
+jest.mock('../../../repositories/dadosRepository', () => ({
+    findMany: jest.fn(),
+    create: jest.fn(),
+}));
+
+describe('Testes de Unidade para dadosService', () => {
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    // Testes de Unidade para dadosService.inserir
+    describe('dadosService.inserir', () => {
+        it('Deve inserir dados corretamente e retornar o registro criado', async () => {
+            const mockData = {
+                temperature: '25',
+                humidity: 80,
+                rainfall: 10,
+                wind_speed_kmh: 20,
+                data_hora: `${new Date()}`
+            };
+            DadosRepository.create.mockResolvedValue(mockData);
+
+            const data = {
+                temperature: '25',
+                humidity: 80,
+                rainfall: 10,
+                wind_speed_kmh: 20,
+                data_hora: new Date()
+            };
+            const result = await dadosService.inserir(data);
+
+            expect(DadosRepository.create).toHaveBeenCalledWith(expect.objectContaining(data));
+            expect(result).toEqual(mockData);
+        });
+
+        it('Deve lançar erro se os dados não forem salvos no banco', async () => {
+            DadosRepository.create.mockResolvedValue(null);
+
+            const data = {
+                temperature: '25',
+                humidity: 80,
+                rainfall: 10,
+                wind_speed_kmh: 20,
+                data_hora: new Date()
+            };
+
+            await expect(dadosService.inserir(data)).rejects.toEqual({
+                error: true,
+                code: 400,
+                message: "Não foi possível inserir os dados climáticos no banco de dados.",
+            });
+        });
+
+        it('Deve lançar erro de validação para dados inválidos', async () => {
+            const dadosInvalidos = {
+                temperature: 25, // Deve ser string, mas é número
+                wind_speed_kmh: 'vinte', // Deve ser número, mas é string
+                data_hora: new Date()
+            };
+
+            await expect(dadosService.inserir(dadosInvalidos)).rejects.toEqual({
+                error: true,
+                code: 400,
+                message: [
+                    {
+                        path: "temperature",
+                        message: "Temperatura informada não é do tipo string."
+                    },
+                    {
+                        path: "wind_speed_kmh",
+                        message: "Velocidade do vento informada não é do tipo int."
+                    }
+                ],
+            });
+        });
+    });
+});
 describe('Testes de Unidade para dadosService', () => {
 
     afterEach(() => {
@@ -75,43 +153,13 @@ describe('Testes de Unidade para dadosService', () => {
                 wind_speed_kmh: 20,
                 data_hora: new Date()
             };
-            const result = await dadosService.inserir(data);
+            const result = await dadosService.inserir({ ...data });
 
             expect(DadosRepository.create).toHaveBeenCalledWith(expect.objectContaining(data));
             expect(result).toEqual(mockData);
         });
 
-        it('Deve lançar erro se os dados não forem salvos no banco', async () => {
-            DadosRepository.create.mockResolvedValue(null);
 
-            const data = {
-                temperature: '25',
-                humidity: 80,
-                rainfall: 10,
-                wind_speed_kmh: 20,
-                data_hora: new Date()
-            };
 
-            await expect(dadosService.inserir(data)).rejects.toEqual({
-                error: true,
-                code: 400,
-                message: "Não foi possível inserir os dados climáticos no banco de dados.",
-            });
-        });
-
-        it('Deve lançar erro de validação para dados inválidos', async () => {
-            const dadosInvalidos = {
-                temperature: 25, // Deve ser string, mas é número
-                wind_speed_kmh: 'vinte', // Deve ser número, mas é string
-                data_hora: new Date()
-
-            };
-
-            await expect(dadosService.inserir(dadosInvalidos)).rejects.toEqual({
-                error: true,
-                code: 400,
-
-            });
-        });
     });
 });
