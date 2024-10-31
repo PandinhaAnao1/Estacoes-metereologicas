@@ -82,11 +82,10 @@ class EstacaoService {
                         message: "Estação não encontrada.",
                         path: "id"
     
-                    }])
+                    }]);
                 };
                 return response;
             };
-    ;
 
     static async inserir(data) {
         const estacao = EstacoesSchemas.cadastrar.parse(data);

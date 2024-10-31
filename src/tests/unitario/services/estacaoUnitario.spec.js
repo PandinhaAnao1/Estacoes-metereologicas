@@ -71,13 +71,10 @@ describe('EstacaoSevices.listarPorId', () => {
         try {
             await EstacaoService.listarPorID({ id: 'errado' });
         } catch (error) {
-            expect(error).toEqual({
-                error: true,
-                code: 400,
-                message: [
-                    { message: 'Id informado não é do tipo number.', path: 'id' }
-                ]
-            });
+            expect(error.errors).toBeDefined();
+            expect(error.errors[0].message).toBe("Id informado não é do tipo number.");
+            expect(error.errors[0].path).toEqual(["id"]);
+            expect(error.errors[0].code).toBe("invalid_type");
         }
     });
 
