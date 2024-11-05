@@ -34,7 +34,11 @@ describe('Testes de Integração para DadosController', () => {
             it('Deve retornar erro 400 quando não encontrar dados climáticos', async () => {
                 const response = await request(app)
                     .get('/dados')
-                    .query({ temperature: '25000' }) //temperatura que não existe
+                    .query({ temperature: '25000' });
+
+                //temperatura que não existe
+                console.log(response.body);
+
                 expect(response.body.error).toBe(true);
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBe("Nenhum dado climático encontrado");

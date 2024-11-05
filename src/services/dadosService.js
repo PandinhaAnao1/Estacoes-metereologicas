@@ -8,7 +8,7 @@ class dadosService {
         const dados = DadosSchemas.listar.parse(filtro);
         const response = await dadosRepository.findMany(dados)
         if (response.length === 0) {
-            throw APIErro(400, [{
+            throw new APIErro(400, [{
                 path: "message",
                 message: "Nenhum dado climático encontrado",
             }]);
