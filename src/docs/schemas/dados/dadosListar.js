@@ -18,28 +18,8 @@ const dadosSchemaListar = {
         type: "array",
         example: [
             {
-                path: "id",
-                message: "ID inválido"
-            },
-            {
-                path: "temperature",
-                message: "Temperatura inválida"
-            },
-            {
-                path: "humidity",
-                message: "Umidade inválida"
-            },
-            {
-                path: "rainfall",
-                message: "Precipitação inválida"
-            },
-            {
-                path: "wind_speed_kmh",
-                message: "Velocidade do vento inválida"
-            },
-            {
-                path: "data_hora",
-                message: "Data e hora inválidas"
+                path: "message",
+                message: "Nenhum dado climático encontrado",
             }
         ]
     }

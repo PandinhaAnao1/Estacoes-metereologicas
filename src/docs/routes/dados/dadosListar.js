@@ -57,7 +57,7 @@ const dadosListar = {
       ],
       responses: {
         200: commonResponses[200]("#/components/schemas/dados_listar_200"),
-        400: commonResponses[201]("#/components/schemas/dados_cadastrar_201"),
+        400: commonResponses[400](null, null, "#/components/schemas/dados_listar_400"),
         500: commonResponses[500](),
 
 
