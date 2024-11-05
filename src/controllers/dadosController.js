@@ -5,34 +5,6 @@ import { sendError, sendResponse } from "../util/messages.js";
 class Dados {
     static async listar(req, res) {
         try {
-            // Quando a API envia textplain;
-            const { temperature, humidity, rainfall, wind_speed_kmh, data_hora } = req.query;
-            const filtro = {
-                temperature: temperature,
-                humidity: humidity,
-                rainfall: rainfall,
-                wind_speed_kmh: wind_speed_kmh,
-                data_hora: data_hora,
-            };
-
-
-            if (humidity) {
-                filtro.humidity = parseInt(humidity)
-            }
-
-            if (rainfall) {
-                filtro.rainfall = parseInt(rainfall)
-            }
-
-            if (wind_speed_kmh) {
-                filtro.wind_speed_kmh = parseInt(wind_speed_kmh)
-            }
-
-            if (data_hora) {
-                filtro.data_hora = new Date(data_hora)
-            }
-
-
             const response = await DadosService.listar(req.query)
             return res.status(200).json({
                 data: response,
