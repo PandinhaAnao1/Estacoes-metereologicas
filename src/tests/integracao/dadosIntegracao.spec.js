@@ -18,6 +18,7 @@ describe('Testes de Integração para DadosController', () => {
                 expect(response.body.message).toBe("Dados climáticos encontrados com sucesso.");
             });
 
+
             it('Deve retornar dados climáticos filtrados', async () => {
                 const response = await request(app)
                     .get('/dados')
@@ -29,6 +30,24 @@ describe('Testes de Integração para DadosController', () => {
                 expect(response.body.code).toBe(200);
                 expect(response.status).toBe(200);
                 expect(response.body.message).toBe("Dado climático encontrado com sucesso.");
+            });
+
+            it('Deve retornar erro 400 passando dados invalidos para resultar em erros no zod', async () => {
+                const response = await request(app)
+                    .get('/dados')
+                    .query({ humidity: 'a' });
+
+                console.log(response.body);
+
+                expect(response.body.error).toBe(true);
+                expect(response.status).toBe(400);
+                expect(response.body.message).toBeDefined();
+                expect(response.body.error).toBe(true);
+                expect(response.body.data).toEqual([]);
+                expect(response.body.code).toBe(400);
+                expect(response.body.errors).toBeInstanceOf(Array);
+                expect(response.body.errors[0]).toHaveProperty('path');
+                expect(response.body.errors[0]).toHaveProperty('message');
             });
 
             it('Deve retornar erro 400 quando não encontrar dados climáticos', async () => {
