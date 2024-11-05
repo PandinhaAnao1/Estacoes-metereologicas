@@ -6,7 +6,6 @@ class Dados {
     static async listar(req, res) {
         try {
             // Quando a API envia textplain;
-            // const jsonBody = JSON.parse(req.body);
             const { temperature, humidity, rainfall, wind_speed_kmh, data_hora } = req.query;
             const filtro = {
                 temperature: temperature,
@@ -42,7 +41,23 @@ class Dados {
                 message: response.length > 1 ? "Dados climáticos encontrados com sucesso." : "Dado climático encontrado com sucesso.",
             });
         } catch (error) {
-            res.status(error.code || 500).json(error);
+            if (error instanceof APIErro) {
+                const { code, errors } = error.toJson();
+                return sendError(res, code, ...errors);
+            }
+
+            if (error instanceof z.ZodError) {
+                let errors = [];
+                error.issues.map((issue) => (
+                    errors.push({
+                        path: issue.path[0],
+                        message: issue.message
+                    })));
+
+                return sendError(res, 400, errors);
+            }
+
+            return sendError(res, 500, []);
         };
     };
 
