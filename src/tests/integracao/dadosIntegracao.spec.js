@@ -37,8 +37,6 @@ describe('Testes de Integração para DadosController', () => {
                     .get('/dados')
                     .query({ humidity: 'a' });
 
-                console.log(response.body);
-
                 expect(response.body.error).toBe(true);
                 expect(response.status).toBe(400);
                 expect(response.body.message).toBeDefined();
