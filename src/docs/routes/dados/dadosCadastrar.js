@@ -16,6 +16,7 @@ const dadosCadastrar = {
       responses: {
         201: commonResponses[201]("#/components/schemas/dados_cadastrar_201"),
         400: commonResponses[400](null, null, "#/components/schemas/dados_cadastrar_400"),
+        500: commonResponses[500](),
 
       }
     }

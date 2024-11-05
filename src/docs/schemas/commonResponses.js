@@ -120,7 +120,7 @@ const commonResponses = {
                         error: { type: "boolean", example: true },
                         code: { type: "integer", example: 500 },
                         message: { type: "string", example: messages.httpCodes[500] },
-                        errors: { type: "array", example: [{ message: messages.error.internalServerError }] }
+                        errors: { type: "array", example: [{ message: messages.httpCodes[500] }] }
                     }
                 }
             }
