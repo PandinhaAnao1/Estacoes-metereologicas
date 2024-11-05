@@ -33,7 +33,7 @@ class Dados {
             }
 
 
-            const response = await DadosService.listar(filtro)
+            const response = await DadosService.listar(req.query)
             return res.status(200).json({
                 data: response,
                 error: false,
