@@ -5,11 +5,9 @@ import { sendError, sendResponse } from "../util/messages.js";
 class Dados {
     static async listar(req, res) {
         try {
-            const response = await DadosService.listar(req.query)
-            return res.status(200).json({
+            const response = await DadosService.listar(req.query);
+            return sendResponse(res, 200, {
                 data: response,
-                error: false,
-                code: 200,
                 message: response.length > 1 ? "Dados climáticos encontrados com sucesso." : "Dado climático encontrado com sucesso.",
             });
         } catch (error) {
