@@ -40,4 +40,22 @@ describe('Teste de unidade para o controller de dados', () => {
             expect(response.body.error).toEqual(true);
         });
     });
+    describe('GET', () => {
+
+
+        it('Deve retornar erro 500 para erros desconhecidos', async () => {
+            DadosService.listar.mockRejectedValue(new Error('Erro desconhecido'));
+
+            const response = await request(app)
+                .get('/dados')
+                .send({ temperature: '25' });
+
+            expect(DadosService.listar).toHaveBeenCalled();
+            expect(response.status).toBe(500);
+            expect(response.body.errors).toEqual([]);
+            expect(response.body.data).toBeDefined();
+            expect(response.body.message).toBeDefined();
+            expect(response.body.error).toEqual(true);
+        });
+    });
 });
