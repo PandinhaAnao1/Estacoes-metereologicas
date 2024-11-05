@@ -8,11 +8,12 @@ class dadosService {
         try {
             const dados = DadosSchemas.listar.parse(filtro);
             const response = await dadosRepository.findMany(dados)
-            if (response.length === 0) throw {
-                error: true,
-                code: 400,
-                message: "Nenhum dado climático encontrado",
-            };
+            if (response.length === 0) {
+                throw APIErro(400, [{
+                    path: "message",
+                    message: "Nenhum dado climático encontrado",
+                }]);
+            }
             return response;
         } catch (error) {
             if (error instanceof z.ZodError) {
