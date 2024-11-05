@@ -6,25 +6,8 @@ import { APIErro } from "../util/apiErrro.js";
 class dadosService {
     static async listar(filtro) {
         try {
-            const filtroSchema = z.object({
-                temperature: z.string({
-                    invalid_type_error: "Temperatura informada não é do tipo string."
-                }).optional(),
-                humidity: z.number({
-                    invalid_type_error: "Umidade informada não é do tipo int."
-                }).optional(),
-                rainfall: z.number({
-                    invalid_type_error: "Pluviosidade informada não é do tipo int."
-                }).optional(),
-                wind_speed_kmh: z.number({
-                    invalid_type_error: "Velocidade do vento informada não é do tipo int."
-                }).optional(),
-                data_hora: z.date({
-                    invalid_type_error: "Data informada não é do tipo string/data"
-                }).optional(),
-            });
-            const filtroValidated = filtroSchema.parse(filtro)
-            const response = await dadosRepository.findMany(filtroValidated)
+            const dados = DadosSchemas.listar.parse(filtro);
+            const response = await dadosRepository.findMany(dados)
             if (response.length === 0) throw {
                 error: true,
                 code: 400,
