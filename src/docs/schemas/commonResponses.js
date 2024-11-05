@@ -37,7 +37,7 @@ const commonResponses = {
         }
     }),
 
-    400: (schemaRef = null, description = "Requisição inválida") => ({
+    400: (schemaRef = null, description = "Requisição inválida", errors = null) => ({
         description: description,
         content: {
             "application/json": {
@@ -48,7 +48,7 @@ const commonResponses = {
                         error: { type: "boolean", example: true },
                         code: { type: "integer", example: 400 },
                         message: { type: "string", example: messages.httpCodes[400] },
-                        errors: { type: "array", example: [{ message: messages.error.invalidRequest }] }
+                        errors: errrors ?  { $ref: errors } : { type: "array", items: {}, example: [] }
                     }
                 }
             }
