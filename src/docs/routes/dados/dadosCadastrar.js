@@ -9,7 +9,9 @@ const dadosCadastrar = {
         required: true,
         content: {
           "application/json": {
-            schema: {}
+            schema: {
+              $ref: "#/components/schemas/dados_cadastrar_body"
+            }
           }
         }
       },
