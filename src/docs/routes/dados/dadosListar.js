@@ -23,7 +23,6 @@ const dadosListar = {
           required: false,
           schema: {
             type: "int",
-            example: 60
           }
         },
         {
