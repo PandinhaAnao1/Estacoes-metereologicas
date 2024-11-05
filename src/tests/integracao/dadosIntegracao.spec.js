@@ -36,12 +36,15 @@ describe('Testes de Integração para DadosController', () => {
                     .get('/dados')
                     .query({ temperature: '25000' });
 
-                //temperatura que não existe
-                console.log(response.body);
-
                 expect(response.body.error).toBe(true);
                 expect(response.status).toBe(400);
-                expect(response.body.message).toBe("Nenhum dado climático encontrado");
+                expect(response.body.message).toBeDefined();
+                expect(response.body.error).toBe(true);
+                expect(response.body.data).toEqual([]);
+                expect(response.body.code).toBe(400);
+                expect(response.body.errors).toBeInstanceOf(Array);
+                expect(response.body.errors[0]).toHaveProperty('path');
+                expect(response.body.errors[0]).toHaveProperty('message');
             });
 
             it('Deve filtrar dados climáticos usando humidity, rainfall, wind_speed_kmh e data_hora', async () => {
