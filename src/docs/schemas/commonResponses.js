@@ -48,7 +48,7 @@ const commonResponses = {
                         error: { type: "boolean", example: true },
                         code: { type: "integer", example: 400 },
                         message: { type: "string", example: messages.httpCodes[400] },
-                        errors: errrors ?  { $ref: errors } : { type: "array", items: {}, example: [] }
+                        errors: errors ?  { $ref: errors } : { type: "array", items: {}, example: [] }
                     }
                 }
             }
