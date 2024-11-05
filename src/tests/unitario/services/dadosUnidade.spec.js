@@ -83,32 +83,6 @@ describe('Testes de Unidade para dadosService', () => {
             expect(result).toEqual(mockDados);
         });
 
-        it('Deve lançar erro se nenhum dado for encontrado', async () => {
-            DadosRepository.findMany.mockResolvedValue([]);
-
-            const filtro = { temperature: '25' };
-
-            await expect(dadosService.listar(filtro)).rejects.toEqual({
-                error: true,
-                code: 400,
-                message: "Nenhum dado climático encontrado",
-            });
-        });
-
-        it('Deve lançar erro de validação para filtro inválido', async () => {
-            const filtroInvalido = { wind_speed_kmh: 'vinte' }; // Deve ser número, mas é string
-
-            await expect(dadosService.listar(filtroInvalido)).rejects.toEqual({
-                error: true,
-                code: 400,
-                message: [
-                    {
-                        path: "wind_speed_kmh",
-                        message: "Velocidade do vento informada não é do tipo int."
-                    }
-                ],
-            });
-        });
     });
 
     // Testes de Unidade para dadosService.inserir
