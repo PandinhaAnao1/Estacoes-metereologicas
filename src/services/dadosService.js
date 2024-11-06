@@ -2,10 +2,12 @@ import dadosRepository from "../repositories/dadosRepository.js"
 import { z } from "zod";
 import DadosSchemas from "../schemas/dadosSchemas.js";
 import { APIErro } from "../util/apiErrro.js";
+import PaginationSchema from "../schemas/paginationSchema.js";
 
 class dadosService {
     static async listar(filtro) {
         const dados = DadosSchemas.listar.parse(filtro);
+        const { pagina, quantidade } = PaginationSchema.paginationSchema.parse(filtro);
         const response = await dadosRepository.findMany(dados)
         if (response.length === 0) {
             throw new APIErro(400, [{
