@@ -1,7 +1,40 @@
 import { string, z } from 'zod';
 
 class DadosSchemas {
-    static listar = null;
+    static listar = z.object({
+        temperature: z.string({
+            invalid_type_error: "Temperatura informada não é do tipo string."
+        }).optional(),
+        humidity: z.preprocess(
+            arg => (typeof arg === 'string') ? parseInt(arg) : arg,
+            z.number({
+                invalid_type_error: "Umidade informada não é do tipo int."
+            })
+        ).optional(),
+        rainfall: z.preprocess(
+            arg => (typeof arg === 'string') ? parseInt(arg) : arg,
+            z.number({
+                invalid_type_error: "Pluviosidade informada não é do tipo int."
+            })
+        ).optional(),
+        wind_speed_kmh: z.preprocess(
+            arg => (typeof arg === 'string') ? parseInt(arg) : arg,
+            z.number({
+                invalid_type_error: "Velocidade do vento informada não é do tipo int."
+            })
+        ).optional(),
+        data_hora: z.preprocess(
+            (arg) => {
+                if (typeof arg == 'string') {
+                    return new Date(arg);
+                }
+                return arg;
+            },
+            z.date({
+                invalid_type_error: "Data informada não é do tipo date."
+            })
+        ).optional(),
+    });;
 
     static listarPorId = null;
 
