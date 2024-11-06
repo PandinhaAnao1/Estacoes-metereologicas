@@ -3,6 +3,7 @@ import EstacaoService from '../../../services/estacaoService.js';
 import EstacaoRepository from '../../../repositories/estacaoRepository.js';
 import UsuarioRepository from '../../../repositories/usuarioRepository.js';
 import { ZodError } from 'zod';
+import { APIErro } from '../../../util/apiErrro.js';
 
 jest.mock('../../../repositories/estacaoRepository.js', () => ({
     findMany: jest.fn(),
@@ -53,7 +54,7 @@ describe('EstacaoSevices.listarPorId', () => {
         try {
             await EstacaoService.listarPorID({ id: 44454 });
         } catch (error) {
-            if (error instanceof ZodError) {
+            if (error instanceof APIErro) {
                 const errorMessages = error.errors.map((err) => ({
                     path: err.path,
                     message: err.message,
