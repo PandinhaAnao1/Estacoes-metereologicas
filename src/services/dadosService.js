@@ -7,7 +7,7 @@ import PaginationSchema from "../schemas/paginationSchema.js";
 class dadosService {
     static async listar(filtro) {
         const dados = DadosSchemas.listar.parse(filtro);
-        const { pagina, quantidade } = PaginationSchema.paginationSchema.parse(filtro);
+        const { pagina, quantidade } = PaginationSchema.schema.parse(filtro);
         const total = await dadosRepository.count(dados, pagina, quantidade);
         console.log(total);
         const response = await dadosRepository.findMany(dados)
