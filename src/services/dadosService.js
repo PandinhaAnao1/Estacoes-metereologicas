@@ -1,4 +1,4 @@
-import dadosRepository from "../repositories/dadosRepository.js"
+import DadosRepository from "../repositories/dadosRepository.js"
 import { z } from "zod";
 import DadosSchemas from "../schemas/dadosSchemas.js";
 import { APIErro } from "../util/apiErrro.js";
@@ -8,9 +8,9 @@ class dadosService {
     static async listar(filtro) {
         const dados = DadosSchemas.listar.parse(filtro);
         const { pagina, quantidade } = PaginationSchema.schema.parse(filtro);
-        const total = await dadosRepository.count(dados, pagina, quantidade);
-        console.log(total);
-        const response = await dadosRepository.findMany(dados)
+        // const total = await DadosRepository.countItens(dados);
+        // console.log(total);
+        const response = await DadosRepository.findMany(dados)
         if (response.length === 0) {
             throw new APIErro(400, [{
                 path: "message",
@@ -22,7 +22,7 @@ class dadosService {
     };
     static async inserir(data) {
         const { temperature, humidity, rainfall, wind_speed_kmh, data_hora } = DadosSchemas.cadastrar.parse(data);
-        const response = await dadosRepository.create({
+        const response = await DadosRepository.create({
             temperature: temperature,
             humidity: humidity,
             rainfall: rainfall,
