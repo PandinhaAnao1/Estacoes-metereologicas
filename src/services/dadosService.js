@@ -8,6 +8,8 @@ class dadosService {
     static async listar(filtro) {
         const dados = DadosSchemas.listar.parse(filtro);
         const { pagina, quantidade } = PaginationSchema.paginationSchema.parse(filtro);
+        const total = await dadosRepository.count(dados, pagina, quantidade);
+        console.log(total);
         const response = await dadosRepository.findMany(dados)
         if (response.length === 0) {
             throw new APIErro(400, [{
