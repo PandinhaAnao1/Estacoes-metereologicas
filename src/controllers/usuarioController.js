@@ -106,13 +106,12 @@ class Usuario {
         email: email
       };
       const response = await UsuarioService.listar(filtro);
-      return res.status(200).json({
-        data: response,
-        error: false,
-        code: 200,
-        message: response.length > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
+      return sendResponse(res, 200, {
+        ...response,
+        message: response.total > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
       });
     } catch (error) {
+      console.log(error);
       
       if (error instanceof APIErro) {
         const { code, errors } = error.toJson();
