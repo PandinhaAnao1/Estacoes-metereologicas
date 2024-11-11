@@ -1,5 +1,4 @@
 import EstacaoRepository from "../repositories/estacaoRepository.js";
-import UsuarioRepository from "../repositories/usuarioRepository.js";
 import EstacoesSchemas from "../schemas/estacoesSchemas.js";
 import { z } from "zod";
 import { APIErro } from "../util/apiErrro.js";
@@ -7,45 +6,8 @@ import { APIErro } from "../util/apiErrro.js";
 class EstacaoService {
     static async listar(filtro) {
         try {
-            const filtroSchema = z.object({
-                id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id informado não é do tipo number.",
-                }).int({
-                    message: "Id informado não é um número inteiro."
-                }).positive({
-                    message: "Id informado não é positivo."
-                })).optional(),
-                nome: z.string({
-                    invalid_type_error: "Nome informado não é do tipo string."
-                }).trim().optional(),
-                endereco: z.string({
-                    invalid_type_error: "Endereço informado não é do tipo string."
-                }).trim().optional(),
-                latitude: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Latitude informada não é do tipo number.",
-                })).optional(),
-                longitude: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Longitude informada não é do tipo number.",
-                })).optional(),
-                ip: z.string({
-                    invalid_type_error: "Ip informado não é do tipo string.",
-                }).ip({
-                    message: "Ip informado não segue o padrão (IPv4 ou IPv6)."
-                }).optional(),
-                status: z.enum(['ativo', 'inativo'], {
-                    invalid_type_error: "Status não é do tipo string.",
-                    message: "Status informado não corresponde ao formato indicado (ativo ou inativo)."
-                }).optional(),
-                usuario_id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id do usuário informado não é do tipo number."
-                }).int({
-                    message: "Id do usuário informado não é um número inteiro."
-                }).positive({
-                    message: "Id do usuário informado não é um inteiro positivo."
-                })).optional(),
-            });
-            const filtroValidated = filtroSchema.parse(filtro)
-            const response = await EstacaoRepository.findMany(filtroValidated);
+            const filtros = EstacoesSchemas.listar.parse(filtro);
+            const response = await EstacaoRepository.findMany(filtros);
             if (response.length === 0) throw {
                 error: true,
                 code: 400,
@@ -72,20 +34,20 @@ class EstacaoService {
     };
 
     static async listarPorID(filtro) {
-           
-            const { id } = EstacoesSchemas.id.parse(filtro);
-            const response = await EstacaoRepository.findById(id);
-            if (!response) {
-                throw new APIErro(
-                    400,
-                    [{
-                        message: "Estação não encontrada.",
-                        path: "id"
-    
-                    }]);
-                };
-                return response;
-            };
+
+        const { id } = EstacoesSchemas.id.parse(filtro);
+        const response = await EstacaoRepository.findById(id);
+        if (!response) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "Estação não encontrada.",
+                    path: "id"
+
+                }]);
+        };
+        return response;
+    };
 
     static async inserir(data) {
         const estacao = EstacoesSchemas.cadastrar.parse(data);
