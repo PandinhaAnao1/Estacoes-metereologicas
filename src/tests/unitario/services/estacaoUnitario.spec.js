@@ -2,6 +2,8 @@ import { describe, expect, jest, test } from '@jest/globals';
 import EstacaoService from '../../../services/estacaoService.js';
 import EstacaoRepository from '../../../repositories/estacaoRepository.js';
 import UsuarioRepository from '../../../repositories/usuarioRepository.js';
+import { ZodError } from 'zod';
+import { APIErro } from '../../../util/apiErrro.js';
 
 jest.mock('../../../repositories/estacaoRepository.js', () => ({
     findMany: jest.fn(),
@@ -52,11 +54,17 @@ describe('EstacaoSevices.listarPorId', () => {
         try {
             await EstacaoService.listarPorID({ id: 44454 });
         } catch (error) {
-            expect(error).toEqual({
-                error: true,
-                code: 400,
-                message: "Estação não encontrada."
-            });
+            if (error instanceof APIErro) {
+                const errorMessages = error.errors.map((err) => ({
+                    path: err.path,
+                    message: err.message,
+                }));
+                expect(errorMessages).toEqual([
+                    { path: "id", message: "Estação não encontrada." }
+                ]);
+            } else {
+                throw error; 
+            }
         }
     });
 
@@ -64,13 +72,10 @@ describe('EstacaoSevices.listarPorId', () => {
         try {
             await EstacaoService.listarPorID({ id: 'errado' });
         } catch (error) {
-            expect(error).toEqual({
-                error: true,
-                code: 400,
-                message: [
-                    { message: 'Id informado não é do tipo number.', path: 'id' }
-                ]
-            });
+            expect(error.errors).toBeDefined();
+            expect(error.errors[0].message).toBe("Id informado não é do tipo number.");
+            expect(error.errors[0].path).toEqual(["id"]);
+            expect(error.errors[0].code).toBe("invalid_type");
         }
     });
 
