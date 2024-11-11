@@ -1,18 +1,19 @@
-import res from "express/lib/response.js";
 import UsuarioRepository from "../repositories/usuarioRepository.js";
 import UsuarioSchema from "../schemas/usuarioSchema.js";
 import Hashsenha from "../util/hashSenha.js";
-import { z } from "zod";
 import { APIErro } from "../util/apiErrro.js";
+import Paginacao from "../util/pagination.js";
+import PaginationSchema from "../schemas/paginationSchema.js";
 
 class UsuarioService {
 
     static async listar(filtro) {
-        const filtroValidated = UsuarioSchema.listarUsuario.parse(filtro);
+        const filtros = UsuarioSchema.listarUsuario.parse(filtro);
+        const { pagina = 1, quantidade = 10 } = PaginationSchema.schema.parse(filtro);
 
-        const response = await UsuarioRepository.findMany(filtroValidated);
-        response.forEach((e) => delete e.senha);
-        if (response.length === 0) {
+        const total = await UsuarioRepository.countItens(filtros);
+    
+        if (total === 0) {
             throw new APIErro(
                 400,
                 [{
@@ -21,7 +22,17 @@ class UsuarioService {
                 }]
             );
         };
-        return response;
+        
+        const paginado = Paginacao.paginationFilter( pagina, quantidade);
+        const response = await UsuarioRepository.findMany(filtros, paginado);
+        
+        const paginacao = Paginacao.pagination( pagina, quantidade, total );
+        response.forEach((e) => delete e.senha);
+        
+        return {
+            data: response,
+            ...paginacao
+        };
     };
 
     static async listarPorID(filtro) {

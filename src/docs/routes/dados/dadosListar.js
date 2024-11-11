@@ -7,6 +7,26 @@ const dadosListar = {
       summary: "Lista todos os dados cadastrados",
       parameters: [
         {
+          name: "pagina",
+          in: "query",
+          description: "pagina da listagem",
+          required: false,
+          schema: {
+            type: "number",
+            format: "int",
+          }
+        },
+        {
+          name: "quantidade",
+          in: "query",
+          description: "quantidade por pagina",
+          required: false,
+          schema: {
+            type: "number",
+            format: "int",
+          }
+        },
+        {
           name: "temperature",
           in: "query",
           description: "Temperatura da estação",

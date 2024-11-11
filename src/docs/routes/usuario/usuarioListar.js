@@ -6,6 +6,26 @@ const usuarioListar = {
       summary: "Lista todos os usuários cadastrados",
       parameters: [
         {
+          name: "pagina",
+          in: "query",
+          description: "pagina da listagem",
+          required: false,
+          schema: {
+            type: "number",
+            format: "int",
+          }
+        },
+        {
+          name: "quantidade",
+          in: "query",
+          description: "quantidade por pagina",
+          required: false,
+          schema: {
+            type: "number",
+            format: "int",
+          },
+        },
+        {
           name: "email",
           in: "query",
           description: "Email do usuário",

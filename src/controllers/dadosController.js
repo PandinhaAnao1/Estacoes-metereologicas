@@ -7,8 +7,8 @@ class Dados {
         try {
             const response = await DadosService.listar(req.query);
             return sendResponse(res, 200, {
-                data: response,
-                message: response.length > 1 ? "Dados climáticos encontrados com sucesso." : "Dado climático encontrado com sucesso.",
+                ...response,
+                message: response.total > 1 ? "Dados climáticos encontrados com sucesso." : "Dado climático encontrado com sucesso.",
             });
         } catch (error) {
             if (error instanceof APIErro) {

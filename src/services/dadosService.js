@@ -1,24 +1,34 @@
-import dadosRepository from "../repositories/dadosRepository.js"
+import DadosRepository from "../repositories/dadosRepository.js"
 import { z } from "zod";
 import DadosSchemas from "../schemas/dadosSchemas.js";
 import { APIErro } from "../util/apiErrro.js";
+import PaginationSchema from "../schemas/paginationSchema.js";
+import Paginacao from "../util/pagination.js";  
 
 class dadosService {
     static async listar(filtro) {
         const dados = DadosSchemas.listar.parse(filtro);
-        const response = await dadosRepository.findMany(dados)
-        if (response.length === 0) {
+        const { pagina = 1, quantidade = 10 } = PaginationSchema.schema.parse(filtro);
+        const total = await DadosRepository.countItens(dados);
+        if (total === 0) {
             throw new APIErro(400, [{
                 path: "message",
                 message: "Nenhum dado climático encontrado",
             }]);
         }
-        return response;
+        const filters = Paginacao.paginationFilter( pagina, quantidade);
+        const response = await DadosRepository.findMany(dados,filters);
+        const paginacao = Paginacao.pagination( pagina, quantidade, total );
+
+        return {
+            data:response,
+            ...paginacao
+        };
 
     };
     static async inserir(data) {
         const { temperature, humidity, rainfall, wind_speed_kmh, data_hora } = DadosSchemas.cadastrar.parse(data);
-        const response = await dadosRepository.create({
+        const response = await DadosRepository.create({
             temperature: temperature,
             humidity: humidity,
             rainfall: rainfall,

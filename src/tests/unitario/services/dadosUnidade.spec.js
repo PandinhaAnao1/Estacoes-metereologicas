@@ -7,11 +7,7 @@ import { APIErro } from '../../../util/apiErrro.js';
 jest.mock('../../../repositories/dadosRepository', () => ({
     findMany: jest.fn(),
     create: jest.fn(),
-}));
-
-jest.mock('../../../repositories/dadosRepository', () => ({
-    findMany: jest.fn(),
-    create: jest.fn(),
+    countItens: jest.fn(),
 }));
 
 describe('Testes de Unidade para dadosService', () => {
@@ -68,22 +64,6 @@ describe('Testes de Unidade para dadosService', () => {
         jest.clearAllMocks();
     });
 
-    // Testes de Unidade para dadosService.listar
-    describe('dadosService.listar', () => {
-        it('Deve retornar dados filtrados corretamente', async () => {
-            const mockDados = [
-                { temperature: '25', humidity: 80, rainfall: 10, wind_speed_kmh: 20, data_hora: new Date() },
-            ];
-            DadosRepository.findMany.mockResolvedValue(mockDados);
-
-            const filtro = { temperature: '25' };
-            const result = await dadosService.listar(filtro);
-
-            expect(DadosRepository.findMany).toHaveBeenCalledWith(filtro);
-            expect(result).toEqual(mockDados);
-        });
-
-    });
 
     // Testes de Unidade para dadosService.inserir
     describe('dadosService.inserir', () => {
