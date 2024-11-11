@@ -149,8 +149,6 @@ describe("Listar estação", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         const body = response.body;
-        console.log(response.body);
-
         expect(response.status).toBe(200);
         expect(body.data).toBeInstanceOf(Array);
         expect(response.body.message).toBe("Estação encontrada com sucesso.")

@@ -53,21 +53,20 @@ const messages = {
  * sendError(res, 400, [{message:"msg A"}, {message:"msg B"}])
  * sendError(res, 400, {message:"Campo Obrigatório", field:"senha"})
  */
-export const sendError = (res,code, errors = []) => {
+export const sendError = (res, code, errors = []) => {
     // Detecta diferentes formas de usar:
     let _errors = undefined;
-    if(Array.isArray(errors)) { 
+    if (Array.isArray(errors)) {
         // Se for um array de erros --> sendError(res, 400, [{message:"A"},{message:"B"}])
         _errors = errors;
-    } else if(typeof errors === "object" && errors.message !== undefined) {
+    } else if (typeof errors === "object" && errors.message !== undefined) {
         // Se for um objeto com a propriedade message --> sendError(res, 400, {message:"A"})
         _errors = [errors];
     } else {
         // Se for uma string ou qualquer outro tipo --> sendError(res, 400, "A")
-        _errors = [{message: ""+errors}];
+        _errors = [{ message: "" + errors }];
     }
 
-    //console.log(_errors);
     return res.status(code).json({
         data: [],
         error: true,
@@ -86,7 +85,7 @@ export const sendError = (res,code, errors = []) => {
  *    data: usuario
  * });
  */
-export const sendResponse = (res,code, resp = {}) => {
+export const sendResponse = (res, code, resp = {}) => {
     return res.status(code).json({
         ...{
             error: false,

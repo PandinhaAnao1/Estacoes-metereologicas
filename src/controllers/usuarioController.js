@@ -15,7 +15,7 @@ class Usuario {
         message: 'usuario cadastrado com sucesso.',
       });
     } catch (error) {
-      
+
       if (error.code && error.errors) {
         return sendError(res, error.code, error.errors)
       }
@@ -33,21 +33,21 @@ class Usuario {
         return sendError(res, 400, errors);
       }
 
-      return sendError(res,500,[]);
-      
+      return sendError(res, 500, []);
+
     };
   };
 
   static atualizar = async (req, res) => {
     try {
-      const response = await UsuarioService.atualizar({...req.params, ...req.body});
-      return sendResponse(res, 200,{
+      const response = await UsuarioService.atualizar({ ...req.params, ...req.body });
+      return sendResponse(res, 200, {
         data: response,
         error: false,
         message: "Usuario atualizado com sucesso.",
       });
     } catch (error) {
-  
+
       if (error instanceof APIErro) {
         const { code, errors } = error.toJson();
         return sendError(res, code, ...errors);
@@ -65,7 +65,7 @@ class Usuario {
         return sendError(res, 400, errors);
       }
 
-      return sendError(res,500,[]);
+      return sendError(res, 500, []);
 
     };
   };
@@ -111,8 +111,7 @@ class Usuario {
         message: response.total > 1 ? "Usuários encontrados com sucesso." : "Usuário encontrado com sucesso.",
       });
     } catch (error) {
-      console.log(error);
-      
+
       if (error instanceof APIErro) {
         const { code, errors } = error.toJson();
         return sendError(res, code, ...errors);
@@ -131,7 +130,7 @@ class Usuario {
         return sendError(res, 400, errors);
       }
 
-      return sendError(res,500,[]);
+      return sendError(res, 500, []);
 
     };
   };
@@ -163,9 +162,9 @@ class Usuario {
         return sendError(res, 400, errors);
       }
 
-      return sendError(res,500,[]);
+      return sendError(res, 500, []);
     }
-    
+
   };
 };
 
