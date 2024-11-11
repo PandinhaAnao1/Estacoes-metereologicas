@@ -19,8 +19,7 @@ class dadosService {
         const filters = Paginacao.paginationFilter( pagina, quantidade);
         const response = await DadosRepository.findMany(dados,filters);
         const paginacao = Paginacao.pagination( pagina, quantidade, total );
-        console.log(paginacao);
-        
+
         return {
             data:response,
             ...paginacao
