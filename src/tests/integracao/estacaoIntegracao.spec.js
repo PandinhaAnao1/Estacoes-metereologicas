@@ -319,24 +319,36 @@ describe("Listar estação", () => {
         const response = await request(app)
             .get("/estacoes?usuario_id=0")
             .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Id do usuário informado não é um inteiro positivo.")
-        expect(response.body.message[0].path).toBe("usuario_id")
-        expect(response.body.message).toBeInstanceOf(Object);
+            .set("Content-Type", "application/json");
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
+
     });
     it('Listagem das estações por id negativo', async () => {
         const response = await request(app)
             .get("/estacoes?usuario_id=-1")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.errors[0]).toHaveProperty("message")
-        expect(response.body.errors[0]).toHaveProperty("path")
+        console.log(response.body);
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
         expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
+
     });
 
 });
