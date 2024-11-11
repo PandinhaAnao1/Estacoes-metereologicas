@@ -7,11 +7,7 @@ import { APIErro } from '../../../util/apiErrro.js';
 jest.mock('../../../repositories/dadosRepository', () => ({
     findMany: jest.fn(),
     create: jest.fn(),
-}));
-
-jest.mock('../../../repositories/dadosRepository', () => ({
-    findMany: jest.fn(),
-    create: jest.fn(),
+    countItens: jest.fn(),
 }));
 
 describe('Testes de Unidade para dadosService', () => {
@@ -75,8 +71,10 @@ describe('Testes de Unidade para dadosService', () => {
                 { temperature: '25', humidity: 80, rainfall: 10, wind_speed_kmh: 20, data_hora: new Date() },
             ];
             DadosRepository.findMany.mockResolvedValue(mockDados);
+            DadosRepository.countItens.mockResolvedValue(1);
 
             const filtro = { temperature: '25' };
+            
             const result = await dadosService.listar(filtro);
 
             expect(DadosRepository.findMany).toHaveBeenCalledWith(filtro);
