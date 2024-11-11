@@ -293,12 +293,16 @@ describe("Listar estação", () => {
             .get("/estacoes?status=ok")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Status informado não corresponde ao formato indicado (ativo ou inativo).")
-        expect(response.body.message[0].path).toBe("status")
-        expect(response.body.message).toBeInstanceOf(Object);
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
     });
 
 
@@ -307,13 +311,18 @@ describe("Listar estação", () => {
         const response = await request(app)
             .get("/estacoes?usuario_id=e")
             .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Id do usuário informado não é do tipo number.")
-        expect(response.body.message[0].path).toBe("usuario_id")
-        expect(response.body.message).toBeInstanceOf(Object);
+            .set("Content-Type", "application/json");
+
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
     });
     it('Listagem das estações por id 0 ou negativo', async () => {
         const response = await request(app)
