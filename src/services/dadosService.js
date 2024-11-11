@@ -16,10 +16,15 @@ class dadosService {
                 message: "Nenhum dado climático encontrado",
             }]);
         }
-        const filters = Paginacao.paginationFilter({ pagina, quantidade });
-        console.log(filters);
+        const filters = Paginacao.paginationFilter( pagina, quantidade);
         const response = await DadosRepository.findMany(dados,filters);
-        return response;
+        const paginacao = Paginacao.pagination( pagina, quantidade, total );
+        console.log(paginacao);
+        
+        return {
+            data:response,
+            ...paginacao
+        };
 
     };
     static async inserir(data) {
