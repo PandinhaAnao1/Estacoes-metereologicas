@@ -10,11 +10,10 @@ class Estacao {
   static listar = async (req, res) => {
     try {
       const response = await EstacaoService.listar(req.query);
-      res.status(200).json({
-        data: response,
-        error: false,
-        code: 200,
-        message: response.length > 1 ? "Estações encontradas com sucesso." : "Estação encontrada com sucesso.",
+      return sendResponse(res, 200, {
+        ...response,
+        message: response.total > 1 ? "Estações encontradas com sucesso." : "Estação encontrada com sucesso.",
+
       });
     } catch (error) {
       if (error instanceof APIErro) {

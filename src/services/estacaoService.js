@@ -2,17 +2,34 @@ import EstacaoRepository from "../repositories/estacaoRepository.js";
 import EstacoesSchemas from "../schemas/estacoesSchemas.js";
 import { z } from "zod";
 import { APIErro } from "../util/apiErrro.js";
+import PaginationSchema from "../schemas/paginationSchema.js";
+import Paginacao from "../util/pagination.js";
 
 class EstacaoService {
     static async listar(filtro) {
         const filtros = EstacoesSchemas.listar.parse(filtro);
-        const response = await EstacaoRepository.findMany(filtros);
-        if (response.length === 0) throw {
-            error: true,
-            code: 400,
-            message: "Nenhuma estação encontrada.",
-        }
-        return response
+        const { pagina = 1, quantidade = 10 } = PaginationSchema.schema.parse(filtro);
+        const total = await EstacaoRepository.countItens(filtros);
+
+        if (total === 0) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "Nenhuma estação encontrada, verifique os parâmetros!",
+                    path: "parâmetros"
+                }]
+            );
+        };
+
+        const paginado = Paginacao.paginationFilter(pagina, quantidade);
+
+        const response = await EstacaoRepository.findMany(filtros, paginado);
+        const paginacao = Paginacao.pagination(pagina, quantidade, total);
+
+        return {
+            data: response,
+            ...paginacao
+        };
 
     };
 
