@@ -1,12 +1,12 @@
 import { describe, expect, test } from "@jest/globals";
 import usuarioService from "../../../services/usuarioService.js";
-import usuarioRepository from "../../../repositories/usuarioRepository.js";
+import UsuarioRepository from "../../../repositories/usuarioRepository.js";
 import { object, z, ZodError } from "zod";
 import { APIErro } from "../../../util/apiErrro.js";
 import { sendError } from "../../../util/messages.js";
 
 beforeEach(() => {
-  usuarioRepository.findById = jest.fn();
+  UsuarioRepository.findById = jest.fn();
 });
 
 jest.mock("../../../repositories/usuarioRepository.js", () => ({
@@ -15,6 +15,7 @@ jest.mock("../../../repositories/usuarioRepository.js", () => ({
   create: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
+  countItens: jest.fn(),
 }));
 
 jest.mock("bcryptjs", () => ({
@@ -25,25 +26,34 @@ jest.mock("bcryptjs", () => ({
     ),
 }));
 
-jest.mock("../../../util/messages.js")
 
 describe("usuarioService.listar", () => {
   it("Deve retornar usuários válidos quando o filtro é correto", async () => {
     const usuarioMock = [
       { id: 1, nome: "John", email: "john@example.com", senha: "secret" },
     ];
-    usuarioRepository.findMany.mockResolvedValue(usuarioMock);
+    UsuarioRepository.findMany.mockResolvedValue(usuarioMock);
+    UsuarioRepository.countItens.mockResolvedValue(1);
+
 
     const filtro = { id: 1 };
     const result = await usuarioService.listar(filtro);
-
-    expect(result).toEqual([
-      { id: 1, nome: "John", email: "john@example.com" },
-    ]); // senha excluída
+    expect(result).toHaveProperty("data");
+    expect(result.data).toBeDefined();
+    expect(result.data).toBeInstanceOf(Array);
+    expect(result.data[0]).toHaveProperty("email");
+    expect(result.data[0]).toHaveProperty("id");
+    expect(result.data[0]).toHaveProperty("nome");
+    expect(result).toHaveProperty("pagina");
+    expect(result).toHaveProperty("quantidade");
+    expect(result).toHaveProperty("total");
+  
   });
 
   it("Deve lançar erro se nenhum usuário for encontrado", async () => {
-    usuarioRepository.findMany.mockResolvedValue([]);
+    UsuarioRepository.findMany.mockResolvedValue([]);
+    UsuarioRepository.countItens.mockResolvedValue(0);
+
 
     const filtro = { id: 999 };
 
@@ -57,7 +67,7 @@ describe("usuarioService.listarId", () => {
     const usuarioMock = [
       { id: 1, nome: "John", email: "john@example.com", senha: "secret" },
     ];
-    usuarioRepository.findById.mockResolvedValue(usuarioMock);
+    UsuarioRepository.findById.mockResolvedValue(usuarioMock);
 
     const filtro = { id: 1 };
     const result = await usuarioService.listarPorID(filtro);
@@ -72,7 +82,7 @@ describe("usuarioService.listarId", () => {
       const usuarioMock = [
         { id: -1.5, nome: "John", email: "john@example.com", senha: "secret" },
       ];
-      usuarioRepository.findById.mockResolvedValue(usuarioMock);
+      UsuarioRepository.findById.mockResolvedValue(usuarioMock);
 
       const filtro = { id: -1.5 };
 
@@ -99,7 +109,7 @@ describe("usuarioService.listarId", () => {
       const usuarioMock = [
         { id: "abc", nome: "John", email: "john@example.com", senha: "secret" },
       ];
-      usuarioRepository.findById.mockResolvedValue(usuarioMock);
+      UsuarioRepository.findById.mockResolvedValue(usuarioMock);
 
       const filtro = { id: "abc" };
 
@@ -129,8 +139,8 @@ describe("usuarioService.inserir", () => {
       senha: "StrongPass1!",
     };
     const mockUsuario = { id: 1, nome: "John", email: "john@example.com" };
-    usuarioRepository.findMany.mockResolvedValue([]); // Email não repetido
-    usuarioRepository.create.mockResolvedValue(mockUsuario);
+    UsuarioRepository.findMany.mockResolvedValue([]); // Email não repetido
+    UsuarioRepository.create.mockResolvedValue(mockUsuario);
 
     const result = await usuarioService.inserir(data);
 
@@ -143,7 +153,7 @@ describe("usuarioService.inserir", () => {
       email: "john@example.com",
       senha: "StrongPass1!",
     };
-    usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
+    UsuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
 
     await expect(usuarioService.inserir(data)).rejects.toEqual({
       code: 400,
@@ -178,10 +188,10 @@ describe("usuarioService.atualizar", () => {
     const emailRepetidoMock = []; // Simulando que não há email repetido.
 
     // Mock do repositório e da função de hash
-    usuarioRepository.findById.mockResolvedValue(usuarioExistenteMock);
-    usuarioRepository.findMany.mockResolvedValue(emailRepetidoMock);
+    UsuarioRepository.findById.mockResolvedValue(usuarioExistenteMock);
+    UsuarioRepository.findMany.mockResolvedValue(emailRepetidoMock);
 
-    usuarioRepository.update.mockResolvedValue({
+    UsuarioRepository.update.mockResolvedValue({
       ...usuarioExistenteMock,
       nome: dadosMock.nome,
       email: dadosMock.email,
@@ -206,7 +216,7 @@ describe("usuarioService.atualizar", () => {
       senha: "Senha123!",
     };
 
-    usuarioRepository.findById.mockResolvedValue(null); // Simular usuário não encontrado
+    UsuarioRepository.findById.mockResolvedValue(null); // Simular usuário não encontrado
 
     await expect(usuarioService.atualizar(idMock, dadosMock)).rejects.toBeInstanceOf(Object);
   });
@@ -218,9 +228,9 @@ describe("usuarioService.atualizar", () => {
         email: "fernanda@example.com",
     };
 
-      usuarioRepository.findById.mockResolvedValue(idMock);
+      UsuarioRepository.findById.mockResolvedValue(idMock);
 
-      usuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
+      UsuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
   
       await expect(usuarioService.atualizar({...idMock, ...data})).rejects.toBeInstanceOf(APIErro);
     });

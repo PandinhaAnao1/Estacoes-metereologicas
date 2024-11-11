@@ -22,6 +22,7 @@ class UsuarioService {
                 }]
             );
         };
+        
         const paginado = Paginacao.paginationFilter( pagina, quantidade);
         const response = await UsuarioRepository.findMany(filtros, paginado);
         
