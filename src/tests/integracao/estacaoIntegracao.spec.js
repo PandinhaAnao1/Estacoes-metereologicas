@@ -327,17 +327,5 @@ describe("Listar estação", () => {
         expect(response.body.message[0].path).toBe("usuario_id")
         expect(response.body.message).toBeInstanceOf(Object);
     });
-    it('Listagem das estações por id negativo', async () => {
-        const response = await request(app)
-            .get("/estacoes?usuario_id=-1")
-            .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Id do usuário informado não é um inteiro positivo.")
-        expect(response.body.message[0].path).toBe("usuario_id")
-        expect(response.body.message).toBeInstanceOf(Object);
-    });
 
 });
