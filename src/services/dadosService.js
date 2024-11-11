@@ -3,20 +3,22 @@ import { z } from "zod";
 import DadosSchemas from "../schemas/dadosSchemas.js";
 import { APIErro } from "../util/apiErrro.js";
 import PaginationSchema from "../schemas/paginationSchema.js";
+import Paginacao from "../util/pagination.js";  
 
 class dadosService {
     static async listar(filtro) {
         const dados = DadosSchemas.listar.parse(filtro);
-        const { pagina, quantidade } = PaginationSchema.schema.parse(filtro);
+        const { pagina = 1, quantidade = 10 } = PaginationSchema.schema.parse(filtro);
         const total = await DadosRepository.countItens(dados);
-        console.log(total);
-        const response = await DadosRepository.findMany(dados)
-        if (response.length === 0) {
+        if (total === 0) {
             throw new APIErro(400, [{
                 path: "message",
                 message: "Nenhum dado climático encontrado",
             }]);
         }
+        const filters = Paginacao.paginationFilter({ pagina, quantidade });
+        console.log(filters);
+        const response = await DadosRepository.findMany(dados,filters);
         return response;
 
     };
