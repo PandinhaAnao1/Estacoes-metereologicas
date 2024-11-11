@@ -5,32 +5,15 @@ import { APIErro } from "../util/apiErrro.js";
 
 class EstacaoService {
     static async listar(filtro) {
-        try {
-            const filtros = EstacoesSchemas.listar.parse(filtro);
-            const response = await EstacaoRepository.findMany(filtros);
-            if (response.length === 0) throw {
-                error: true,
-                code: 400,
-                message: "Nenhuma estação encontrada.",
-            }
-            return response
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        };
+        const filtros = EstacoesSchemas.listar.parse(filtro);
+        const response = await EstacaoRepository.findMany(filtros);
+        if (response.length === 0) throw {
+            error: true,
+            code: 400,
+            message: "Nenhuma estação encontrada.",
+        }
+        return response
+
     };
 
     static async listarPorID(filtro) {
