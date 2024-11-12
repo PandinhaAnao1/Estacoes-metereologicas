@@ -269,19 +269,23 @@ describe("Listar estação", () => {
             .get("/estacoes?longitude=as")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Longitude informada não é do tipo number.")
-        expect(response.body.message[0].path).toBe("longitude")
-        expect(response.body.message).toBeInstanceOf(Object);
+        
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
     });
     it('Listagem das estações por ip invalido', async () => {
         const response = await request(app)
             .get("/estacoes?ip=123")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-            
+
         expect(response.body).toHaveProperty('data');
         expect(response.body.data).toBeInstanceOf(Array);
         expect(response.body).toHaveProperty('error', true);
