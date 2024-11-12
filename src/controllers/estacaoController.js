@@ -103,6 +103,7 @@ class Estacao {
       });
 
     } catch (error) {
+      
       if (error.code && error.error) {
         return sendError(res, error.code, [error.error]);
       }
@@ -119,6 +120,8 @@ class Estacao {
         return sendError(res, 400, errors);
 
       }
+      console.log(error);
+
       return sendError(res, 500, []);
     };
   };

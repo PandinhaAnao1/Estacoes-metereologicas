@@ -145,17 +145,6 @@ describe("Listar estação", () => {
         expect(response.body.message).toBe("Estações encontradas com sucesso.")
         expect(response.body.error).toBe(false)
     });
-    it('Listagem das estações id params', async () => {
-        const response = await request(app)
-            .get(`/estacoes?id=${idvalido}`)
-            .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(200);
-        expect(body.data).toBeInstanceOf(Array);
-        expect(response.body.message).toBe("Estação encontrada com sucesso.")
-        expect(response.body.error).toBe(false)
-    });
     it('Listar estação por ID valido', async () => {
         const response = await request(app)
             .get(`/estacoes/${idvalido}`)

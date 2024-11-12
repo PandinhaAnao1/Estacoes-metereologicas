@@ -51,7 +51,7 @@ class EstacaoService {
 
     static async inserir(data) {
         const estacao = EstacoesSchemas.cadastrar.parse(data);
-        const usuario = await UsuarioRepository.findById(estacao.usuario_id);
+        const usuario = await EstacaoRepository.findById(estacao.usuario_id);
         if (!usuario || usuario.length === 0) throw {
             code: 400,
             error: {
