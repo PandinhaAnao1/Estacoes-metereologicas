@@ -2,14 +2,15 @@ import { describe, expect, jest, test } from '@jest/globals';
 import EstacaoService from '../../../services/estacaoService.js';
 import EstacaoRepository from '../../../repositories/estacaoRepository.js';
 import UsuarioRepository from '../../../repositories/usuarioRepository.js';
-import { ZodError } from 'zod';
+import { z, ZodError } from 'zod';
 import { APIErro } from '../../../util/apiErrro.js';
 
 jest.mock('../../../repositories/estacaoRepository.js', () => ({
     findMany: jest.fn(),
     findById: jest.fn(),
     create: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
+    countItens: jest.fn(),
 }));
 
 jest.mock('../../../repositories/usuarioRepository.js', () => ({
@@ -139,21 +140,19 @@ describe('EstacaoService.listar', () => {
     it('Deve lançar erro de validação para filtros inválidos.', async () => {
         await expect(EstacaoService.listar(filtroInvalido))
             .rejects
-            .toEqual(expect.objectContaining({
-                error: true,
-                code: 400,
-            }));
+            .toBeInstanceOf(z.ZodError);
 
         expect(EstacaoRepository.findMany).not.toHaveBeenCalled();
     });
 
     it('Deve lidar com outros erros e lançar erro', async () => {
+        EstacaoRepository.findMany.mockRejectedValue(1);
         EstacaoRepository.findMany.mockRejectedValue(new Error('Erro desconhecido'));
 
         await expect(EstacaoService.listar(filtroValido))
             .rejects
             .toThrow('Erro desconhecido');
-
+        
         expect(EstacaoRepository.findMany).toHaveBeenCalledWith(filtroValido);
     });
 });
