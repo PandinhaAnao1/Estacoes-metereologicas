@@ -151,8 +151,6 @@ describe("Listar estação", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json");
 
-        console.log(response.body);
-        console.log(idvalido);
         
         
         expect(response.status).toBe(200);
@@ -346,7 +344,6 @@ describe("Listar estação", () => {
             .get("/estacoes?usuario_id=-1")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        console.log(response.body);
 
         expect(response.body).toHaveProperty('data');
         expect(response.body.data).toBeInstanceOf(Array);

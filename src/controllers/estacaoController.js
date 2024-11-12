@@ -120,7 +120,6 @@ class Estacao {
         return sendError(res, 400, errors);
 
       }
-      console.log(error);
 
       return sendError(res, 500, []);
     };
