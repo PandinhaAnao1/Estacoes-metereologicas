@@ -1,42 +1,32 @@
 const estacoesListarSchemas = {
 
     estacoes_listar_200: {
-        type: "object",
-        properties: {
-            data: {
-                type: "object", items: {}, example:
-                {
-                    data: {
-                        type: 'array', example: [
-                            {
-                                "id": 1,
-                                "nome": "Estação Central",
-                                "endereco": "Rua Exemplo, 123",
-                                "latitude": "11.1111",
-                                "longitude": "22.2222",
-                                "ip": "192.168.1.1",
-                                "status": "ativo",
-                                "usuario_id": 1
-                            },
-                            {
-                                "id": 2,
-                                "nome": "Estação Norte",
-                                "endereco": "Avenida Exemplo, 456",
-                                "latitude": "33.3333",
-                                "longitude": "44.4444",
-                                "ip": "192.168.1.2",
-                                "status": "inativo",
-                                "usuario_id": 2
-                            }
-                        ]
-                    },
-                    error: { type: "boolean", example: false },
-                    code: { type: "int", example: 200 },
-                    message: { type: "string", example: "Estações encontradas com sucesso" }
-                }
+
+        type: 'array',
+        example: [
+            {
+                id: 1,
+                nome: "Estação Central",
+                endereco: "Rua Exemplo, 123",
+                latitude: "11.1111",
+                longitude: "22.2222",
+                ip: "192.168.1.1",
+                status: "ativo",
+                usuario_id: 1
             },
-        },
+            {
+                id: 2,
+                nome: "Estação Norte",
+                endereco: "Avenida Exemplo, 456",
+                latitude: "33.3333",
+                longitude: "44.4444",
+                ip: "192.168.1.2",
+                status: "inativo",
+                usuario_id: 2
+            }
+        ]
     },
+
     estacoes_cadastrar_400: {
 
         properties: {
