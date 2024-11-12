@@ -39,28 +39,6 @@ const estacoesListarSchemas = {
             }
         ]
     },
-    estacoes_cadastrar_500: {
-        properties: {
-            data: {
-                description: "Obejto resultado, cadastrado no banco de dados.",
-                type: "array",
-                example: []
-            },
-            code: {
-                type: "int",
-                example: 500,
-                description: "Codigo http da requisição.",
 
-            },
-            message: {
-                description: "Campo que mostra uma mensagem de resultado da requisição.",
-                type: "string",
-                example: "Requisição com sintaxe incorreta ou outros problemas!",
-            },
-            error: { type: "boolean", example: true },
-            errors: { type: "array", example: [] }
-        },
-
-    },
 };
 export default estacoesListarSchemas;
