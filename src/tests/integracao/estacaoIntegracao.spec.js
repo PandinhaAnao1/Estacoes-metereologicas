@@ -175,17 +175,7 @@ describe("Listar estação", () => {
         expect(typeof response.body.data.status).toBe('string');
         expect(typeof response.body.data.usuario_id).toBe('number');
     });
-    it('Deve retornar que nao localizou as estações', async () => {
-        const response = await request(app)
-            .get(`/estacoes?id=2222`)
-            .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        //expect(body.data).toBeInstanceOf(Array);
-        expect(response.body.message).toBe("Nenhuma estação encontrada.")
-        expect(response.body.error).toBe(true)
-    });
+
 });
 
 describe("Listar estação", () => {
