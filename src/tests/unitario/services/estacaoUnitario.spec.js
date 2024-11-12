@@ -116,12 +116,20 @@ describe('EstacaoService.listar', () => {
 
 
 
-
-
     it('Deve lançar erro de validação para filtros inválidos.', async () => {
         await expect(EstacaoService.listar(filtroInvalido))
             .rejects
             .toBeInstanceOf(z.ZodError);
+
+        expect(EstacaoRepository.findMany).not.toHaveBeenCalled();
+    });
+
+    it('Deve lançar erro de quando não é encontrada uma estação.', async () => {
+        EstacaoRepository.countItens.mockResolvedValue(0);
+
+        await expect(EstacaoService.listar({}))
+            .rejects
+            .toBeInstanceOf(APIErro);
 
         expect(EstacaoRepository.findMany).not.toHaveBeenCalled();
     });
