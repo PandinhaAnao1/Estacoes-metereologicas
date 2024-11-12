@@ -40,6 +40,16 @@ describe('Teste que verifica o controller de estações', () => {
     });
 
     describe('GET /estacoes', () => {
+        describe('400', () => {
+            it('Deve retornar erro 400 da classe api erro ao listar estações', async () => {
+                EstacaoService.listar.mockRejectedValue(new APIErro(400, [{message:'Erro ao listar estações', path:'estacoes'}]));
+
+                await EstacaoController.listar(req, res);
+
+                expect(res.status).toHaveBeenCalledWith(400);
+            });
+
+        });
         describe('500', () => {
             it('Deve retornar erro 500 ao listar estações', async () => {
                 EstacaoService.listar.mockRejectedValue(new Error('Erro interno do serviço'));
