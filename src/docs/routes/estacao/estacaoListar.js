@@ -7,9 +7,18 @@ const estacaoListar = {
       summary: "Lista todas as estações cadastradas",
       parameters: [
         {
-          name: "id",
+          name: "quantidade",
           in: "query",
-          description: "ID da estação",
+          description: "Quantidade de estações a serem listadas",
+          required: false,
+          schema: {
+            type: "integer"
+          }
+        },
+        {
+          name: "pagina",
+          in: "query",
+          description: "Pagina que vai ser listada",
           required: false,
           schema: {
             type: "integer"
