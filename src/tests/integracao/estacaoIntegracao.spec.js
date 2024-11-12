@@ -1,5 +1,5 @@
 import request from "supertest";
-import { expect, describe } from "@jest/globals";
+import { expect, describe, beforeEach } from "@jest/globals";
 import { prisma } from "../../configs/prismaClient.js";
 import app from "../../app.js";
 
@@ -20,7 +20,9 @@ it('Login com autenticação jwt', async () => {
 })
 
 // ----------- Cadastrar Estação ---------
-
+beforeEach(async () => {
+    idvalido = 1;
+});
 describe("Cadastrar estação", () => {
     it('Deve cadastrar uma estação com dados válidos', async () => {
         const response = await request(app)
@@ -158,7 +160,12 @@ describe("Listar estação", () => {
         const response = await request(app)
             .get(`/estacoes/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
+            .set("Content-Type", "application/json");
+
+        console.log(response.body);
+        console.log(idvalido);
+        
+        
         expect(response.status).toBe(200);
         expect(response.body.error).toBe(false)
         expect({ id: idvalido }).toHaveProperty('id', idvalido);
