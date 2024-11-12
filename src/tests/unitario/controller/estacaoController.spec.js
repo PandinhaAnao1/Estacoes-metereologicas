@@ -40,6 +40,23 @@ describe('Teste que verifica o controller de estações', () => {
     });
 
     describe('GET /estacoes', () => {
+        describe('200', () => {
+            it('Deve retornar sucesso em listar uma unica estação', async () => {
+                EstacaoService.listar.mockReturnThis({
+                    total: 1,
+                    pagina: 1,
+                    quantidade: 10,
+                    data: [{ id: 1, nome: 'Estação 1', cidade: 'Cidade 1', latitude: 1.0, longitude: 1.0, usuario_id: 1 }],
+                });
+
+                await EstacaoController.listar(req, res);
+
+                expect(res.status).toHaveBeenCalledWith(200);
+                expect(EstacaoService.listar).toHaveBeenCalled();
+            });
+
+        });
+
         describe('400', () => {
             it('Deve retornar erro 400 da classe api erro ao listar estações', async () => {
                 EstacaoService.listar.mockRejectedValue(new APIErro(400, [{message:'Erro ao listar estações', path:'estacoes'}]));
