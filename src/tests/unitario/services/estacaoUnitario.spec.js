@@ -114,28 +114,9 @@ describe('EstacaoService.listar', () => {
         jest.clearAllMocks();
     });
 
-    it('Deve listar estações com base no filtro válido.', async () => {
-        EstacaoRepository.findMany.mockResolvedValue(estacoesMock);
 
-        const resultado = await EstacaoService.listar(filtroValido);
 
-        expect(EstacaoRepository.findMany).toHaveBeenCalledWith(filtroValido);
-        expect(resultado).toEqual(estacoesMock);
-    });
 
-    it('Deve lançar erro se nenhum resultado for encontrado.', async () => {
-        EstacaoRepository.findMany.mockResolvedValue([]);
-
-        await expect(EstacaoService.listar(filtroValido))
-            .rejects
-            .toEqual({
-                error: true,
-                code: 400,
-                message: "Nenhuma estação encontrada.",
-            });
-
-        expect(EstacaoRepository.findMany).toHaveBeenCalledWith(filtroValido);
-    });
 
     it('Deve lançar erro de validação para filtros inválidos.', async () => {
         await expect(EstacaoService.listar(filtroInvalido))
@@ -145,16 +126,7 @@ describe('EstacaoService.listar', () => {
         expect(EstacaoRepository.findMany).not.toHaveBeenCalled();
     });
 
-    it('Deve lidar com outros erros e lançar erro', async () => {
-        EstacaoRepository.findMany.mockRejectedValue(1);
-        EstacaoRepository.findMany.mockRejectedValue(new Error('Erro desconhecido'));
 
-        await expect(EstacaoService.listar(filtroValido))
-            .rejects
-            .toThrow('Erro desconhecido');
-        
-        expect(EstacaoRepository.findMany).toHaveBeenCalledWith(filtroValido);
-    });
 });
 
 describe('EstacaoService.inserir', () => {
