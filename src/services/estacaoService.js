@@ -4,7 +4,7 @@ import { z } from "zod";
 import { APIErro } from "../util/apiErrro.js";
 import PaginationSchema from "../schemas/paginationSchema.js";
 import Paginacao from "../util/pagination.js";
-
+import UsuarioRepository from "../repositories/usuarioRepository.js";
 class EstacaoService {
     static async listar(filtro) {
         const filtros = EstacoesSchemas.listar.parse(filtro);
@@ -51,7 +51,7 @@ class EstacaoService {
 
     static async inserir(data) {
         const estacao = EstacoesSchemas.cadastrar.parse(data);
-        const usuario = await EstacaoRepository.findById(estacao.usuario_id);
+        const usuario = await UsuarioRepository.findById(estacao.usuario_id);
         if (!usuario || usuario.length === 0) throw {
             code: 400,
             error: {
