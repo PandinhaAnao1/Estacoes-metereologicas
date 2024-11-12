@@ -1,91 +1,53 @@
 import EstacaoRepository from "../repositories/estacaoRepository.js";
-import UsuarioRepository from "../repositories/usuarioRepository.js";
 import EstacoesSchemas from "../schemas/estacoesSchemas.js";
 import { z } from "zod";
 import { APIErro } from "../util/apiErrro.js";
-
+import PaginationSchema from "../schemas/paginationSchema.js";
+import Paginacao from "../util/pagination.js";
+import UsuarioRepository from "../repositories/usuarioRepository.js";
 class EstacaoService {
     static async listar(filtro) {
-        try {
-            const filtroSchema = z.object({
-                id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id informado não é do tipo number.",
-                }).int({
-                    message: "Id informado não é um número inteiro."
-                }).positive({
-                    message: "Id informado não é positivo."
-                })).optional(),
-                nome: z.string({
-                    invalid_type_error: "Nome informado não é do tipo string."
-                }).trim().optional(),
-                endereco: z.string({
-                    invalid_type_error: "Endereço informado não é do tipo string."
-                }).trim().optional(),
-                latitude: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Latitude informada não é do tipo number.",
-                })).optional(),
-                longitude: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Longitude informada não é do tipo number.",
-                })).optional(),
-                ip: z.string({
-                    invalid_type_error: "Ip informado não é do tipo string.",
-                }).ip({
-                    message: "Ip informado não segue o padrão (IPv4 ou IPv6)."
-                }).optional(),
-                status: z.enum(['ativo', 'inativo'], {
-                    invalid_type_error: "Status não é do tipo string.",
-                    message: "Status informado não corresponde ao formato indicado (ativo ou inativo)."
-                }).optional(),
-                usuario_id: z.preprocess((val) => Number(val), z.number({
-                    invalid_type_error: "Id do usuário informado não é do tipo number."
-                }).int({
-                    message: "Id do usuário informado não é um número inteiro."
-                }).positive({
-                    message: "Id do usuário informado não é um inteiro positivo."
-                })).optional(),
-            });
-            const filtroValidated = filtroSchema.parse(filtro)
-            const response = await EstacaoRepository.findMany(filtroValidated);
-            if (response.length === 0) throw {
-                error: true,
-                code: 400,
-                message: "Nenhuma estação encontrada.",
-            }
-            return response
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
+        const filtros = EstacoesSchemas.listar.parse(filtro);
+        const { pagina = 1, quantidade = 10 } = PaginationSchema.schema.parse(filtro);
+        const total = await EstacaoRepository.countItens(filtros);
+
+        if (total === 0) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "Nenhuma estação encontrada, verifique os parâmetros!",
+                    path: "parâmetros"
+                }]
+            );
         };
+
+        const paginado = Paginacao.paginationFilter(pagina, quantidade);
+
+        const response = await EstacaoRepository.findMany(filtros, paginado);
+        const paginacao = Paginacao.pagination(pagina, quantidade, total);
+
+        return {
+            data: response,
+            ...paginacao
+        };
+
     };
 
     static async listarPorID(filtro) {
-           
-            const { id } = EstacoesSchemas.id.parse(filtro);
-            const response = await EstacaoRepository.findById(id);
-            if (!response) {
-                throw new APIErro(
-                    400,
-                    [{
-                        message: "Estação não encontrada.",
-                        path: "id"
-    
-                    }]);
-                };
-                return response;
-            };
+
+        const { id } = EstacoesSchemas.id.parse(filtro);
+        const response = await EstacaoRepository.findById(id);
+        if (!response) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "Estação não encontrada.",
+                    path: "id"
+
+                }]);
+        };
+        return response;
+    };
 
     static async inserir(data) {
         const estacao = EstacoesSchemas.cadastrar.parse(data);

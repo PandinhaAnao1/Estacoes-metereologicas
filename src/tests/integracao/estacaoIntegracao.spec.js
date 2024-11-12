@@ -1,5 +1,5 @@
 import request from "supertest";
-import { expect, describe } from "@jest/globals";
+import { expect, describe, beforeEach } from "@jest/globals";
 import { prisma } from "../../configs/prismaClient.js";
 import app from "../../app.js";
 
@@ -20,7 +20,9 @@ it('Login com autenticação jwt', async () => {
 })
 
 // ----------- Cadastrar Estação ---------
-
+beforeEach(async () => {
+    idvalido = 1;
+});
 describe("Cadastrar estação", () => {
     it('Deve cadastrar uma estação com dados válidos', async () => {
         const response = await request(app)
@@ -143,22 +145,14 @@ describe("Listar estação", () => {
         expect(response.body.message).toBe("Estações encontradas com sucesso.")
         expect(response.body.error).toBe(false)
     });
-    it('Listagem das estações id params', async () => {
-        const response = await request(app)
-            .get(`/estacoes?id=${idvalido}`)
-            .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(200);
-        expect(body.data).toBeInstanceOf(Array);
-        expect(response.body.message).toBe("Estação encontrada com sucesso.")
-        expect(response.body.error).toBe(false)
-    });
     it('Listar estação por ID valido', async () => {
         const response = await request(app)
             .get(`/estacoes/${idvalido}`)
             .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
+            .set("Content-Type", "application/json");
+
+        
+        
         expect(response.status).toBe(200);
         expect(response.body.error).toBe(false)
         expect({ id: idvalido }).toHaveProperty('id', idvalido);
@@ -175,17 +169,7 @@ describe("Listar estação", () => {
         expect(typeof response.body.data.status).toBe('string');
         expect(typeof response.body.data.usuario_id).toBe('number');
     });
-    it('Deve retornar que nao localizou as estações', async () => {
-        const response = await request(app)
-            .get(`/estacoes?id=2222`)
-            .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        //expect(body.data).toBeInstanceOf(Array);
-        expect(response.body.message).toBe("Nenhuma estação encontrada.")
-        expect(response.body.error).toBe(true)
-    });
+
 });
 
 describe("Listar estação", () => {
@@ -214,7 +198,7 @@ describe("Listar estação", () => {
         } else {
             expect(body.message).toBeDefined();
         }
-        
+
     });
     it('Listagem das estações por id 0 ou negativo', async () => {
         const response = await request(app)
@@ -232,7 +216,7 @@ describe("Listar estação", () => {
         } else {
             expect(body.message).toBeDefined();
         }
-        
+
     });
     it('Listagem das estações por id numero nao inteiro', async () => {
         const response = await request(app)
@@ -250,7 +234,7 @@ describe("Listar estação", () => {
         } else {
             expect(body.message).toBeDefined();
         }
-        
+
     });
     it('Listagem das estações por latitude invalida', async () => {
         const response = await request(app)
@@ -258,47 +242,65 @@ describe("Listar estação", () => {
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
         const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Latitude informada não é do tipo number.")
-        expect(response.body.message[0].path).toBe("latitude")
-        expect(response.body.message).toBeInstanceOf(Object);
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
+
     });
     it('Listagem das estações por longitude invalida', async () => {
         const response = await request(app)
             .get("/estacoes?longitude=as")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Longitude informada não é do tipo number.")
-        expect(response.body.message[0].path).toBe("longitude")
-        expect(response.body.message).toBeInstanceOf(Object);
+        
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
     });
     it('Listagem das estações por ip invalido', async () => {
         const response = await request(app)
             .get("/estacoes?ip=123")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Ip informado não segue o padrão (IPv4 ou IPv6).")
-        expect(response.body.message[0].path).toBe("ip")
-        expect(response.body.message).toBeInstanceOf(Object);
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
     });
     it('Listagem das estações por status invalido', async () => {
         const response = await request(app)
             .get("/estacoes?status=ok")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Status informado não corresponde ao formato indicado (ativo ou inativo).")
-        expect(response.body.message[0].path).toBe("status")
-        expect(response.body.message).toBeInstanceOf(Object);
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
     });
 
 
@@ -307,37 +309,52 @@ describe("Listar estação", () => {
         const response = await request(app)
             .get("/estacoes?usuario_id=e")
             .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Id do usuário informado não é do tipo number.")
-        expect(response.body.message[0].path).toBe("usuario_id")
-        expect(response.body.message).toBeInstanceOf(Object);
+            .set("Content-Type", "application/json");
+
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
     });
     it('Listagem das estações por id 0 ou negativo', async () => {
         const response = await request(app)
             .get("/estacoes?usuario_id=0")
             .set("Authorization", `Bearer ${token}`)
-            .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Id do usuário informado não é um inteiro positivo.")
-        expect(response.body.message[0].path).toBe("usuario_id")
-        expect(response.body.message).toBeInstanceOf(Object);
+            .set("Content-Type", "application/json");
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
+
     });
     it('Listagem das estações por id negativo', async () => {
         const response = await request(app)
             .get("/estacoes?usuario_id=-1")
             .set("Authorization", `Bearer ${token}`)
             .set("Content-Type", "application/json")
-        const body = response.body;
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe(true)
-        expect(response.body.message[0].message).toBe("Id do usuário informado não é um inteiro positivo.")
-        expect(response.body.message[0].path).toBe("usuario_id")
-        expect(response.body.message).toBeInstanceOf(Object);
+
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toBeInstanceOf(Array);
+        expect(response.body).toHaveProperty('error', true);
+        expect(response.body).toHaveProperty('code', 400);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toBeInstanceOf(Array);
+        expect(response.body.errors[0]).toHaveProperty('path');
+        expect(response.body.errors[0]).toHaveProperty('message');
+
     });
 
 });

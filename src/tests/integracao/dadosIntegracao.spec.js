@@ -11,9 +11,7 @@ describe('Testes de Integração para DadosController', () => {
             it('Deve retornar dados climáticos', async () => {
                 const response = await request(app)
                     .get('/dados')
-                    
-                console.log(response.body);
-                
+
                 expect(response.body.error).toBe(false);
                 expect(response.body.data).toBeInstanceOf(Array);
                 expect(response.body.code).toBe(200);
