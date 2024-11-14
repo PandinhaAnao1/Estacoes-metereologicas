@@ -324,6 +324,33 @@ describe("Estação", () => {
 
     describe("PATCH /estacoes", () => {
         describe("201", () => {
+            it('Deve atualizar uma estação com dados válidos', async () => {
+                const response = await request(app)
+                    .patch(`/estacoes/${idvalido}`)
+                    .set("Authorization", `Bearer ${token}`)
+                    .set("Content-Type", "application/json")
+                    .send({
+                        nome: 'Estação Atualizada',
+                        endereco: 'Rua 2, Centro',
+                        latitude: -46.6333,
+                        longitude: -23.5505,
+                        ip: '192.168.0.2',
+                        status: 'inativo',
+                        usuario_id: 6
+                    });
+                expect(response.status).toBe(200);
+                expect(response.body.error).toBe(false);
+                expect(response.body.data).toHaveProperty('id', idvalido);
+                expect(response.body.data).toHaveProperty('nome', 'Estação Atualizada');
+                expect(response.body.data).toHaveProperty('endereco', 'Rua 2, Centro');
+                expect(response.body.data).toHaveProperty('latitude', -46.6333);
+                expect(response.body.data).toHaveProperty('longitude', -23.5505);
+                expect(response.body.data).toHaveProperty('ip', '192.168.0.2');
+                expect(response.body.data).toHaveProperty('status', 'inativo');
+                expect(response.body.data).toHaveProperty('usuario_id', 6);
+            });
+        });
+        describe("400", () => {
 
             it('Deve retornar erro ao cadastrar uma estação com usuário_id inválido', async () => {
                 const response = await request(app)
@@ -349,5 +376,27 @@ describe("Estação", () => {
                 expect(response.body.errors[0].path).toBeDefined();
             });
         });
+
+        it('Deve retornar erro ao atualizar uma estação com dados inválidos', async () => {
+            const response = await request(app)
+            .patch(`/estacoes/${idvalido}`)
+            .set("Authorization", `Bearer ${token}`)
+            .set("Content-Type", "application/json")
+            .send({
+                nome: 123, 
+                endereco: 'Rua 2, Centro',
+                latitude: 'invalid', 
+                longitude: -23.5505,
+                ip: 'invalid_ip',
+                status: 'invalido', 
+                usuario_id: 'invalid'
+            });
+            expect(response.status).toBe(400);
+            expect(response.body.error).toBe(true);
+            expect(response.body.errors).toBeInstanceOf(Array);
+            expect(response.body.errors[0]).toHaveProperty('path');
+            expect(response.body.errors[0]).toHaveProperty('message');
+        });
+
     });
 });
