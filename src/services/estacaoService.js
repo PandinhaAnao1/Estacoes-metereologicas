@@ -68,7 +68,7 @@ class EstacaoService {
         const { id } = EstacoesSchemas.id.parse(_id);
         const total = await EstacaoRepository.countItens({id:id});
         if (total === 0) {
-            throw APIErro(400,
+            throw new APIErro(400,
                 [
                     {
                         message: "Estação não encontrado.",
@@ -80,8 +80,8 @@ class EstacaoService {
         }
         const {usuario_id, ...estacao} = EstacoesSchemas.atualizar.parse(data);
         
-        const usuario = await UsuarioRepository.findById(usuario_id);
-        if (!usuario) {
+        const usuario = await UsuarioRepository.countItens({id:usuario_id});
+        if (usuario === 0) {
             throw new APIErro(
                 400,
                 [{
@@ -93,11 +93,11 @@ class EstacaoService {
         
         const response = await EstacaoRepository.update(id, { ...estacao, usuario_id: usuario_id });
         if (!response) {
-            throw APIErro(400,
+            throw new APIErro(400,
                 [
                     {
                         message: "Não foi possível atualizar estação.",
-                        path: "id"
+                        path: "estacao"
                     }
                 ]
             );
