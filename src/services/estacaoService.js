@@ -65,45 +65,32 @@ class EstacaoService {
     };
 
     static async atualizar(_id, data) {
-        try {
-            const id = EstacoesSchemas.id.parse(_id);
-            const total = await EstacaoRepository.countItens(id);
-            if (total === 0) {
-                throw APIErro(400,
-                    [
-                        {
-                            message: "Estação não encontrado.",
-                            path: "id"
-                        }
-                    ]
-                );
+        const id = EstacoesSchemas.id.parse(_id);
+        const total = await EstacaoRepository.countItens(id);
+        if (total === 0) {
+            throw APIErro(400,
+                [
+                    {
+                        message: "Estação não encontrado.",
+                        path: "id"
+                    }
+                ]
+            );
 
-            }
-            const estacao = EstacoesSchemas.atualizar.parse(data);
-            const response = await EstacaoRepository.update(id, estacao);
-            if (!response) throw {
-                error: true,
-                code: 400,
-                message: "Não foi possível atualizar estação.",
-            };
-            return response;
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const errorMessages = error.issues.map((issue) => {
-                    return {
-                        path: issue.path[0],
-                        message: issue.message
-                    };
-                });
-                throw {
-                    error: true,
-                    code: 400,
-                    message: errorMessages,
-                };
-            } else {
-                throw error;
-            };
-        };
+        }
+        const estacao = EstacoesSchemas.atualizar.parse(data);
+        const response = await EstacaoRepository.update(id, estacao);
+        if (!response) {
+            throw APIErro(400,
+                [
+                    {
+                        message: "Não foi possível atualizar estação.",
+                        path: "id"
+                    }
+                ]
+            );
+        }
+        return response;
     };
 };
 
