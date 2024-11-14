@@ -65,8 +65,8 @@ class EstacaoService {
     };
 
     static async atualizar(_id, data) {
-        const id = EstacoesSchemas.id.parse(_id);
-        const total = await EstacaoRepository.countItens(id);
+        const { id } = EstacoesSchemas.id.parse(_id);
+        const total = await EstacaoRepository.countItens({id:id});
         if (total === 0) {
             throw APIErro(400,
                 [
@@ -78,8 +78,20 @@ class EstacaoService {
             );
 
         }
-        const estacao = EstacoesSchemas.atualizar.parse(data);
-        const response = await EstacaoRepository.update(id, estacao);
+        const {usuario_id, ...estacao} = EstacoesSchemas.atualizar.parse(data);
+        
+        const usuario = await UsuarioRepository.findById(usuario_id);
+        if (!usuario) {
+            throw new APIErro(
+                400,
+                [{
+                    message: "Usuário associado não encontrado.",
+                    path: "usuario_id"
+                }]
+            );
+        }
+        
+        const response = await EstacaoRepository.update(id, { ...estacao, usuario_id: usuario_id });
         if (!response) {
             throw APIErro(400,
                 [
