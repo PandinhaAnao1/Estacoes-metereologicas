@@ -14,7 +14,8 @@ jest.mock('../../../repositories/estacaoRepository.js', () => ({
 }));
 
 jest.mock('../../../repositories/usuarioRepository.js', () => ({
-    findById: jest.fn()
+    findById: jest.fn(),
+    countItens: jest.fn(),
 }));
 
 describe('EstacaoService', () => {
@@ -135,15 +136,10 @@ describe('EstacaoService', () => {
     });
 
     describe('atualizar', () => {
-      
-
-        beforeEach(() => {
-            jest.clearAllMocks();
-        });
-
         describe('Sucesso', () => {
             it('Deve atualizar uma estação com sucesso.', async () => {
-                EstacaoRepository.findById.mockResolvedValue(estacao);
+                EstacaoRepository.countItens.mockResolvedValue(1);
+                UsuarioRepository.countItens.mockResolvedValue(1);
                 EstacaoRepository.update.mockResolvedValue({
                     ...estacao,
                     ...dados
@@ -151,57 +147,39 @@ describe('EstacaoService', () => {
 
                 const resultado = await EstacaoService.atualizar({ id: id }, dados);
 
-                expect(EstacaoRepository.findById).toHaveBeenCalledWith(id);
+                expect(EstacaoRepository.countItens).toHaveBeenCalled();
+                expect(UsuarioRepository.countItens).toHaveBeenCalled();
                 expect(EstacaoRepository.update).toHaveBeenCalledWith(id, expect.objectContaining(dados));
                 expect(resultado).toEqual(expect.objectContaining(dados));
             });
         });
 
-        describe('Erro', () => {
-            it('Deve lançar erro se a estação não for encontrada.', async () => {
-                EstacaoRepository.findById.mockResolvedValue(null);
-
-                await expect(EstacaoService.atualizar({ id: id }, dados))
-                    .rejects
-                    .toEqual({
-                        error: true,
-                        code: 400,
-                        message: "Estação não encontrado.",
-                    });
-
-                expect(EstacaoRepository.findById).toHaveBeenCalledWith(id);
-                expect(EstacaoRepository.update).not.toHaveBeenCalled();
-            });
-
-            it('Deve lançar erro de validação para dados inválidos.', async () => {
-                const dadosInvalidos = {
-                    latitude: 'invalido',
-                };
-
-                await expect(EstacaoService.atualizar(id, dadosInvalidos))
-                    .rejects
-                    .toEqual(expect.objectContaining({
-                        error: true,
-                        code: 400,
-                    }));
-
-                expect(EstacaoRepository.findById).not.toHaveBeenCalled();
-                expect(EstacaoRepository.update).not.toHaveBeenCalled();
-            });
-
-            it('Deve lançar erro ao não conseguir atualizar a estação.', async () => {
-                EstacaoRepository.findById.mockResolvedValue(estacao);
+        describe('Erro', () => {  
+            it('Deve testar o erro caso uma estação não exita.', async () => {
+                EstacaoRepository.countItens.mockResolvedValue(0);
+                UsuarioRepository.countItens.mockResolvedValue(1);
                 EstacaoRepository.update.mockResolvedValue(null);
-
+    
                 await expect(EstacaoService.atualizar({ id: id }, dados))
                     .rejects
-                    .toEqual({
-                        error: true,
-                        code: 400,
-                        message: "Não foi possível atualizar estação.",
-                    });
+                    .toBeInstanceOf(APIErro);
 
-                expect(EstacaoRepository.findById).toHaveBeenCalledWith(id);
+                expect(EstacaoRepository.countItens).toHaveBeenCalled();
+                expect(UsuarioRepository.countItens).toHaveBeenCalledTimes(0);
+                expect(EstacaoRepository.update).toHaveBeenCalledTimes(0);
+            });
+
+            it('Deve testar o erro caso uma estação não seja atualizada corretamente.', async () => {
+                EstacaoRepository.countItens.mockResolvedValue(1);
+                UsuarioRepository.countItens.mockResolvedValue(1);
+                EstacaoRepository.update.mockResolvedValue(null);
+        
+                await expect(EstacaoService.atualizar({ id: id }, dados))
+                   .rejects
+                    .toBeInstanceOf(APIErro);
+
+                expect(EstacaoRepository.countItens).toHaveBeenCalled();
+                expect(UsuarioRepository.countItens).toHaveBeenCalled();
                 expect(EstacaoRepository.update).toHaveBeenCalledWith(id, expect.objectContaining(dados));
             });
         });

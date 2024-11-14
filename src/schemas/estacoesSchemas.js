@@ -81,6 +81,37 @@ class EstacoesSchemas {
         }))
     });
 
+    static atualizar = z.object({
+        nome: z.string({
+            invalid_type_error: "Nome informado não é do tipo string.",
+        }).optional(),
+        endereco: z.string({
+            invalid_type_error: "Email informado não é do tipo string.",
+        }).optional(),
+        latitude: z.preprocess((val) => Number(val), z.number({
+            invalid_type_error: "Latitude informada não é do tipo number.",
+        })).optional(),
+        longitude: z.preprocess((val) => Number(val), z.number({
+            invalid_type_error: "Longitude informada não é do tipo number.",
+        })).optional(),
+        ip: z.string({
+            invalid_type_error: "Ip informado não é do tipo string.",
+        }).ip({
+            message: "Formato de Ip inválido."
+        }).optional(),
+        status: z.enum(["ativo", "inativo"], {
+            invalid_type_error: "Status não é do tipo string.",
+            message: "Status informado não corresponde ao formato indicado (ativo ou inativo)."
+        }).optional(),
+        usuario_id: z.number({
+            invalid_type_error: "Id não é do tipo number."
+        }).int({
+            message: "Id não é um tipo inteiro."
+        }).positive({
+            message: "Id não é um inteiro positivo."
+        }).optional()
+    });
+
 
 }
 
