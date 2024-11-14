@@ -82,6 +82,8 @@ class Estacao {
       );
 
     } catch (error) {
+      console.log(error);
+
       if (error instanceof APIErro) {
         const { code, errors } = error.toJson();
         return sendError(res, code, ...errors);
