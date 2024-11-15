@@ -21,6 +21,7 @@ import dadosSchema from "../schemas/dados/dadosCadastrar.js";
 import dadosListarSchema from "../schemas/dados/dadosListar.js";
 import estacoesListarSchemas from "../schemas/estacoes/estacoesListar.js";
 import estacoesAtualizar from "../schemas/estacoes/estacoesAtualizar.js";
+import estacoesListarPorId from "../schemas/estacoes/estacoesListarPorId.js";
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
   const devUrl = { url: process.env.SWAGGER_DEV_URL || "http://localhost:7001" };
@@ -104,6 +105,7 @@ const getSwaggerOptions = () => {
           ...dadosListarSchema,
           ...estacoesListarSchemas,
           ...estacoesAtualizar,
+          ...estacoesListarPorId,
 
         }
       },
