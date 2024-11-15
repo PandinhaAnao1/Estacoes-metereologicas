@@ -15,6 +15,16 @@ const estacoesAtualizar = {
             status: "ativo",
             usuario_id: 1
         }
+    },
+
+    estacoes_atualizar_400: {
+        type: "array",
+        example: [
+            {
+                mensage: "Estacao não encontrada",
+                path:'id',
+            }
+        ]
     }
 }
 

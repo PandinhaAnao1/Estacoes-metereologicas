@@ -63,21 +63,7 @@ const estacaoAtualizar = {
       },
       responses: {
         200: commonResponses["200"]('#/components/schemas/estacoes_atualizar_200'),
-        400: {
-          description: "Erro na requisição",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  error: { type: "boolean", example: true },
-                  code: { type: "int", example: 400 },
-                  message: { type: "array", example: ["Campo Nome É Obrigatório!", "O Nome tem que ser String", "Campo Endereço É Obrigatório!", "O Endereço tem que ser String", "Campo Latitude É Obrigatório!", "Latitude deve ser um número", "Campo Longitude É Obrigatório!", "Longitude deve ser um número", "Campo IP É Obrigatório!", "IP deve ser um formato válido", "Campo Status É Obrigatório!", "Status deve ser String", "Campo Usuario ID É Obrigatório!", "Usuario ID deve ser um número inteiro", "Estação não encontrada", "Não foi possível atualizar estação"] }
-                }
-              }
-            }
-          }
-        }
+        400: commonResponses["400"](null,null,'#/components/schemas/estacoes_atualizar_400')
       }
     }
   }
