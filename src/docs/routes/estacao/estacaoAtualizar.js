@@ -63,7 +63,8 @@ const estacaoAtualizar = {
       },
       responses: {
         200: commonResponses["200"]('#/components/schemas/estacoes_atualizar_200'),
-        400: commonResponses["400"](null,null,'#/components/schemas/estacoes_atualizar_400')
+        400: commonResponses["400"](null,null,'#/components/schemas/estacoes_atualizar_400'),
+        500: commonResponses["500"]()
       }
     }
   }
