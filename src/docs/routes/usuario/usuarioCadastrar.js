@@ -1,5 +1,4 @@
-// import authSchemas from "../schemas/authSchema.js";
-// import commonResponses from "../schemas/commonResponses.js";
+import commonResponses from "../../schemas/commonResponses.js";
 
 const usuarioCadastrar = {
 
@@ -34,26 +33,9 @@ const usuarioCadastrar = {
         }
       },
       responses: {
-        201: {
-          description: "Usuário cadastrado com sucesso!",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: '#/components/schemas/usuario_cadastrar_201'
-              }
-            }
-          }
-        },
-        400: {
-          description: "Erro na requisição",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: '#/components/schemas/usuario_cadastrar_400'
-              }
-            }
-          }
-        }
+        201: commonResponses[201]('#/components/schemas/usuario_cadastrar_201'),
+        400: commonResponses[400](null,null,'#/components/schemas/usuario_cadastrar_400'),
+        500: commonResponses[500](),
       }
     }
   }

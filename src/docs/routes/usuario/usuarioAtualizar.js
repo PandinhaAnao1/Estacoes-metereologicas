@@ -1,5 +1,5 @@
 // import authSchemas from "../schemas/authSchema.js";
-// import commonResponses from "../schemas/commonResponses.js";
+import commonResponses from "../../schemas/commonResponses.js";
 
 const usuarioAtualizar = {
 
@@ -46,26 +46,9 @@ const usuarioAtualizar = {
         }
       },
       responses: {
-        200: {
-          description: "Usuario atualizado com sucesso!!!",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: '#/components/schemas/usuario_atualizar_200'
-              }
-            }
-          }
-        },
-        400: {
-          description: "Erro na requisição",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: '#/components/schemas/usuario_atualizar_400'
-              }
-            }
-          }
-        }
+        200: commonResponses["200"]('#/components/schemas/usuario_atualizar_200'),
+        400: commonResponses["400"](null, null, '#/components/schemas/usuario_atualizar_400'),
+        500: commonResponses["500"]()
       }
     }
   }
