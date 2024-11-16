@@ -1,4 +1,4 @@
-// import commonResponses from "../schemas/commonResponses.js";
+import commonResponses from "../../schemas/commonResponses.js";
 
 const autenticacao = {
   "/autenticacao": {
@@ -21,34 +21,9 @@ const autenticacao = {
         }
       },
       responses: {
-        201: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/autenticao_201"
-
-              }
-            }
-          }
-        },
-        400: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/autenticao_400"
-              }
-            }
-          }
-        },
-        500: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/autenticao_500"
-              }
-            }
-          }
-        }
+        201: commonResponses["201"]("#/components/schemas/autenticao_201"),
+        400: commonResponses["400"](null,"Erro ao autenticar","#/components/schemas/autenticao_400"),
+        500: commonResponses["500"](),
       }
     }
   }
