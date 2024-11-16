@@ -1,5 +1,6 @@
+import commonResponses from "../../schemas/commonResponses.js";
+
 const usuarioListar = {
-  //get
   "/usuarios": {
     get: {
       tags: ["Usuario"],
@@ -45,46 +46,11 @@ const usuarioListar = {
             example: "",
           },
         },
-        {
-          name: "id",
-          in: "query",
-          description: "ID do usuário",
-          required: false,
-          schema: {
-            type: "string",
-            example: "",
-          },
-        },
       ],
       responses: {
-        200: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/usuario_listar_200",
-              },
-            },
-          },
-        },
-
-        404: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/usuario_listar_404",
-              },
-            },
-          },
-        },
-        400: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/usuario_listar_400",
-              },
-            },
-          },
-        },
+        200: commonResponses['200']("#/components/schemas/usuario_listar_200"),
+        400: commonResponses['400'](null,'Erro ao listar usuarios',"#/components/schemas/usuario_listar_400"),
+        500: commonResponses['500']()
       },
     },
   },
