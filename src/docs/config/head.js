@@ -1,3 +1,4 @@
+//Routes
 import autenticacao from "../routes/autenticacao/autenticacao.js";
 import usuarioListar from "../routes/usuario/usuarioListar.js";
 import usuarioListarId from "../routes/usuario/usuarioListarID.js";
@@ -11,17 +12,22 @@ import estacoeCadastrar from "../routes/estacao/estacaoCadastrar.js";
 import dadosCadastrar from "../routes/dados/dadosCadastrar.js";
 import dadosListar from "../routes/dados/dadosListar.js";
 //Schemas
+//Autenticação
 import autenticaoSchemas from "../schemas/autenticacao.js";
+//Usuarios
 import deletarSchemas from "../schemas/usuarios/usuariosDeletar.js";
-import estacoesCadastrarSchemas from "../schemas/estacoes/estacoesCadastrar.js";
+import atualizarSchemas from "../schemas/usuarios/usuarioAtualizar.js";
 import cadastrarSchemas from "../schemas/usuarios/usuarioCadastrar.js";
 import listarSchemas from "../schemas/usuarios/usuarioListar.js";
-import atualizarSchemas from "../schemas/usuarios/usuarioAtualizar.js";
-import dadosSchema from "../schemas/dados/dadosCadastrar.js";
-import dadosListarSchema from "../schemas/dados/dadosListar.js";
+import listarPorIDSchemas from "../schemas/usuarios/usuarioListarID.js";
+//Estações
+import estacoesCadastrarSchemas from "../schemas/estacoes/estacoesCadastrar.js";
 import estacoesListarSchemas from "../schemas/estacoes/estacoesListar.js";
 import estacoesAtualizar from "../schemas/estacoes/estacoesAtualizar.js";
 import estacoesListarPorId from "../schemas/estacoes/estacoesListarPorId.js";
+//Dados
+import dadosListarSchema from "../schemas/dados/dadosListar.js";
+import dadosSchema from "../schemas/dados/dadosCadastrar.js";
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
   const devUrl = { url: process.env.SWAGGER_DEV_URL || "http://localhost:7001" };
@@ -96,13 +102,17 @@ const getSwaggerOptions = () => {
         schemas: {
           //Schemas
           ...autenticaoSchemas,
+          //Usuarios
           ...deletarSchemas,
-          ...estacoesCadastrarSchemas,
           ...cadastrarSchemas,
           ...listarSchemas,
           ...atualizarSchemas,
+          ...listarPorIDSchemas,
+          //Dados
           ...dadosSchema,
           ...dadosListarSchema,
+          //Estações
+          ...estacoesCadastrarSchemas,
           ...estacoesListarSchemas,
           ...estacoesAtualizar,
           ...estacoesListarPorId,
