@@ -2,23 +2,24 @@ import request from "supertest";
 import { expect, describe } from "@jest/globals";
 import app from "../../app.js";
 import UsuarioService from "../../services/usuarioService.js";
+import { postLogin } from "../auth.js";
 
 
 // Apenas para teste depois irei refatorar
 // ---------------- Login ----------------
 let token;
 let idvalido;
-
-it('Login com autenticação jwt', async () => {
-    const response = await request(app)
-        .post("/autenticacao")
-        .send({
-            email: "carlos@example.com",
-            senha: "Senha123@"
-        })
-        .expect(201)
-    token = response.body.token;
-})
+describe("Testes de autenticação com token", () => {
+    let req = request(app);
+    it('Deve atutenticar na aplicação!', async () => {
+        const res = await postLogin(req);
+        const data = res.body?.data;
+        console.log(data);
+        
+        expect(data?.token).toBeTruthy();
+        token = data.token;
+    });
+});
 
 // ----------- Cadastrar usuario ---------
 
