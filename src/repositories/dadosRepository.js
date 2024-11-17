@@ -1,8 +1,11 @@
 import { prisma } from "../configs/prismaClient.js"
 
 class DadosRepository {
-    static async findMany(filtro) {
-        return await prisma.dados_diarios.findMany({ where: filtro });
+    static async countItens(filtro) {
+        return await prisma.dados_diarios.count({ where: filtro });
+    }
+    static async findMany(filtro,pagination) {
+        return await prisma.dados_diarios.findMany({ where: filtro, ...pagination});
     }
 
     static async create(data) {

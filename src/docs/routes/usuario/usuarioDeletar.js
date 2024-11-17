@@ -1,3 +1,5 @@
+import commonResponses from "../../schemas/commonResponses.js";
+
 const usuarioDeletar = {
 
   //Delete
@@ -18,36 +20,9 @@ const usuarioDeletar = {
         }
       ],
       responses: {
-        // 204: {
-        //   content: {
-        //     "application/json": {
-        //       schema: {
-        //         $ref: "#/components/schemas/deltar_204"
-
-        //       }
-        //     }
-        //   }
-        // },
-        400: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/deltar_400"
-
-              }
-            }
-          }
-        },
-        500: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/deltar_500"
-
-              }
-            }
-          }
-        }
+        204: commonResponses["200"](null,'Usuario deletado com sucesso'),
+        400: commonResponses["400"](null,null,"#/components/schemas/deltar_400"),
+        500: commonResponses["500"](),
       }
     }
   }
