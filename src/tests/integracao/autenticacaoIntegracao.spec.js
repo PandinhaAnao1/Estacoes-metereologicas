@@ -65,8 +65,20 @@ describe("Testes de autenticação com token", () => {
     const response = await request(app)
       .post('/estacoes')  // Substitua por uma rota que utilize o middleware de autenticação
       .set("Content-Type", "application/json");
-
     expect(response.status).toBe(400);
-    expect(response.body.Error).toBe('Token not provided');
+    expect(response.body).toBeDefined();
+    expect(response.body).toHaveProperty('data');
+    expect(response.body.data).toEqual([]);
+    expect(response.body).toHaveProperty('error');
+    expect(response.body.error).toBe(true);
+    expect(response.body).toHaveProperty('code');
+    expect(response.body.code).toBe(400);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body).toHaveProperty('errors');
+    expect(response.body.errors).toBeDefined();
+    expect(response.body.errors[0]).toHaveProperty('path');
+    expect(response.body.errors[0].path).toBe('token');
+    expect(response.body.errors[0]).toHaveProperty('message');
+    
   });
 });
