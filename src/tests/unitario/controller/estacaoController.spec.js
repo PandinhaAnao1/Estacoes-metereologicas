@@ -89,20 +89,27 @@ describe('Teste que verifica o controller de estações', () => {
     describe('POST /estacoes', () => {
         describe('400', () => {
             it('Deve retornar erro 400 ao cadastrar uma estação', async () => {
-                EstacaoService.inserir.mockRejectedValue({ error: 'Erro ao cadastrar estação', code: 400 });
+                EstacaoService.inserir.mockRejectedValue(
+                    new APIErro(400,
+                        [
+                            {
+                                message: 'Erro ao cadastrar estação',
+                                path: 'estacoes'
+                            }  
+                        ]
+                ));
 
                 await EstacaoController.cadastrar(req, res);
 
                 expect(res.status).toHaveBeenCalledWith(400);
             });
         });
-
         describe('500', () => {
-            it('Deve retornar erro 500 quando ocorrer um erro inesperado', async () => {
-                const error = new Error('Erro no servidor');
-                EstacaoService.inserir = jest.fn().mockRejectedValue(error);
+            it('Deve retornar erro 500 ao cadastrar uma estação', async () => {
+                EstacaoService.inserir.mockRejectedValue(new Error('Erro interno do serviço'));
 
                 await EstacaoController.cadastrar(req, res);
+
                 expect(res.status).toHaveBeenCalledWith(500);
             });
         });
