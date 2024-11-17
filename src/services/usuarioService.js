@@ -54,15 +54,13 @@ class UsuarioService {
 
             const emailRepetido = await UsuarioRepository.findMany({ email: data.email }) || [];
             if (emailRepetido.length > 0) {
-                throw {
-                    code: 400,
-                    errors: [
+                throw new APIErro(400,
+                    [
                         {
                             message: "Email já cadastrado!",
                             path: "email"
                         }
-                    ]
-                };
+                    ]);
             }
 
             const hashSenha = await Hashsenha.criarHashSenha(data.senha);

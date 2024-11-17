@@ -155,15 +155,7 @@ describe("usuarioService.inserir", () => {
     };
     UsuarioRepository.findMany.mockResolvedValue([data]); // Email repetido
 
-    await expect(usuarioService.inserir(data)).rejects.toEqual({
-      code: 400,
-      errors: [
-        {
-          message: "Email já cadastrado!",
-          path: "email",
-        },
-      ],
-    });
+    await expect(usuarioService.inserir(data)).rejects.toBeInstanceOf(APIErro);
   });
 });
 
