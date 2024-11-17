@@ -1,5 +1,8 @@
 import AutenticacaoServices from "../services/autenticacaoSevices.js";
-import {z} from 'zod';
+import { z } from 'zod';
+import { APIErro } from "../util/apiErrro.js";
+import { sendError, sendResponse } from "../util/messages.js";
+
 class Autenticacao {
 
   static login = async (req, res) => {
@@ -7,28 +10,28 @@ class Autenticacao {
 
       const response = await AutenticacaoServices.login(req.body);
 
-      return res.status(201).json({
-        error: false,
-        code: 201,
-        message: 'Token gerado com sucesso!',
-        ...response
-      })
+      return sendResponse(res, 201, {
+        data: response
+      });
+
     } catch (error) {
-      if(error.code && error.message){
-        return res.status(error.code).json({
-         ...error
-        })
+      if (error instanceof APIErro) {
+        const { code, errors } = error.toJson();
+        return sendError(res, code, ...errors);
       }
-      
+
       if (error instanceof z.ZodError) {
-         const errosMessages = error.issues.map(error => error.message);
-         return res.status(400).json({
-           message: errosMessages,
-           code: 400,
-           error: true
-       });
-       }
-      return res.status(error.code || 500).json(error)
+        let errors = [];
+        error.issues.map((issue) => (
+          errors.push({
+            path: issue.path[0],
+            message: issue.message
+          })));
+
+        return sendError(res, 400, errors);
+      }
+
+      return sendError(res, 500, []);
     }
 
   }
