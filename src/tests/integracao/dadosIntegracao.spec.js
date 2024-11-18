@@ -91,8 +91,6 @@ describe('Testes de Integração para DadosController', () => {
                     .query({
                         data_hora: "a",
                     });
-                console.log(response.body);
-                console.log(new Date().toISOString());
                 
             
                 expect(response.body.data).toEqual([]);

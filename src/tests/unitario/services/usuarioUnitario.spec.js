@@ -199,7 +199,6 @@ describe("usuarioService", () => {
         };
         UsuarioRepository.findMany.mockResolvedValue(null);
         const user = await usuarioService.inserir(data);
-        console.log(user);
 
         expect(user).toHaveProperty('email');
         expect(user).toHaveProperty('nome');
