@@ -1,15 +1,15 @@
 import { prisma } from "../configs/prismaClient.js"
 
 class UsuarioRepository {
-    static async findMany(filtros) {
+
+    static async countItens(filtro) {
+        return await prisma.usuario.count({ where: filtro });
+    }
+
+    static async findMany(filtros, pagination) {
         return await prisma.usuario.findMany({
             where: filtros,
-            select: {
-                id: true,
-                nome: true,
-                email: true,
-                senha: true
-            }
+            ...pagination ?? {},
         });
     };
 
@@ -30,7 +30,6 @@ class UsuarioRepository {
     };
 
     static async update(id, data) {
-        console.log('dsdsdds',id)
         return await prisma.usuario.update({ where: { id: id }, data: data });
     };
 

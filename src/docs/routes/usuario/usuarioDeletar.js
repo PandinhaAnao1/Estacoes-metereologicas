@@ -1,13 +1,15 @@
+import commonResponses from "../../schemas/commonResponses.js";
+
 const usuarioDeletar = {
 
   //Delete
-  "/usuarios/{idUser}": {
+  "/usuarios/{id}": {
     delete: {
       tags: ["Usuario"],
       summary: "Detela um usuário pelo id",
       parameters: [
         {
-          name: "idUser",
+          name: "id",
           in: "path",
           description: "ID do usuário",
           required: true,
@@ -18,48 +20,9 @@ const usuarioDeletar = {
         }
       ],
       responses: {
-        204: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  error: {
-                    type: "boolean",
-                    example: false
-                  },
-                  code: {
-                    type: "integer",
-                    example: 204
-                  },
-                  message: {
-                    type: "string",
-                    example: "Usuario deletado com sucesso."
-                  }
-                }
-              }
-            }
-          }
-        },        
-        400: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  data: {
-                    type: "object", items: {}, example:
-                    {
-                      error: { type: "boolean", example: true },
-                      code: { type: "int", example: 400 },
-                      message: { type: "array", example: ["Não existe usuário com este id: 9"] }
-                    }
-                  },
-                }
-              }
-            }
-          }
-        },
+        204: commonResponses["200"](null,'Usuario deletado com sucesso'),
+        400: commonResponses["400"](null,null,"#/components/schemas/deltar_400"),
+        500: commonResponses["500"](),
       }
     }
   }
