@@ -55,7 +55,7 @@ const commonResponses = {
         }
     }),
 
-    401: (schemaRef = null, description = "Não autorizado") => ({
+    401: (schemaRef = null, description = "Não autorizado", errors = null) => ({
         description: description,
         content: {
             "application/json": {
@@ -66,14 +66,14 @@ const commonResponses = {
                         error: { type: "boolean", example: false },
                         code: { type: "integer", example: 401 },
                         message: { type: "string", example: messages.httpCodes[401] },
-                        errors: { type: "array", example: [{ message: messages.auth.invalidPermission }] }
+                        errors: errors ?  { $ref: errors } : { type: "array", items: {}, example: [] }
                     }
                 }
             }
         }
     }),
 
-    404: (schemaRef = null, description = "Não encontrado") => ({
+    404: (schemaRef = null, description = "Não encontrado",errors = null) => ({
         description: description,
         content: {
             "application/json": {
@@ -84,14 +84,14 @@ const commonResponses = {
                         error: { type: "boolean", example: false },
                         code: { type: "integer", example: 404 },
                         message: { type: "string", example: messages.httpCodes[404] },
-                        errors: { type: "array", example: [{ message: messages.error.resourceNotFound }] }
+                        errors: errors ?  { $ref: errors } : { type: "array", items: {}, example: [] }
                     }
                 }
             }
         }
     }),
 
-    498: (schemaRef = null, description = "Token inválido") => ({
+    498: (schemaRef = null, description = "Token inválido",errors = null) => ({
         description: description,
         content: {
             "application/json": {
@@ -101,8 +101,8 @@ const commonResponses = {
                         data: schemaRef ? { $ref: schemaRef } : { type: "array", items: {}, example: [] },
                         error: { type: "boolean", example: true },
                         code: { type: "integer", example: 498 },
-                        message: { type: "string", example: messages.auth.invalidToken },
-                        errors: { type: "array", example: [{ message: messages.httpCodes[498] }] }
+                        message: { type: "string", example: messages.httpCodes[498] },
+                        errors: errors ?  { $ref: errors } : { type: "array", items: {}, example: [] }
                     }
                 }
             }

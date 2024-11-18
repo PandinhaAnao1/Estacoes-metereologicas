@@ -13,7 +13,6 @@ describe("Testes de autenticação com token", () => {
     it('Deve atutenticar na aplicação!', async () => {
         const res = await postLogin(req);
         const data = res.body?.data;
-        console.log(data);
         
         expect(data?.token).toBeTruthy();
         token = data.token;

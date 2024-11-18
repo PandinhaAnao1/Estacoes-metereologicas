@@ -25,8 +25,9 @@ class DadosSchemas {
         ).optional(),
         data_hora: z.preprocess(
             (arg) => {
-                if (typeof arg == 'string') {
-                    return new Date(arg);
+                const date = new Date(arg);
+                if (!isNaN(date.getTime())) {
+                    return date;
                 }
                 return arg;
             },
@@ -56,8 +57,9 @@ class DadosSchemas {
         }),
         data_hora: z.preprocess(
             (arg) => {
-                if (typeof arg == 'string') {
-                    return new Date(arg);
+                const date = new Date(arg);
+                if (!isNaN(date.getTime())) {
+                    return date;
                 }
                 return arg;
             },
