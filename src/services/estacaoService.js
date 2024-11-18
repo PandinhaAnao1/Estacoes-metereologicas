@@ -52,13 +52,15 @@ class EstacaoService {
     static async inserir(data) {
         const estacao = EstacoesSchemas.cadastrar.parse(data);
         const usuario = await UsuarioRepository.findById(estacao.usuario_id);
-        if (!usuario || usuario.length === 0) throw {
-            code: 400,
-            error: {
-                message: "Usuário não encontrado.",
-                path: "usuario"
-            },
-        };
+        if (!usuario || usuario.length === 0){
+
+            throw new APIErro(400, [
+                {
+                    message: "Usuário não encontrado.",
+                    path: "id"
+                },
+            ]);
+        }
         const resposta = await EstacaoRepository.create(estacao);
 
         return resposta;

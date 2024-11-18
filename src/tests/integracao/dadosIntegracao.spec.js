@@ -7,7 +7,7 @@ describe('Testes de Integração para DadosController', () => {
 
     describe('Rotas /dados', () => {
 
-        describe('GET /dados', () => {
+        describe('GET /dados', () => { 
             it('Deve retornar dados climáticos', async () => {
                 const response = await request(app)
                     .get('/dados')
@@ -66,22 +66,42 @@ describe('Testes de Integração para DadosController', () => {
             });
 
             it('Deve filtrar dados climáticos usando humidity, rainfall, wind_speed_kmh e data_hora', async () => {
-                await request(app)
+                const response = await request(app)
                     .get('/dados')
                     .query({
                         temperature: '25.3',
                         humidity: '60',
                         rainfall: '5',
-                        wind_speed_kmh: '12'
-                    })
-                    .expect(200)
-                    .then((res) => {
-                        expect(res.body.error).toBe(false);
-                        expect(res.body.data[0]).toHaveProperty('humidity');
-                        expect(res.body.data[0]).toHaveProperty('rainfall');
-                        expect(res.body.data[0]).toHaveProperty('temperature');
-                        expect(res.body.data[0]).toHaveProperty('wind_speed_kmh');
+                        wind_speed_kmh: '12',
+                        data_hora: new Date('2024-10-11').toISOString(),
                     });
+                
+            
+                expect(response.body.code).toBe(200)
+                expect(response.body.error).toBe(false);
+                expect(response.body.data[0]).toHaveProperty('humidity');
+                expect(response.body.data[0]).toHaveProperty('rainfall');
+                expect(response.body.data[0]).toHaveProperty('temperature');
+                expect(response.body.data[0]).toHaveProperty('wind_speed_kmh');
+            });
+
+            it('Deve filtrar dados com a hora errada', async () => {
+                const response = await request(app)
+                    .get('/dados')
+                    .query({
+                        data_hora: "a",
+                    });
+                
+            
+                expect(response.body.data).toEqual([]);
+                expect(response.body.error).toBe(true);
+                expect(response.body.code).toBe(400);
+                expect(response.body.message).toBeDefined();
+                expect(response.body.errors).toBeDefined();
+                expect(response.body.errors[0].message).toBeDefined();
+                expect(response.body.errors[0].path).toBeDefined();
+
+
             });
         });
 

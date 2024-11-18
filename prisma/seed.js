@@ -42,7 +42,7 @@ async function seed() {
     // Insere novos dados na tabela `dados_diarios`
     await prisma.dados_diarios.createMany({
         data: [
-            { id: 1, temperature: "25.3", humidity: 60, rainfall: 5, wind_speed_kmh: 12, data_hora: new Date() },
+            { id: 1, temperature: "25.3", humidity: 60, rainfall: 5, wind_speed_kmh: 12, data_hora: new Date('2024-10-11') },
             { id: 2, temperature: "26.7", humidity: 65, rainfall: 4, wind_speed_kmh: 14, data_hora: new Date() },
             { id: 3, temperature: "24.1", humidity: 58, rainfall: 3, wind_speed_kmh: 10, data_hora: new Date() },
             { id: 4, temperature: "27.4", humidity: 70, rainfall: 6, wind_speed_kmh: 16, data_hora: new Date() },

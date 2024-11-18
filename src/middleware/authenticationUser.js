@@ -1,17 +1,27 @@
 import Jwt from "jsonwebtoken"
-
+import { sendError, sendResponse } from "../util/messages.js";
 
 const authentication = (req, res, next) => {
   const authHerades = req.headers.authorization
   if (!authHerades || !authHerades.startsWith('Bearer ')) {
-    res.status(400).json({ Error: "Token not provided" })
+    sendError(res, 400,[
+      {
+        path: 'token',
+        message: 'Token não informado por favor faça login',
+      }
+    ]);
   } else {
     const token = authHerades.split(' ')[1]
     try {
       Jwt.verify(token, process.env.JWT_SECRET)
-      next()
+      next();
     } catch (error) {
-      res.status(401).json({ Error: "Incorret Token" })
+      sendError(res, 401,[
+        {
+          path: 'token',
+          message: 'Token informado não é valido por favor faça login',
+        }
+      ]);
     }
   }
 }

@@ -2,6 +2,7 @@ import UsuarioRepository from '../repositories/usuarioRepository.js'
 import Jwt from "jsonwebtoken";
 import HashSenha from '../util/hashSenha.js';
 import AutenticaoSchema from '../schemas/autenticacaoSchema.js';
+import { APIErro } from "../util/apiErrro.js";
 
 class AutenticacaoServices {
 
@@ -12,33 +13,29 @@ class AutenticacaoServices {
     const usuario = await UsuarioRepository.findMany({ email: email });
 
     if (usuario.length === 0) {
-      throw {
-        data: [],
-        error: true,
-        message: "Usuario não existe por favor corrija o email!",
-        code: 400,
-      };
+      throw new APIErro(400, [
+        {
+          path: "email",
+          message: "Usuário não existe por favor corrija o email!",
+        }
+      ]);
     }
     const response = await HashSenha.compararSenha(senha, usuario[0].senha);
     if (!response) {
-      throw {
-        data: [],
-        error: true,
-        code: 404,
-        message: "A senha informada esta errada por favor tente"
-      }
+      throw new APIErro (404, [
+        {
+          path: "senha",
+          message: "A senha informada esta errada por favor tente"
+        }
+      ]);
     }
 
-    const { id, nome, ...resto } = usuario[0];
-
-    const token = Jwt.sign({ email, senha }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    
+    const token = Jwt.sign({ ...usuario[0]}, process.env.JWT_SECRET, { expiresIn: '30d' });
+    usuario.forEach((e) => delete e.senha);
     return {
-      token: token,
-      data: {
-        id,
-        nome,
-        email: usuario[0].email
-      }
+        token: token,
+        ...usuario[0]
     }
   }
 }
